@@ -1,0 +1,21 @@
+require("formatter").setup({
+    logging = true,
+    log_level = vim.log.levels.WARN,
+    filetype = {
+        lua = { require("formatter.filetypes.lua").stylua },
+        javascript = { require("formatter.filetypes.javascript").prettierd },
+        typescript = { require("formatter.filetypes.typescript").prettierd },
+        javascriptreact = { require("formatter.filetypes.javascriptreact").prettierd },
+        typescriptreact = { require("formatter.filetypes.typescriptreact").prettierd },
+        markdown = { require("formatter.filetypes.markdown").prettierd },
+        json = { require("formatter.filetypes.json").prettierd },
+        yaml = { require("formatter.filetypes.yaml").prettierd },
+        toml = { require("formatter.filetypes.toml").taplo },
+        python = { require("formatter.filetypes.python").ruff },
+        sh = { require("formatter.filetypes.sh").shfmt },
+        go = { require("formatter.filetypes.go").goimports },
+        terraform = { require("formatter.filetypes.terraform").terraformfmt },
+        kcl = { require("formatters.kcl").kclfmt },
+        ["*"] = { require("formatter.filetypes.any").remove_trailing_whitespace },
+    },
+})

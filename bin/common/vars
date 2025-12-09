@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2034
+
+set -ueo pipefail
+
+REPOSITORY_DIR=$(realpath "$(dirname -- "${BASH_SOURCE[0]}")/../..")
+
+source "$REPOSITORY_DIR/bin/common/logging"
+
+readonly XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+readonly XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+
+OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
+ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')"
+OS_NAME=$(awk -F'=' '/^ID=/ {print $2}' /etc/os-release | sed 's/ubuntu/xUbuntu/I')
+OS_VERSION=$(awk -F'=' '/^VERSION_ID=/ {gsub(/"/, "", $2); print $2}' /etc/os-release)
+
+readonly REPOSITORY_DIR OS ARCH OS_NAME OS_VERSION
+
+readonly BIN_DIR="$HOME/.local/bin"
+readonly UDEV_RULES_DIR=/etc/udev/rules.d
+readonly I3_CONFIG_DIR="$XDG_CONFIG_HOME/i3"
+readonly I3_CURRENT_STATUS_BAR_SYMLINK="$I3_CONFIG_DIR/i3-bar"
+
+readonly DESKTOP_APP_ICONS_DIR=/usr/share/pixmaps
+readonly APPIMAGE_DIR="$HOME/Applications"
+
+readonly APT_DATA_SOURCES_DIR=/etc/apt/sources.list.d
+readonly APT_GPG_KEYS_DIR=/etc/apt/trusted.gpg.d
+
+readonly RAW_GITHUB_URL=https://raw.githubusercontent.com
+
+readonly -a NERD_FONTS_TO_INSTALL=(
+    "JetBrainsMono"
+    "RobotoMono"
+    "FiraCode"
+    "Iosevka"
+)
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    log::error "Execution denied: This script is a library and must be sourced."
+fi

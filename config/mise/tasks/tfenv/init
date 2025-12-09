@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+#MISE hide=true
+
+readonly TERRAFORM_LATEST_VERSION=$(tfenv list-remote | grep -iEv '(rc|alpha|beta)' | head -n1)
+
+tfenv use "$TERRAFORM_LATEST_VERSION"

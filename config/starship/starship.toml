@@ -1,0 +1,205 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = """
+[░▒▓](sec1_bg)\
+$os\
+[](fg:sec1_bg bg:sec2_bg)\
+$directory\
+[](fg:sec2_bg bg:sec3_bg)\
+$git_branch\
+$git_status\
+$git_commit\
+$git_state\
+[](fg:sec3_bg bg:sec4_bg)\
+$c\
+$rust\
+$golang\
+$nodejs\
+$php\
+$java\
+$kotlin\
+$haskell\
+$python\
+$lua\
+$ruby\
+$terraform\
+$helm\
+[](fg:sec4_bg bg:sec5_bg)\
+$time\
+$direnv\
+[ ](fg:sec5_bg)\
+$cmd_duration\
+$line_break\
+$character"""
+
+palette = 'catppuccin'
+add_newline = false
+
+[os]
+disabled = false
+style = "fg:sec1_fg bg:sec1_bg"
+
+[os.symbols]
+Windows = "  "
+Ubuntu = " 󰕈 "
+SUSE = "  "
+Raspbian = " 󰐿 "
+Mint = " 󰣭 "
+Macos = " 󰀵 "
+Manjaro = "  "
+Linux = " 󰌽 "
+Gentoo = " 󰣨 "
+Fedora = " 󰣛 "
+Alpine = "  "
+Amazon = "  "
+Android = "  "
+AOSC = "  "
+Arch = " 󰣇 "
+Artix = " 󰣇 "
+CentOS = "  "
+Debian = " 󰣚 "
+Redhat = " 󱄛 "
+RedHatEnterprise = " 󱄛 "
+
+[directory]
+style = "bold fg:sec2_fg bg:sec2_bg"
+format = "[ $path ]($style)"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[directory.substitutions]
+"Documents" = "󰈙 "
+"Downloads" = " "
+"Music" = " "
+"Pictures" = " "
+
+[git_branch]
+symbol = ""
+style = "bg:sec3_bg"
+format = '[[ $symbol $branch ](bold fg:sec3_fg bg:sec3_bg)]($style)'
+
+[git_status]
+style = "bg:sec3_bg"
+format = '[[($all_status$ahead_behind )](bold fg:sec3_fg bg:sec3_bg)]($style)'
+
+[git_commit]
+style = "bold bg:sec3_bg"
+format = '[[ $hash$tag ](bold fg:sec3_fg bg:sec3_bg)]($style)'
+only_detached = true
+commit_hash_length = 5
+
+[c]
+symbol = " "
+style = "bg:sec4_bg"
+format = '[[ $symbol( $version) ](bold fg:sec4_fg bg:sec4_bg)]($style)'
+
+[rust]
+symbol = ""
+style = "bg:sec4_bg"
+format = '[[ $symbol( $version) ](bold fg:sec4_fg bg:sec4_bg)]($style)'
+
+[golang]
+symbol = ""
+style = "bg:sec4_bg"
+format = '[[ $symbol( $version) ](bold fg:sec4_fg bg:sec4_bg)]($style)'
+
+[php]
+symbol = ""
+style = "bg:sec4_bg"
+format = '[[ $symbol( $version) ](bold fg:sec4_fg bg:sec4_bg)]($style)'
+
+[java]
+symbol = " "
+style = "bg:sec4_bg"
+format = '[[ $symbol( $version) ](bold fg:sec4_fg bg:sec4_bg)]($style)'
+
+[kotlin]
+symbol = ""
+style = "bg:sec4_bg"
+format = '[[ $symbol( $version) ](bold fg:sec4_fg bg:sec4_bg)]($style)'
+
+[haskell]
+symbol = ""
+style = "bg:sec4_bg"
+format = '[[ $symbol( $version) ](bold fg:sec4_fg bg:sec4_bg)]($style)'
+
+[python]
+symbol = ""
+style = "bg:sec4_bg"
+format = '[[ $symbol( $version)(\(#$virtualenv\)) ](bold fg:sec4_fg bg:sec4_bg)]($style)'
+
+[nodejs]
+symbol = "󰎙"
+style = "bg:sec4_bg"
+format = '[[ $symbol( $version) ](bold fg:sec4_fg bg:sec4_bg)]($style)'
+
+[lua]
+symbol = "󰢱"
+style = "bg:sec4_bg"
+format = '[[ $symbol( $version) ](bold fg:sec4_fg bg:sec4_bg)]($style)'
+
+[ruby]
+symbol = ""
+style = "bg:sec4_bg"
+format = '[[ $symbol( $version) ](bold fg:sec4_fg bg:sec4_bg)]($style)'
+
+[terraform]
+symbol = "󱁢"
+style = "bg:sec4_bg"
+format = '[[ $symbol( $version) ](bold fg:sec4_fg bg:sec4_bg)]($style)'
+
+[helm]
+symbol = ""
+style = "bg:sec4_bg"
+format = '[[ $symbol( $version) ](bold fg:sec4_fg bg:sec4_bg)]($style)'
+
+[time]
+disabled = true
+time_format = "%R"
+style = "bg:sec5_bg"
+format = '[[  $time ](fg:sec5_fg bg:sec5_bg)]($style)'
+
+[direnv]
+symbol = " "
+disabled = false
+allowed_msg = ""
+not_allowed_msg = ""
+loaded_msg = "󱞸"
+unloaded_msg = "󱞴"
+format = '[[ $symbol $loaded - $allowed ](fg:sec5_fg bg:sec5_bg)]($style)'
+
+[line_break]
+disabled = true
+
+[cmd_duration]
+show_milliseconds = false
+format = " in $duration "
+style = "bg:lavender"
+disabled = false
+show_notifications = false
+min_time = 30000
+min_time_to_notify = 60000
+
+[character]
+disabled = false
+success_symbol = '[❯](bold fg:success)'
+error_symbol = '[✗](bold fg:error)'
+
+[palettes.catppuccin]
+sec1_bg = "#a3aed2"
+sec1_fg = "#090c0c"
+
+sec2_bg = "#5c80c0"
+sec2_fg = "#e3e5e5"
+
+sec3_bg = "#394260"
+sec3_fg = "#769ff0"
+
+sec4_bg = "#212736"
+sec4_fg = "#769ff0"
+
+sec5_bg = "#1d2230"
+sec5_fg = "#a0a9cb"
+
+success = "#a6e3a1"
+error = "#f38ba8"

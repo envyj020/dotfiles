@@ -1,0 +1,227 @@
+# i3 config file (v4)
+# reference: https://i3wm.org/docs/userguide.html
+
+set $mod Mod4
+set $ctrl Control
+set $term $HOME/.local/bin/alacritty
+
+set $inner 5
+set $outerTop 0
+set $outerBottom 0
+
+set $up k
+set $down j
+set $left h
+set $right l
+
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+gaps inner $inner
+gaps top $outerTop
+gaps bottom $outerBottom
+
+set $borderSize 0
+set $focusBorder #EF9F76
+set $unFocusBorder #4D3D69
+set $bg #181825
+set $fg #FFFFFF
+
+# remove window borders and title bars
+for_window [class=".*"] border pixel $borderSize
+
+# borders
+# CLASS                 BORDER                  BACK            TEXT            INDICATOR
+client.focused          $focusBorder            $focusBorder    $focusBorder    $bg
+client.focused_inactive $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
+client.unfocused        $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
+client.urgent           $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
+
+font pango:JetBrainsMonoNL Nerd Font,monospace 8
+floating_modifier $mod
+focus_follows_mouse no
+smart_borders on
+
+# window rules
+
+# avoid tiling popups, dropdown windows...
+for_window [class="plasmashell"] floating enable
+for_window [class="Plasma"] floating enable
+for_window [class="krunner"] floating enable
+for_window [class="Kmix"] floating enable
+for_window [class="Klipper"] floating enable
+for_window [class="Plasmoidviewer"] floating enable
+for_window [class="Blueman-manager"] floating enable
+for_window [class="Wireshark"] floating enable
+for_window [title="Desktop — Plasma"] kill
+
+# From wiki https://userbase.kde.org/Tutorials/Using_Other_Window_Managers_with_Plasma
+for_window [title="Desktop — Plasma"] kill, floating enable, border none
+for_window [class="plasmashell"] floating enable
+for_window [class="Plasma"] floating enable, border none
+for_window [title="plasma-desktop"] floating enable, border none
+for_window [title="win7"] floating enable, border none
+for_window [class="krunner"] floating enable, border none
+for_window [class="Kmix"] floating enable, border none
+for_window [class="Klipper"] floating enable, border none
+for_window [class="Plasmoidviewer"] floating enable, border none
+for_window [class="(?i)*nextcloud*"] floating disable
+for_window [class="plasmashell" window_type="notification"] floating enable; border none
+for_window [window_role="pop-up"] floating enable; border none
+no_focus [class="plasmashell" window_type="notification"]
+
+for_window [class="Albert"] border none
+for_window [class="zoom"] floating enable; border none
+for_window [class="VirtualBox Manager"] floating enable; border none
+
+# Workspace app assignment - case sensitive: check: xprop | grep CLASS
+assign [class="firefox"] $ws2
+assign [class="zoom"] $ws3
+
+# Workspace screen assignment
+workspace $ws1 output eDP-1
+workspace $ws2 output HDMI-1-2
+workspace $ws3 output DP-1
+
+# shortcuts
+bindsym $mod+Return exec $term
+bindsym $mod+d exec --no-startup-id "rofi -show combi \
+    -modi combi,window,drun,ssh,:rofi-power-menu \
+    -combi-modes 'window,drun,ssh,:rofi-power-menu --choices=suspend/hibernate/reboot/shutdown --confirm=' \
+    -modes combi"
+
+# switch to workspace
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# restart/reload i3
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+r restart
+
+bindsym $mod+Shift+s exec --no-startup-id $XDG_CONFIG_HOME/i3/lock --font 'JetBrainsMono-NF-ExtraBold'
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -f 'pango:JetBrainsMonoNL Nerd Font Bold 10' \
+    -m 'Do you really want to exit i3? This will end your X session.' -b 'Exit' 'i3-msg exit'"
+
+# window resize
+
+mode "resize" {
+    bindsym $right resize shrink width 10 px or 10 ppt
+    bindsym $up resize grow height 10 px or 10 ppt
+    bindsym $down resize shrink height 10 px or 10 ppt
+    bindsym $left resize grow width 10 px or 10 ppt
+
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+$ctrl+Right    resize shrink width 10 px or 10 ppt
+bindsym $mod+$ctrl+Down     resize shrink height 10 px or 10 ppt
+bindsym $mod+$ctrl+Up       resize grow height 10 px or 10 ppt
+bindsym $mod+$ctrl+Left     resize grow width 10 px or 10 ppt
+bindsym $mod+r mode "resize"
+
+# audio control
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute exec amixer set Capture toggle
+
+# screenshots
+bindsym $mod+p exec --no-startup-id maim --select "$HOME/Pictures/$(date +%H-%M-%S).jpg"
+bindsym $mod+Shift+p exec --no-startup-id maim -s --format png /dev/stdout | xclip -selection clipboard -t image/png -i
+
+# change focus
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# orientantion
+bindsym $mod+$ctrl+h split v
+bindsym $mod+$ctrl+v split h
+
+# fullscreen mode in focused window
+bindsym $mod+f fullscreen toggle
+
+# change container layout - stacked, tabbed, split
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+t layout toggle split
+
+# toggle tiling and floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling and floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# exec
+exec_always --no-startup-id wmctrl -c Plasma
+exec_always --no-startup-id feh --bg-fill ~/Pictures/aesthetic.jpg
+
+exec --no-startup-id picom
+exec --no-startup-id nm-applet
+exec --no-startup-id blueman-applet
+exec --no-startup-id setxkbmap -layout es,us -option 'grp:alt_shift_toggle'
+
+# screen layout
+exec --no-startup-id xrandr --output eDP-1 --primary --mode 1920x1080 \
+    --output HDMI-1-2 --mode 1920x1080 --left-of eDP-1 \
+    --output DP-1 --mode 1920x1080 --right-of eDP-1
+
+# i3 status bar
+include i3-bar

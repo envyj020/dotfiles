@@ -1,0 +1,202 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2124,SC203
+
+set -ueo pipefail
+
+source "$(dirname "${BASH_SOURCE[0]}")/logging"
+
+# Detects the system's package manager by checking available commands
+# and OS release files.
+#
+# It first attempts to find common package managers in PATH,
+# then falls back to /etc/*-release files.
+#
+# Globals:
+#   None
+# Arguments:
+#   None
+# Outputs:
+#   Writes the package manager name to stdout
+#   Error to stderr
+# Returns:
+#   0 if package manager is detected
+#   1 if no package manager could be determined
+function common::package_manager() {
+
+    local -ra PACKAGE_MANAGERS=(
+        "apt-get"
+        "dnf"
+        "pacman"
+        "zypper"
+        "apk"
+        "emerge"
+    )
+
+    for PACKAGE_MANAGER in "${PACKAGE_MANAGERS[@]}"; do
+        if [[ $(command -v "$PACKAGE_MANAGER") ]]; then
+            echo "$PACKAGE_MANAGER"
+            return 0
+        fi
+    done
+
+    local -rA OS_FILENAMES=(
+        ["/etc/redhat-release"]=dnf
+        ["/etc/arch-release"]=pacman
+        ["/etc/gentoo-release"]=emerge
+        ["/etc/SUSE-release"]=zypper
+        ["/etc/debian_version"]=apt-get
+        ["/etc/alpine-release"]=apk
+    )
+
+    for DISTRIBUTION in "${!OS_FILENAMES[@]}"; do
+        [[ -f $DISTRIBUTION ]] && {
+            echo "${OS_FILENAMES[$DISTRIBUTION]}"
+            return 0
+        }
+    done
+
+    log::error "Couldn't determine the OS package manager."
+}
+
+# Displays an interactive menu using bash select and executes the chosen function.
+# Globals:
+#   PS3
+# Arguments:
+#   $1 - An associative array where each key is an option and the value is the function to execute
+#   $2 - Optional prompt text (default: "Select an option")
+# Outputs:
+#   Options and function output to stdout
+#   Error to stderr
+# Returns:
+#   0 on success
+#   1 if the mapped function doesn't exist
+# Example:
+#   declare -A options=(
+#       ["PackageA"]="install_packageA"
+#       ["PackageB"]="install_packageB|arg1|arg2"
+#   )
+#
+#   common::choose options "Choose a package"
+
+function common::choose() {
+    local -n SETTINGS=$1
+    local -r PROMPT=${2:-"Select an option"}
+    local -a OPTIONS=()
+
+    for option in "${!SETTINGS[@]}"; do
+        OPTIONS+=("$option")
+    done
+
+    PS3="${PROMPT}: "
+
+    function show_options {
+        for i in "${!OPTIONS[@]}"; do
+            printf "%d) %s\n" $((i + 1)) "${OPTIONS[$i]}"
+        done
+    }
+
+    select CHOICE in "${OPTIONS[@]}"; do
+        [[ -z $CHOICE ]] && {
+            log::info "Oops! Option unavailable, Please choose a correct one."
+            show_options
+            continue
+        }
+
+        IFS='|' read -r -a FN_SIGNATURE <<<"${SETTINGS[$CHOICE]}"
+
+        if [[ ${#FN_SIGNATURE} -eq 0 ]]; then
+            log::error "${CHOICE} requires to be mapped to an action."
+        fi
+
+        local -r FN_NAME="${FN_SIGNATURE[0]}"
+        local -r FN_ARGS="${FN_SIGNATURE[@]:1}"
+
+        declare -F "$FN_NAME" &>/dev/null || {
+            log::error "$FN_NAME isn't a recognized action."
+        }
+
+        "$FN_NAME" "$FN_ARGS"
+        break
+    done
+}
+
+# Displays a progress spinner. Requires to properly handle its clean up
+# in case of any failure in between of start/stop
+# Globals:
+#   SPIN_CHARS
+#   SPIN_PID
+#   ON_SUCCESS_MSG
+#   ON_ERROR_MSG
+# Arguments:
+#   $1: Message to show while the action is progressing
+#   $2: Message on success
+#   $3: Message on error
+# Outputs:
+#   progress and success or error messages to stdout
+# Example:
+#   common::start_spinner
+#   do_something
+#   common::stop_spinner
+
+readonly SPIN_CHARS="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+
+ON_SUCCESS_MSG=""
+ON_ERROR_MSG=""
+
+SPIN_PID=""
+
+function common::__init_spinner() {
+    local i=0
+    local -r MESSAGE="$1"
+    local -r n=${#SPIN_CHARS}
+
+    tput civis
+
+    while true; do
+        printf "\r\033[K\033[36m%s\033[0m %s" "${SPIN_CHARS:i:1}" "$MESSAGE"
+        i=$(((i + 1) % n))
+        sleep 0.05
+    done
+}
+
+function common::start_spinner() {
+    local -r FUNCTION_CALLEE="${FUNCNAME[1]##*::}"
+    local -r PROGRESS_MSG="${1:-"Installing ${FUNCTION_CALLEE}..."}"
+
+    ON_SUCCESS_MSG="${2:-"${BOLD}${FUNCTION_CALLEE} ${GREEN}OK${NC}"}"
+    ON_ERROR_MSG="${3:-"${BOLD}${FUNCTION_CALLEE} ${RED}KO${NC}"}"
+
+    common::__init_spinner "$PROGRESS_MSG" &
+    SPIN_PID=$!
+    disown
+}
+
+function common::__stop_spinner() {
+    local EXIT_CODE=${1:-0}
+    local TRIGGERED_BY_SIGNAL=${2:-false}
+
+    if [[ -n "$SPIN_PID" ]] && kill -0 "$SPIN_PID" 2>/dev/null; then
+        kill "$SPIN_PID" 2>/dev/null
+        wait "$SPIN_PID" 2>/dev/null
+    fi
+
+    tput cnorm
+
+    [[ $TRIGGERED_BY_SIGNAL == "true" && $EXIT_CODE -eq 0 ]] && return 0
+
+    [[ $EXIT_CODE -eq 0 ]] &&
+        echo -ne "\r\033[K${GREEN}✔${NC} ${ON_SUCCESS_MSG}\n" ||
+        echo -ne "\r\033[K${RED}✖${NC} ${ON_ERROR_MSG}\n" >&2
+
+    SPIN_PID=""
+}
+
+function common::stop_spinner() {
+    local -r EXIT_CODE=$?
+    ON_SUCCESS_MSG=${1:-$ON_SUCCESS_MSG}
+    common::__stop_spinner $EXIT_CODE
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    log::error "Execution denied: This script is a library and must be sourced."
+fi

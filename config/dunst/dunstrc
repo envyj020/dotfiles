@@ -1,0 +1,51 @@
+# https://dunst-project.org/documentation
+
+[global]
+origin = top-right
+scale = 0
+width = (250, 500)
+height = (50, 120)
+offset = (8, 45)
+transparency = 0
+progress_bar_height = 10
+progress_bar_frame_width = 1
+progress_bar_min_width = 150
+progress_bar_max_width = 300
+word_wrap = yes
+ellipsize = end
+padding = 10
+horizontal_padding = 10
+text_icon_padding = 10
+gap_size = 10
+enable_recursive_icon_lookup = true
+icon_position = left
+icon_theme = Papirus-Dark
+min_icon_size = 48
+max_icon_size = 48
+show_indicators = true
+foreground = "#cad3f5"
+background = "#24273a"
+frame_color = "#313244"
+frame_width = 2
+vertical_alignment = center
+alignment = left
+sort = yes
+markup = full
+ignore_newline = yes
+notification_limit = 6
+indicate_hidden = true
+stack_duplicates = true
+hide_duplicate_count = false
+history_length = 30
+title = Dunst
+class = Dunst
+font = JetBrainsMonoNL Nerd Font 10
+
+[urgency_low]
+icon = dialog-information
+
+[urgency_normal]
+icon = dialog-warning
+
+[urgency_critical]
+icon = dialog-error

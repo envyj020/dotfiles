@@ -1,0 +1,6 @@
+bar {
+	font pango:JetBrainsMonoNL Nerd Font 10
+	position top
+	tray_output none
+	status_command bumblebee-status
+}

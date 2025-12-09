@@ -1,0 +1,18 @@
+[submodule "modules/LS_COLORS"]
+	path = modules/LS_COLORS
+	url = https://github.com/trapd00r/LS_COLORS.git
+[submodule "modules/catppuccin-yazi-themes"]
+	path = modules/catppuccin-yazi-themes
+	url = https://github.com/catppuccin/yazi.git
+[submodule "modules/catppuccin-bat-themes"]
+	path = modules/catppuccin-bat-themes
+	url = https://github.com/catppuccin/bat.git
+[submodule "modules/catppuccin-btop-themes"]
+	path = modules/catppuccin-btop-themes
+	url = https://github.com/catppuccin/btop.git
+[submodule "modules/catppuccin-k9s-themes"]
+	path = modules/catppuccin-k9s-themes
+	url = https://github.com/catppuccin/k9s.git
+[submodule "modules/catppuccin-eza-themes"]
+	path = modules/catppuccin-eza-themes
+	url = https://github.com/catppuccin/eza.git

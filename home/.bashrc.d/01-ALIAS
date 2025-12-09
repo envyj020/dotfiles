@@ -1,0 +1,277 @@
+# vim: set ft=sh:
+# shellcheck disable=SC2015,SC2155
+
+alias path='echo -e ${PATH//:/\\n}'
+
+alias ls='ls -F -h --color=always --time-style=long-iso'
+alias ll='ls -la'
+alias lt='ls -s -1 -S -F'
+
+alias fd='find . -type d -iname'
+alias ff='find . -type f -iname'
+
+alias bashrc='exec ${SHELL} -l'
+alias hgrep='history | grep'
+alias mkdir='mkdir -p'
+alias vim='nvim'
+alias open='xdg-open'
+alias tmux-create='tmux new-session -A -s'
+
+alias .1='cd ..'
+alias .2='cd ../..'
+alias .3='cd ../../..'
+alias .4='cd ../../../..'
+alias .5='cd ../../../../..'
+
+alias yarn='corepack yarn'
+alias yarnpkg='corepack yarnpkg'
+alias pnpm='corepack pnpm'
+alias pnpx='corepack pnpm dlx'
+alias npm='corepack npm'
+alias npx='corepack npx'
+
+alias k='kubectl'
+alias kctx="k kc switch"
+alias kns="k kc namespace"
+alias knet='kubectl run -it --rm net \
+    --image=praqma/network-multitool \
+    --restart=Never -- /bin/bash'
+
+alias screenx='xrandr \
+    --output eDP-1 --primary --mode 1920x1080 \
+    --output HDMI-1-2 --mode 1920x1080 --left-of eDP-1 \
+    --output DP-1 --mode 1920x1080 --right-of eDP-1'
+
+function command_exists() {
+    for cmd in "$@"; do
+        command -v "$cmd" &>/dev/null
+    done
+}
+
+function dik() {
+    [[ $# -ne 2 ]] && {
+        echo 1>&2 "Usage: ${FUNCNAME[0]} RECORD_TYPE DOMAIN"
+        return 1
+    }
+    dig +nocmd "$1" "$2" +multiline +noall +answer
+}
+
+function diff() {
+    [[ $# -ne 2 ]] && {
+        echo 1>&2 "Usage: ${FUNCNAME[0]} FILE1 FILE2"
+        return 1
+    }
+    git diff --no-index --color-words "$@"
+}
+
+function mkd() {
+    [[ $# -lt 1 ]] && {
+        echo 1>&2 "Usage: ${FUNCNAME[0]} DIR..."
+        return 1
+    }
+    mkdir -p "$@" && cd "$_" || return 1
+}
+
+function tmpd() {
+    cd "$(mktemp -d ${1:+-t "$1".XXXXXXXXXX})" || return 1
+}
+
+function fs() {
+    [[ -n "$*" ]] && du -sbh -- "$@" || du -sbh .[^.]* ./*
+}
+
+function cat() {
+    command_exists 'bat' && bat "$@" || command cat "$@"
+}
+
+function switch_status_bar() {
+    local -r I3_CONFIG_DIR="$XDG_CONFIG_HOME/i3"
+    local -r I3_CURRENT_STATUS_BAR_SYMLINK="$I3_CONFIG_DIR/i3-bar"
+    local -r RED='\e[1m\e[31m' NC='\e[0m'
+    local -r PS3="Choose a status bar:"
+
+    local -ra OPTIONS=(
+        "Polybar"
+        "Bumblebee"
+        "Quit"
+    )
+
+    function show_options {
+        for i in "${!OPTIONS[@]}"; do
+            printf "%d) %s\n" $((i + 1)) "${OPTIONS[$i]}"
+        done
+    }
+    select CHOICE in "${OPTIONS[@]}"; do
+        case $CHOICE in
+        Polybar)
+            ln -sfn "$I3_CONFIG_DIR/i3bar/polybar" "$I3_CURRENT_STATUS_BAR_SYMLINK"
+            i3-msg restart &>/dev/null
+            break
+            ;;
+        Bumblebee)
+            polybar-msg cmd quit &>/dev/null
+            ln -sfn "$I3_CONFIG_DIR/i3bar/bumblebee-status" "$I3_CURRENT_STATUS_BAR_SYMLINK"
+            i3-msg restart &>/dev/null
+            break
+            ;;
+        Quit)
+            break
+            ;;
+        *)
+            echo -e "${RED} Invalid option: ${REPLY}${NC}"
+            show_options
+            ;;
+        esac
+    done
+}
+
+function eza() {
+    ! command_exists 'eza' && {
+        echo 2>&1 "${FUNCNAME[0]} not found in your PATH"
+        return 1
+    }
+    command eza -lnioa --git --smart-group \
+        --no-permissions --time-style=long-iso "$@"
+}
+
+function yy() {
+    local TMP="$(mktemp -t "yazi-cwd.XXXXXX")" CWD
+    yazi "$@" --cwd-file="$TMP"
+    IFS= read -r -d '' CWD <"$TMP"
+    [ -n "$CWD" ] && [ "$CWD" != "$PWD" ] && cd -- "$CWD" || return 1
+    rm -f -- "$TMP"
+}
+
+function search() {
+    [[ $# -ne 1 ]] && {
+        echo 1>&2 "Usage: ${FUNCNAME[0]} SEARCH_TERM"
+        return 1
+    }
+    open "https://www.google.com/search?q=$1"
+}
+
+function ckp() {
+    [[ $# -ne 1 ]] && {
+        echo 1>&2 "Usage: ${FUNCNAME[0]} PORT"
+        return 1
+    }
+    sudo lsof -ni4TCP:"$1" || echo "Port $1 is not bound"
+}
+
+function kp() {
+    [[ $# -ne 1 ]] && {
+        echo 1>&2 "Usage: ${FUNCNAME[0]} PORT"
+        return 1
+    }
+    sudo fuser -k -n tcp "$1" || echo "Port $1 is not bound"
+}
+
+function copycat() {
+    [[ $# -ne 1 ]] && {
+        echo 1>&2 "Usage: ${FUNCNAME[0]} FILE"
+        return 1
+    }
+    command cat "$1" | xclip -selection clipboard
+}
+
+function datauri() {
+    [[ $# -ne 1 ]] && {
+        echo 1>&2 "Usage: ${FUNCNAME[0]} FILE"
+        return 1
+    }
+    local MIMETYPE=$(file -b --mime-type "$1")
+
+    if [[ $MIMETYPE == text/* ]]; then
+        MIMETYPE="${MIMETYPE};charset=utf-8"
+    fi
+
+    echo "data:${MIMETYPE};base64,$(openssl base64 -in "$1" | tr -d '\n')"
+}
+
+function unidecode() {
+    perl -e "binmode(STDOUT, ':utf8'); print \"$*\""
+    [[ -t 1 ]] && echo ""
+}
+
+function codepoint() {
+    perl -e "use utf8; print sprintf('U+%04X', ord(\"$*\"))"
+    [[ -t 1 ]] && echo ""
+}
+
+function isup() {
+    [[ $# -ne 1 ]] && {
+        echo 1>&2 "Usage: ${FUNCNAME[0]} DOMAIN"
+        return 1
+    }
+    curl -SsLfI -m 5 -XGET -A "Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:121.0)" "$1" >/dev/null &&
+        notify-send -u low -t 2000 "$1 is UP" ||
+        notify-send -u critical -t 2000 "$1 is DOWN"
+}
+
+function epoch() {
+    local TIMESTAMP=${1:--1}
+    printf '%(%B %d, %Y %-I:%M:%S %p %Z)T\n' "$TIMESTAMP"
+}
+
+function shortener() {
+    [[ $# -ne 1 ]] && {
+        echo 1>&2 "Usage: ${FUNCNAME[0]} URL"
+        return 1
+    }
+    local SHORTENER_ENDPOINT=https://api.encurtador.dev/encurtamentos
+    curl -s -XPOST $SHORTENER_ENDPOINT \
+        -H 'content-type: application/json' \
+        -d "{ \"url\": \"$1\" }" | jq -r '"http://" + .urlEncurtada'
+}
+
+function readcert() {
+    [[ $# -ne 1 ]] && {
+        echo 1>&2 "Usage: ${FUNCNAME[0]} DOMAIN"
+        return 1
+    }
+    local -r DOMAIN="$1"
+    local -r RED='\e[1m\e[31m'
+    local -r NC='\e[0m'
+
+    local -r CERT_START_NEEDLE="-----BEGIN CERTIFICATE-----"
+    local -r CERT_DETAILS=$(echo -e "GET / HTTP/1.0\nEOT" |
+        openssl s_client -connect "$DOMAIN:443" -servername "$DOMAIN" 2>&1)
+
+    [[ ! "$CERT_DETAILS" =~ ${CERT_START_NEEDLE} ]] && {
+        echo 1>&2 "Error: certificate not found for $DOMAIN"
+        return 1
+    }
+
+    local -ra CERT_OPTS=(
+        "no_aux"
+        "no_header"
+        "no_pubkey"
+        "no_serial"
+        "no_sigdump"
+        "no_signame"
+        "no_validity"
+        "no_version"
+    )
+
+    local -r CERT_TEXT=$(echo "$CERT_DETAILS" | openssl x509 -text -certopt "$(printf "%s," "${CERT_OPTS[@]}" | sed 's/,$//')" 2>/dev/null)
+
+    [[ -z "$CERT_TEXT" ]] && {
+        echo 1>&2 "Error: Failed to parse certificate."
+        return 1
+    }
+
+    local -r SANS=$(echo "$CERT_TEXT" | grep -A 1 "Subject Alternative Name:" | tail -n 1 | sed -E 's/DNS://g; s/\s//g' | tr ',' '\n')
+    local -r SUBJECT=$(echo "$CERT_TEXT" | grep -o 'Subject: CN=[^ ]*' | sed 's/Subject: CN=//')
+    local -r ISSUER=$(echo "$CERT_TEXT" | grep -oP 'O=\K[^,]*')
+
+    echo -e "${RED}Issued by:${NC}"
+    echo "$ISSUER"
+
+    echo -e "${RED}Issued for:${NC}"
+    echo "$SUBJECT"
+
+    echo -e "${RED}SAN(s):${NC}"
+    echo "$SANS"
+
+    return 0
+}

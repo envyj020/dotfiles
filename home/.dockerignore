@@ -1,0 +1,88 @@
+# ==================================
+# VCS and IDE Files
+# ==================================
+.git
+.gitignore
+.svn
+.hg
+.vscode
+.editorconfig
+.idea
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+
+# ==================================
+# Temporary and OS Files
+# ==================================
+*~
+.#*
+*.bak
+*.swp
+tmp/
+temp/
+**/log
+**/logs
+**/*.log
+
+# ==================================
+# Configuration and Environment
+# ==================================
+.env
+.env.*
+config.*.json
+*/config.yml
+config/
+credentials/
+
+# ==================================
+# Executables/Binaries
+# ==================================
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# ==================================
+# Node.js
+# ==================================
+**/node_modules
+**/dist
+**/build
+**/out
+
+# ==================================
+# Python
+# ==================================
+__pycache__/
+*.pyc
+venv/
+.venv/
+.pytest_cache/
+htmlcov/
+.coverage
+docs/_build/
+
+# ==================================
+# Golang
+# ==================================
+**/target
+**/bin
+
+# ==================================
+# PHP
+# ==================================
+storage/
+bootstrap/cache/
+web/assets/
+var/cache/
+var/log/
+var/tmp/
+phpunit.xml
+
+# ==================================
+# Shared
+# ==================================
+vendor/

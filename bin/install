@@ -1,0 +1,1038 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2086,SC2155,SC2015
+
+set -ueo pipefail
+
+SCRIPT_DIR=$(realpath "$(dirname -- "${BASH_SOURCE[0]}")")
+SANDBOX=$(mktemp -d)
+
+readonly SCRIPT_DIR SANDBOX
+
+source "$SCRIPT_DIR/common/logging"
+source "$SCRIPT_DIR/common/vars"
+source "$SCRIPT_DIR/common/main"
+
+trap main::tear_down EXIT INT QUIT TERM
+
+function main::tear_down() {
+    local EXIT_CODE=$?
+    common::__stop_spinner $EXIT_CODE true
+    rm -rf "$SANDBOX"
+    exit $EXIT_CODE
+}
+
+# Ensures script idempotency by prepending required dirs
+# to the PATH variable during execution until full dotfiles installation.
+function main::setup() {
+
+    local -r PATHS_TO_PREPEND=(
+        "$BIN_DIR"
+        "$BIN_DIR/go/bin"
+        "$HOME/.pyenv/bin"
+        "$HOME/.gvm/bin"
+    )
+
+    for PATH_TO_PREPEND in "${PATHS_TO_PREPEND[@]}"; do
+        PATH="$PATH_TO_PREPEND:$PATH"
+    done
+}
+
+function base::packages() {
+
+    common::start_spinner
+
+    local -rA OS_SPECIFIC_PACKAGES=(
+        ["dnf"]="git-core dnf-command(config-manager) poppler ImageMagick \
+            libnotify pango"
+        ["apt-get"]="git git-extras poppler-utils imagemagick python-is-python3 \
+            build-essential libnotify-bin libpango-1.0.0"
+    )
+
+    local -ra BASE_PACKAGES=(
+        python3 python3-pip fd-find git-lfs ibus-m17n
+        coreutils binutils mercurial ffmpeg zoxide
+        p7zip unzip xclip make bison wget2 curl
+        arandr tmux rpm gcc jq btop fastfetch
+    )
+
+    # shellcheck disable=SC2206
+    local -ra PACKAGES=(${OS_SPECIFIC_PACKAGES[$PKG_MANAGER]} "${BASE_PACKAGES[@]}")
+
+    sudo $PKG_MANAGER install -y "${PACKAGES[@]}" &>/dev/null
+
+    common::stop_spinner
+}
+
+function base::tmux() {
+
+    common::start_spinner
+
+    local -r TMUX_TPM_GH_REPOSITORY=https://github.com/tmux-plugins/tpm
+    local -r TMUX_TPM_PATH="$XDG_CONFIG_HOME/tmux/plugins/tpm"
+
+    [[ -d $TMUX_TPM_PATH ]] || git clone --depth 1 $TMUX_TPM_GH_REPOSITORY $TMUX_TPM_PATH &>/dev/null
+
+    local -r ENTR_LATEST_TAG=$(curl -s "https://api.github.com/repos/eradman/entr/tags" | jq -r '.[0].name')
+    local -r ENTR_REPOSITORY_URL="https://github.com/eradman/entr.git"
+    local -r ENTR_REPOSITORY_BASENAME=$(basename $ENTR_REPOSITORY_URL .git)
+
+    [[ $(command -v entr) ]] || (
+        git clone --depth 1 --branch "$ENTR_LATEST_TAG" "$ENTR_REPOSITORY_URL" "$SANDBOX/$ENTR_REPOSITORY_BASENAME" &>/dev/null && cd $_ || {
+            log::error "Couldn't clone repository: $ENTR_REPOSITORY_URL"
+        }
+        ./configure && PREFIX=$(dirname $BIN_DIR) make install &>/dev/null || {
+            log::error "Couldn't compile and install $ENTR_REPOSITORY_BASENAME"
+        }
+    )
+    common::stop_spinner
+}
+
+function base::ueberzugpp() {
+
+    # https://github.com/jstkdng/ueberzugpp
+
+    common::start_spinner
+
+    [[ $(command -v ueberzugpp) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r UEBERZUGPP_REPOSITORY_NAME="home:justkidding"
+    local -r UEBERZUGPP_REPOSITORY_BASE_URL="https://download.opensuse.org/repositories/$UEBERZUGPP_REPOSITORY_NAME"
+    local -r VERSION_IDENTIFIER="${OS_NAME}_${OS_VERSION}"
+
+    case $OS_NAME in
+    fedora | rhel | centos)
+        local -r RHEL_UEBERZUGPP_REPOSITORY_URL="$UEBERZUGPP_REPOSITORY_BASE_URL/$VERSION_IDENTIFIER/$UEBERZUGPP_REPOSITORY_NAME.repo"
+        sudo $PKG_MANAGER config-manager addrepo --from-repofile $RHEL_UEBERZUGPP_REPOSITORY_URL &>/dev/null
+        sudo $PKG_MANAGER install -y ueberzugpp >/dev/null
+        ;;
+    xUbuntu | debian)
+        echo "deb ${UEBERZUGPP_REPOSITORY_BASE_URL/:j/:\/j}/$VERSION_IDENTIFIER/ /" | sudo tee "$APT_DATA_SOURCES_DIR/$UEBERZUGPP_REPOSITORY_NAME.list" >/dev/null
+        curl -fsSL "$UEBERZUGPP_REPOSITORY_BASE_URL/$VERSION_IDENTIFIER/Release.key" | gpg --dearmor | sudo tee "$APT_GPG_KEYS_DIR/${UEBERZUGPP_REPOSITORY_NAME/:/_}.gpg" >/dev/null
+        sudo $PKG_MANAGER update
+        sudo $PKG_MANAGER install -y ueberzugpp >/dev/null
+        ;;
+    *)
+        log::not_implemented
+        ;;
+    esac
+
+    common::stop_spinner
+}
+
+function base::nvm() {
+
+    # https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
+
+    common::start_spinner
+
+    [[ -d "$HOME/.nvm" ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r LATEST_NVM_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/nvm-sh/nvm/releases/latest" | jq -r '.tag_name')
+    local -r LATEST_NODEJS_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/nodejs/node/releases/latest" | jq -r '.tag_name')
+    local -r NVM_INSTALL_SCRIPT_URL="$RAW_GITHUB_URL/nvm-sh/nvm/$LATEST_NVM_RELEASE_VERSION/install.sh"
+
+    curl -fsSL $NVM_INSTALL_SCRIPT_URL | bash &>/dev/null
+    (
+        # shellcheck source=/dev/null
+        source $HOME/.nvm/nvm.sh
+        nvm install "$LATEST_NODEJS_RELEASE_VERSION"
+    )
+
+    common::stop_spinner
+}
+
+function base::gvm() {
+
+    # https://github.com/moovweb/gvm
+
+    common::start_spinner
+
+    local -r GO_VERSION=1.24.10
+    local -r GO_REMOTE_DOWNLOAD_URL="https://go.dev/dl/go${GO_VERSION}.${OS}-${ARCH}.tar.gz"
+    local -r GO_FILENAME=$(basename $GO_REMOTE_DOWNLOAD_URL)
+    local -r GVM_INSTALLER_URL="$RAW_GITHUB_URL/moovweb/gvm/master/binscripts/gvm-installer"
+
+    [[ $(command -v go) ]] || {
+        curl -fsSL $GO_REMOTE_DOWNLOAD_URL | tar -C $BIN_DIR -xzf - || {
+            log:error "Couldn't download and extract $GO_FILENAME archive"
+        }
+    }
+
+    [[ $(command -v gvm) ]] || {
+        GVM_NO_UPDATE_PROFILE=1 bash < <(curl -fsSL $GVM_INSTALLER_URL)
+    }
+
+    common::stop_spinner
+}
+
+function base::app_image_launcher() {
+
+    # https://github.com/TheAssassin/AppImageLauncher
+
+    common::start_spinner
+
+    [[ $(command -v appimagelauncherd) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r APP_IMAGE_LAUNCHER_VERSION=2.2.0
+    local -r APP_IMAGE_LAUNCHER_DEBIAN_REPOSITORY="ppa:appimagelauncher-team/stable"
+    local -r APP_IMAGE_LAUNCHER_GITHUB_RELEASE_BASE_URL="https://github.com/TheAssassin/AppImageLauncher/releases/download"
+    local -r APP_IMAGE_LAUNCHER_RPM_DOWNLOAD_URL="$APP_IMAGE_LAUNCHER_GITHUB_RELEASE_BASE_URL/v${APP_IMAGE_LAUNCHER_VERSION}/appimagelauncher-$APP_IMAGE_LAUNCHER_VERSION-travis995.0f91801.$(uname -m).rpm"
+
+    [[ -d $APPIMAGE_DIR ]] || mkdir -p $APPIMAGE_DIR
+
+    case $OS_NAME in
+    fedora | rhel | centos)
+        sudo rpm -i "${APP_IMAGE_LAUNCHER_RPM_DOWNLOAD_URL// /}"
+        ;;
+    xUbuntu)
+        # PPA is broken on Ubuntu >= 24.04:
+        if [[ "${OS_VERSION%.*}" -ge 24 ]]; then
+            log::info "Ubuntu PPA is broken on >=24.04, see: https://github.com/TheAssassin/AppImageLauncher/issues/634"
+            return 0
+        fi
+        sudo add-apt-repository -y "$APP_IMAGE_LAUNCHER_DEBIAN_REPOSITORY" >/dev/null
+        sudo apt-get update >/dev/null
+        sudo apt-get install -y appimagelauncher >/dev/null
+        ;;
+    *)
+        log::not_implemented
+        ;;
+    esac
+
+    common::stop_spinner
+}
+
+function base::neovim() {
+
+    # https://github.com/MordechaiHadad/bob
+
+    common::start_spinner
+
+    local -r LATEST_BOB_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/MordechaiHadad/bob/releases/latest" | jq -r '.tag_name')
+    local -r BOB_RELEASE_URL="https://github.com/MordechaiHadad/bob/releases/download/$LATEST_BOB_RELEASE_VERSION/bob-$OS-$(uname -m).zip"
+    local -r BOB_PACKAGE_FILENAME=$(basename $BOB_RELEASE_URL)
+
+    [[ $(command -v bob) ]] || {
+        curl -fsSLO --output-dir "$SANDBOX" "$BOB_RELEASE_URL"
+        unzip -qq "$SANDBOX/$BOB_PACKAGE_FILENAME" -d "$SANDBOX"
+        install "$SANDBOX/${BOB_PACKAGE_FILENAME%.*}/bob" "$BIN_DIR/bob"
+        bob use stable
+    }
+
+    local -r COLORSCRIPT_REPOSITORY_URL=https://gitlab.com/dwt1/shell-color-scripts.git
+    local -r COLORSCRIPT_REPOSITORY_BASENAME=$(basename $COLORSCRIPT_REPOSITORY_URL .git)
+
+    [[ $(command -v colorscript) ]] || (
+        git clone "$COLORSCRIPT_REPOSITORY_URL" "$SANDBOX/$COLORSCRIPT_REPOSITORY_BASENAME" &>/dev/null && cd $_ || {
+            log::error "Couldn't clone repository $COLORSCRIPT_REPOSITORY_URL"
+        }
+        sudo make install
+    )
+
+    common::stop_spinner
+}
+
+function base::fonts() {
+
+    common::start_spinner
+
+    local -rA NOTO_FONTS_PACKAGES=(
+        ["dnf"]="google-noto-sans-fonts google-noto-cjk-fonts google-noto-emoji-fonts google-noto-sans-symbols-fonts"
+        ["apt-get"]="fonts-noto-core fonts-noto-cjk fonts-noto-color-emoji "
+    )
+
+    sudo $PKG_MANAGER install -y ${NOTO_FONTS_PACKAGES[$PKG_MANAGER]} &>/dev/null
+
+    local -r POWERLINE_FONTS_REPOSITORY=https://github.com/powerline/fonts.git
+    local -r POWERLINE_FONTS_DIRNAME=$(basename $POWERLINE_FONTS_REPOSITORY .git)
+    local -r POWERLINE_FONTS_DESTINATION="$XDG_DATA_HOME/fonts/PowerLine"
+
+    local -r NERD_FONTS_LATEST_TAG=$(curl -s "https://api.github.com/repos/ryanoasis/nerd-fonts/tags" | jq -r '.[0].name')
+    local -r NERD_FONTS_RELEASE_BASE_URL=https://github.com/ryanoasis/nerd-fonts/releases/download
+    local -r NERD_FONTS_DESTINATION="$XDG_DATA_HOME/fonts/NerdFonts"
+
+    for NERD_FONT in "${NERD_FONTS_TO_INSTALL[@]}"; do
+        [[ -d "$NERD_FONTS_DESTINATION/$NERD_FONT" ]] && continue
+
+        mkdir -p "$NERD_FONTS_DESTINATION/$NERD_FONT" "$SANDBOX/$NERD_FONT"
+        curl -fsSL "$NERD_FONTS_RELEASE_BASE_URL/$NERD_FONTS_LATEST_TAG/$NERD_FONT.tar.xz" | tar -C "$SANDBOX/$NERD_FONT" -xJf - || {
+            log:error "Couldn't download and extract $NERD_FONT archive"
+        }
+        mv "$SANDBOX/$NERD_FONT"/*.ttf "$NERD_FONTS_DESTINATION/$NERD_FONT" && rm -rf "$SANDBOX/${NERD_FONT:?}"
+        fc-cache -f "$NERD_FONTS_DESTINATION/$NERD_FONT"
+
+    done
+
+    if [[ ! -d $POWERLINE_FONTS_DESTINATION ]]; then
+        git clone --depth 1 $POWERLINE_FONTS_REPOSITORY $SANDBOX/$POWERLINE_FONTS_DIRNAME &>/dev/null
+        sed -i "s|font_dir=\".*\"|font_dir=\"$POWERLINE_FONTS_DESTINATION\"|" "$SANDBOX/$POWERLINE_FONTS_DIRNAME/install.sh"
+
+        $SANDBOX/$POWERLINE_FONTS_DIRNAME/install.sh &>/dev/null || {
+            log::error "Couldn't install $POWERLINE_FONTS_REPOSITORY"
+        }
+    fi
+
+    common::stop_spinner
+}
+
+function base::alacritty() {
+
+    # https://alacritty.org/config-alacritty.html
+
+    common::start_spinner
+
+    local -r ALACRITTY_GH_REPOSITORY='https://github.com/alacritty/alacritty.git'
+    local -r ALACRITTY_DOWNLOAD_DIR="$SANDBOX/$(basename $ALACRITTY_GH_REPOSITORY .git)"
+    local -r ALACRITTY_RELEASE_BIN='target/release/alacritty'
+    local -r ALACRITTY_RELEASE_SVG_LOGO='extra/logo/alacritty-term.svg'
+    local -r ALACRITTY_RELEASE_DESKTOP_FILE='extra/linux/Alacritty.desktop'
+
+    local -rA ALACRITTY_OS_SPECIFIC_DEPENDENCIES=(
+        ["dnf"]="freetype-devel fontconfig-devel libxcb-devel libxkbcommon-devel"
+        ["apt-get"]="pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev"
+    )
+
+    local -ra ALACRITTY_BASE_DEPENDENCIES=(
+        cmake
+        g++
+    )
+
+    [[ $(command -v alacritty) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    # shellcheck disable=SC2206
+    local -ra ALACRITTY_DEPENDENCIES=(${ALACRITTY_OS_SPECIFIC_DEPENDENCIES[$PKG_MANAGER]} "${ALACRITTY_BASE_DEPENDENCIES[@]}")
+    sudo $PKG_MANAGER install -y "${ALACRITTY_DEPENDENCIES[@]}"
+    (
+        git clone --depth 1 $ALACRITTY_GH_REPOSITORY $ALACRITTY_DOWNLOAD_DIR && cd $_ || {
+            log::error "Couldn't clone alacritty github repository: $ALACRITTY_GH_REPOSITORY"
+        }
+        curl -fsS https://sh.rustup.rs | sh && {
+            # shellcheck source=/dev/null
+            source "$HOME/.cargo/env" && cargo build --release || {
+                log::error "Couldn't compile alacritty"
+            }
+        }
+        sudo cp "$ALACRITTY_RELEASE_BIN" "$BIN_DIR"
+        sudo cp "$ALACRITTY_RELEASE_SVG_LOGO" "$DESKTOP_APP_ICONS_DIR/Alacritty.svg"
+        sudo desktop-file-install $ALACRITTY_RELEASE_DESKTOP_FILE
+        sudo update-desktop-database
+    )
+
+    common::stop_spinner
+}
+
+function base::dir_colors() {
+
+    common::start_spinner
+
+    local -r LS_COLORS_FILENAME=lscolors.sh
+    local -r LS_COLORS_SUBMODULE_DIR="$REPOSITORY_DIR/modules/LS_COLORS"
+
+    [[ -f "$XDG_DATA_HOME/$LS_COLORS_FILENAME" ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    (
+        cd $LS_COLORS_SUBMODULE_DIR
+        sudo make generate
+        install $LS_COLORS_FILENAME $XDG_DATA_HOME/$LS_COLORS_FILENAME
+    )
+
+    common::stop_spinner
+}
+
+function base::rofi() {
+
+    # https://github.com/davatorium/rofi/blob/next/INSTALL.md
+
+    common::start_spinner
+
+    local -ra ROFI_DMENU_SCRIPTS=(
+        "$RAW_GITHUB_URL/jluttine/rofi-power-menu/master/rofi-power-menu"
+    )
+
+    for ROFI_DMENU_SCRIPT in "${ROFI_DMENU_SCRIPTS[@]}"; do
+        local MODULE_NAME=$(basename $ROFI_DMENU_SCRIPT)
+
+        [[ -f "$BIN_DIR/$MODULE_NAME" ]] && continue
+
+        curl -fsSLO --output-dir $SANDBOX $ROFI_DMENU_SCRIPT
+        install "$SANDBOX/$MODULE_NAME" "$BIN_DIR/$MODULE_NAME"
+    done
+
+    [[ $(command -v rofi) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -rA ROFI_OS_SPECIFIC_PACKAGES=(
+        ["dnf"]="alsa-lib-devel libmpdclient-devel pango-devel \
+            gdk-pixbuf2-devel startup-notification-devel cairo-devel \
+            libxkbcommon-devel libxkbcommon-x11-devel libxcb-devel \
+            xcb-util-devel xcb-util-wm-devel xcb-util-cursor-devel \
+            xcb-imdkit-devel xcb-util-keysyms-devel"
+        ["apt-get"]="libasound2-dev libmpdclient-dev libpango1.0-dev \
+            libgdk-pixbuf-2.0-dev libstartup-notification0-dev \
+            libcairo2-dev libxkbcommon-dev libxkbcommon-x11-dev libxcb1-dev \
+            libxcb-util-dev libxcb-ewmh-dev libxcb-cursor-dev \
+            libxcb-imdkit-dev libxcb-keysyms1-dev"
+    )
+
+    local -ra ROFI_BASE_PACKAGES=(
+        flex
+        meson
+        ninja-build
+    )
+
+    local -r ROFI_THEMES_REPOSITORY=https://github.com/newmanls/rofi-themes-collection.git
+    local -r ROFI_THEMES_DESTINATION_DIRECTORY="$XDG_DATA_HOME/rofi/themes"
+    local -r ROFI_THEMES_REPOSITORY_BASENAME=$(basename $ROFI_THEMES_REPOSITORY .git)
+
+    git clone --depth 1 "$ROFI_THEMES_REPOSITORY" "$SANDBOX/$ROFI_THEMES_REPOSITORY_BASENAME" &>/dev/null || {
+        log::error "Couldn't clone Rofi themes repository: $ROFI_THEMES_REPOSITORY"
+    }
+
+    cp -r $SANDBOX/$ROFI_THEMES_REPOSITORY_BASENAME/themes/* "$ROFI_THEMES_DESTINATION_DIRECTORY"
+
+    local -r LATEST_ROFI_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/davatorium/rofi/releases/latest" | jq -r '.tag_name')
+    local -r ROFI_RELEASE_URL="https://github.com/davatorium/rofi/releases/download/$LATEST_ROFI_RELEASE_VERSION/rofi-$LATEST_ROFI_RELEASE_VERSION.tar.gz"
+    local -r ROFI_PACKAGE_FILENAME=$(basename $ROFI_RELEASE_URL)
+
+    (
+        # shellcheck disable=SC2206
+        local -ra ROFI_DEPENDENCIES=(${ROFI_OS_SPECIFIC_PACKAGES[$PKG_MANAGER]} "${ROFI_BASE_PACKAGES[@]}")
+        sudo $PKG_MANAGER install -y "${ROFI_DEPENDENCIES[@]}" &>/dev/null
+
+        curl -fsSL $ROFI_RELEASE_URL | tar -xzf - -C $SANDBOX || {
+            log:error "Couldn't download and extract $ROFI_PACKAGE_FILENAME archive"
+        }
+
+        cd "$SANDBOX/$(basename $ROFI_PACKAGE_FILENAME .tar.gz)"
+
+        meson setup build --prefix "$(dirname $BIN_DIR)" -Dwayland=disabled &>/dev/null
+        ninja -C build &>/dev/null && ninja -C build install &>/dev/null || {
+            log::error "Couldn't compile and install Rofi"
+        }
+    )
+
+    common::stop_spinner
+}
+
+function base::albert() {
+
+    # https://albertlauncher.github.io/gettingstarted/install
+
+    common::start_spinner
+
+    local -r ALBERT_REPOSITORY_NAME="home:manuelschneid3r"
+    local -r ALBERT_REPOSITORY_BASE_URL=https://download.opensuse.org/repositories/$ALBERT_REPOSITORY_NAME
+    local -r VERSION_IDENTIFIER="${OS_NAME}_${OS_VERSION}"
+
+    function IS_OS_RELEASE_VERSION_SUPPORTED() {
+
+        local -r VERSION="$1"
+        local -r ALBERT_REPOSITORY_HTML=$(curl -fsSL "${ALBERT_REPOSITORY_BASE_URL/:m/:\/m}")
+        local -r OS_VERSIONS_SUPPORTED=$(grep -i "$OS_NAME" <<<$ALBERT_REPOSITORY_HTML)
+        local -r REGEXP="<a[^>]*>(.*?)</a>"
+
+        while IFS= read -r line; do
+            if [[ $line =~ $REGEXP ]]; then
+                local SUPPORTED_OS=$(echo ${BASH_REMATCH[1]/\//} | tr '[:upper:]' '[:lower:]' | cut -d'_' -f2)
+                [[ $SUPPORTED_OS == "$VERSION" ]] && return 0
+            fi
+        done <<<$OS_VERSIONS_SUPPORTED
+        return 1
+    }
+
+    [[ $(command -v albert) ]] && return 0
+
+    if ! IS_OS_RELEASE_VERSION_SUPPORTED $OS_VERSION; then
+        ! IS_OS_RELEASE_VERSION_SUPPORTED $((--OS_VERSION)) && {
+            log::warn "ALBERT is not supported neither with $((++OS_VERSION)) nor $OS_VERSION"
+            return 1
+        }
+    fi
+
+    case $OS_NAME in
+    fedora | rhel | centos)
+        local -r RHEL_ALBERT_REPOSITORY_URL="$ALBERT_REPOSITORY_BASE_URL/$VERSION_IDENTIFIER/$ALBERT_REPOSITORY_NAME.repo"
+        sudo $PKG_MANAGER config-manager addrepo --from-repofile $RHEL_ALBERT_REPOSITORY_URL &>/dev/null
+        sudo $PKG_MANAGER install -y albert >/dev/null
+        ;;
+    xUbuntu | debian)
+        local -r DEBIAN_ALBERT_REPOSITORY_URL="$ALBERT_REPOSITORY_BASE_URL/$VERSION_IDENTIFIER"
+        echo "deb $DEBIAN_ALBERT_REPOSITORY_URL/ /" | sudo tee "$APT_DATA_SOURCES_DIR/$ALBERT_REPOSITORY_NAME.list" >/dev/null
+        curl -fsSL "$DEBIAN_ALBERT_REPOSITORY_URL/Release.key" | gpg --dearmor | sudo tee "$APT_GPG_KEYS_DIR/${ALBERT_REPOSITORY_NAME/:/_}.gpg" >/dev/null
+        sudo $PKG_MANAGER update >/dev/null
+        sudo $PKG_MANAGER install -y albert >/dev/null
+        ;;
+    *)
+        log::not_implemented
+        ;;
+    esac
+
+    common::stop_spinner
+}
+
+function base::app_launcher() {
+
+    # shellcheck disable=SC2034
+    local -rA options=(
+        ["Albert"]="base::albert"
+        ["Rofi"]="base::rofi"
+    )
+    common::choose options "Choose an Application Launcher"
+}
+
+function base::wm_status_bar() {
+
+    # shellcheck disable=SC2034
+    local -rA options=(
+        ["Polybar"]="base::polybar"
+        ["Bumblebee"]="base::bumblebee"
+    )
+    common::choose options "Choose an Status Bar"
+}
+
+function base::polybar() {
+
+    # https://polybar.readthedocs.io
+
+    common::start_spinner
+
+    [[ $(command -v polybar) ]] && {
+        common::stop_spinner
+        return 0
+    }
+    if [[ ! -s "$UDEV_RULES_DIR/90-backlight.rules" ]]; then
+        awk '{$1=$1};1' <<-'EOF' | sudo tee "$UDEV_RULES_DIR/90-backlight.rules" >/dev/null
+            ACTION=="add", SUBSYSTEM=="backlight", RUN+="/bin/chgrp video $sys$devpath/brightness"
+            ACTION=="add", SUBSYSTEM=="backlight", RUN+="/bin/chmod g+w $sys$devpath/brightness"
+EOF
+    fi
+
+    sudo $PKG_MANAGER install -y polybar &>/dev/null
+    ln -sfn "$I3_CONFIG_DIR/i3bar/polybar" "$I3_CURRENT_STATUS_BAR_SYMLINK"
+
+    common::stop_spinner
+}
+
+function base::bumblebee() {
+
+    # https://bumblebee-status.readthedocs.io
+
+    common::start_spinner
+
+    [[ $(command -v bumblebee-status) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -rA OS_SPECIFIC_PACKAGES=(
+        ["dnf"]="python3-devel python3-tkinter"
+        ["apt-get"]="python3-dev python3-tk"
+    )
+    local -ra PIP_PACKAGES=(
+        bumblebee-status
+        psutil
+        netifaces
+    )
+
+    sudo $PKG_MANAGER install -y ${OS_SPECIFIC_PACKAGES[$PKG_MANAGER]} &>/dev/null
+    pip install --user "${PIP_PACKAGES[@]}" &>/dev/null
+    ln -sfn "$I3_CONFIG_DIR/i3bar/bumblebee-status" "$I3_CURRENT_STATUS_BAR_SYMLINK"
+
+    common::stop_spinner
+}
+
+function base::i3wm() {
+
+    # https://i3wm.org/docs
+
+    common::start_spinner
+
+    [[ $(command -v i3) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -ra I3_BASE_PACKAGES=(
+        blueman xss-lock picom
+        pavucontrol gnome-system-monitor
+        automake autoconf light maim
+        dunst i3 xbacklight wmctrl
+        asciidoc feh dunst papirus-icon-theme
+    )
+
+    local -rA OS_SPECIFIC_PACKAGES=(
+        ["dnf"]="network-manager-applet python3-devel python3-tkinter conky"
+        ["apt-get"]="network-manager python3-dev python3-tk conky-all"
+    )
+
+    # shellcheck disable=SC2206
+    local -ra I3_PACKAGES=(${OS_SPECIFIC_PACKAGES[$PKG_MANAGER]} "${I3_BASE_PACKAGES[@]}")
+    sudo $PKG_MANAGER install -y "${I3_PACKAGES[@]}" &>/dev/null
+
+    common::stop_spinner
+}
+
+function base::i3lock() {
+
+    # https://github.com/Raymo111/i3lock-color
+
+    common::start_spinner
+
+    [[ $(command -v i3lock) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r I3LOCK_COLOR_LATEST_TAG=$(curl -s "https://api.github.com/repos/Raymo111/i3lock-color/tags" | jq -r '.[0].name')
+    local -r I3LOCK_COLOR_REPOSITORY_URL=https://github.com/Raymo111/i3lock-color.git
+    local -r I3LOCK_COLOR_REPOSITORY_BASENAME=$(basename $I3LOCK_COLOR_REPOSITORY_URL .git)
+
+    local -rA I3LOCK_COLOR_OS_PACKAGES=(
+        ["dnf"]="pkgconf cairo-devel fontconfig libev-devel \
+            libjpeg-turbo-devel libXinerama libxkbcommon-devel libxkbcommon-x11-devel \
+            libXrandr pam-devel xcb-util-image-devel xcb-util-xrm-devel"
+        ["apt-get"]="pkg-config libpam0g-dev libcairo2-dev \
+            libfontconfig1-dev libxcb-composite0-dev libev-dev libx11-xcb-dev \
+            libxcb-xkb-dev libxcb-xinerama0-dev libxcb-randr0-dev libxcb-image0-dev \
+            libxcb-util0-dev libxcb-xrm-dev libxkbcommon-dev libxkbcommon-x11-dev \
+            libjpeg-dev libgif-dev"
+    )
+
+    sudo $PKG_MANAGER install -y ${I3LOCK_COLOR_OS_PACKAGES[$PKG_MANAGER]} &>/dev/null
+
+    (
+        git clone --depth 1 --branch "$I3LOCK_COLOR_LATEST_TAG" "$I3LOCK_COLOR_REPOSITORY_URL" "$SANDBOX/$I3LOCK_COLOR_REPOSITORY_BASENAME" &>/dev/null && cd $_ || {
+            log::error "Couldn't clone repository: $I3LOCK_COLOR_REPOSITORY_URL"
+        }
+        PREFIX=$(dirname $BIN_DIR) ./install-i3lock-color.sh &>/dev/null
+    )
+
+    common::stop_spinner
+}
+
+function cmd::terraform() {
+
+    # https://github.com/tofuutils/tofuenv
+
+    common::start_spinner
+
+    local -r TOFUENV_REPOSITORY=https://github.com/tofuutils/tofuenv.gi
+    local -r TOFUENV_INSTALL_DIR=$HOME/.tofuenv
+
+    [[ -d $TOFUENV_INSTALL_DIR ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    git clone --depth 1 $TOFUENV_REPOSITORY $TOFUENV_INSTALL_DIR &>/dev/null
+    ln -s $TOFUENV_INSTALL_DIR/bin/* $BIN_DIR
+    tofuenv install < <(tofuenv list-remote | head -n1) &>/dev/null
+
+    common::stop_spinner
+}
+
+function kube::kubectl() {
+
+    # https://github.com/flavio/kuberlr
+
+    common::start_spinner
+
+    [[ $(command -v kuberlr) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r KUBERLR_VERSION=$(curl -s https://api.github.com/repos/flavio/kuberlr/releases/latest | jq -r '.tag_name')
+    local -r KUBERLR_SHA256_DOWNLOAD_URL="https://github.com/flavio/kuberlr/releases/download/$KUBERLR_VERSION/checksums.txt"
+    local -r KUBERLR_SHA256_FILENAME=$(basename $KUBERLR_SHA256_DOWNLOAD_URL)
+    local -r KUBERLR_BIN_DOWNLOAD_URL="https://github.com/flavio/kuberlr/releases/download/$KUBERLR_VERSION/kuberlr_${KUBERLR_VERSION//v/}_${OS}_${ARCH}.tar.gz"
+    local -r KUBERLR_FILENAME=$(basename $KUBERLR_BIN_DOWNLOAD_URL)
+
+    curl -fsSLO --output-dir $SANDBOX $KUBERLR_SHA256_DOWNLOAD_URL
+    curl -fsSLO --output-dir $SANDBOX $KUBERLR_BIN_DOWNLOAD_URL
+
+    local -r KUBERLR_SHA256=$(grep $KUBERLR_FILENAME $SANDBOX/$KUBERLR_SHA256_FILENAME | cut -d' ' -f1)
+    echo $KUBERLR_SHA256 "$SANDBOX/$KUBERLR_FILENAME" | sha256sum --check || {
+        log::error "$KUBERLR_FILENAME checksum verification failed."
+    }
+
+    tar -xzf "$SANDBOX/$KUBERLR_FILENAME" -C $SANDBOX >/dev/null
+    install "$SANDBOX/$(basename $KUBERLR_FILENAME .tar.gz)/kuberlr" "$BIN_DIR/kuberlr"
+    ln -sfn $BIN_DIR/kuberlr $BIN_DIR/kubectl
+
+    common::stop_spinner
+}
+
+function cmd::podman() {
+
+    # https://podman.io/docs/installation
+
+    common::start_spinner
+
+    [[ $(command -v podman) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    sudo $PKG_MANAGER install -y podman >/dev/null
+
+    common::stop_spinner
+}
+
+function cmd::docker() {
+
+    # https://docs.docker.com/engine/install
+
+    common::start_spinner
+
+    [[ $(command -v docker) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    curl -fsSL https://get.docker.com | sudo sh &>/dev/null
+    sudo systemctl enable --now docker
+    sudo usermod -aG docker $USER
+
+    common::stop_spinner
+}
+
+function kube::kube_prompt() {
+
+    # https://github.com/c-bata/kube-prompt
+
+    common::start_spinner
+
+    local -r KUBEPROMPT_LATEST_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/c-bata/kube-prompt/releases/latest" | jq -r '.tag_name')
+    local -r KUBEPROMPT_RELEASE_URL="https://github.com/c-bata/kube-prompt/releases/download/$KUBEPROMPT_LATEST_RELEASE_VERSION/kube-prompt_${KUBEPROMPT_LATEST_RELEASE_VERSION}_${OS}_${ARCH}.zip"
+    local -r KUBEPROMPT_FILENAME=$(basename $KUBEPROMPT_RELEASE_URL)
+
+    [[ $(command -v kube-prompt) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    curl -fsSLO --output-dir $SANDBOX $KUBEPROMPT_RELEASE_URL
+    unzip -qq "$SANDBOX/$KUBEPROMPT_FILENAME" -d $SANDBOX
+    install "$SANDBOX/kube-prompt" "$BIN_DIR/kube-prompt"
+
+    common::stop_spinner
+}
+
+function base::python() {
+
+    # misc user-wide python packages
+
+    common::start_spinner
+
+    local -r ASTRAL_UV_INSTALLER_URL=https://astral.sh/uv/install.sh
+    local -r PYENV_INSTALLER_URL=https://pyenv.run
+    local -r PIP_TOOLCHAIN=(
+        pipx
+        pipenv
+        poetry
+        saws
+    )
+
+    pip install --user "${PIP_TOOLCHAIN[@]}" --break-system-packages &>/dev/null
+
+    [[ $(command -v pyenv) ]] || curl -fsSL $PYENV_INSTALLER_URL | bash &>/dev/null
+    [[ $(command -v uv) ]] || curl -fsSL $ASTRAL_UV_INSTALLER_URL | sh &>/dev/null
+
+    common::stop_spinner
+}
+
+function kube::rancher_desktop() {
+
+    # https://docs.rancherdesktop.io/getting-started/installation
+
+    common::start_spinner
+
+    local -r RANCHER_DESKTOP_DOWNLOAD_URL="https://download.opensuse.org/repositories/isv:/Rancher:/stable/AppImage/rancher-desktop-latest-$(uname -m).AppImage"
+    local -r RANCHER_DESKTOP_FILENAME=$(basename $RANCHER_DESKTOP_DOWNLOAD_URL)
+    local -r RANCHER_DEPENDENCIES=(
+        pass
+        gnupg2
+    )
+
+    sudo $PKG_MANAGER install -y "${RANCHER_DEPENDENCIES[@]}" >/dev/null
+
+    if [[ ! -f $APPIMAGE_DIR/$RANCHER_DESKTOP_FILENAME ]]; then
+        curl -fsSLO --output-dir $APPIMAGE_DIR $RANCHER_DESKTOP_DOWNLOAD_URL
+    fi
+
+    common::stop_spinner
+}
+
+function cmd::asdf() {
+
+    # https://asdf-vm.com/guide/getting-started.html
+
+    common::start_spinner
+
+    [[ $(command -v asdf) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r ASDF_LATEST_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | jq -r '.tag_name')
+    local -r ASDF_RELEASE_BASE_URL="https://github.com/asdf-vm/asdf/releases/download/$ASDF_LATEST_RELEASE_VERSION"
+    # shellcheck disable=SC2031
+    local -r ASDF_BIN_DOWNLOAD_URL="$ASDF_RELEASE_BASE_URL/asdf-${ASDF_LATEST_RELEASE_VERSION}-$OS-$ARCH.tar.gz"
+    local -r ASDF_TAR_FILENAME=$(basename $ASDF_BIN_DOWNLOAD_URL)
+    # shellcheck disable=SC2031
+    local -r ASDF_MD5_DOWNLOAD_URL="$ASDF_RELEASE_BASE_URL/asdf-${ASDF_LATEST_RELEASE_VERSION}-$OS-$ARCH.tar.gz.md5"
+    local -r ASDF_MD5_FILENAME=$(basename $ASDF_MD5_DOWNLOAD_URL)
+
+    curl -fsSLO --output-dir $SANDBOX $ASDF_BIN_DOWNLOAD_URL
+    curl -fsSLO --output-dir $SANDBOX $ASDF_MD5_DOWNLOAD_URL
+
+    EXPECTED_MD5_CHECKSUM=$(cat $SANDBOX/$ASDF_MD5_FILENAME)
+    GENERATED_MD5_CHECKSUM=$(md5sum $SANDBOX/$ASDF_TAR_FILENAME | cut -d' ' -f1)
+
+    [[ $GENERATED_MD5_CHECKSUM == "$EXPECTED_MD5_CHECKSUM" ]] || {
+        log::error "$ASDF_TAR_FILENAME checksum verification failed."
+    }
+    tar -xzf "$SANDBOX/$ASDF_TAR_FILENAME" -C $SANDBOX
+    install $SANDBOX/asdf $BIN_DIR/asdf
+
+    common::stop_spinner
+}
+
+function cmd::cloudlens() {
+
+    # https://one2n.gitbook.io/docs
+
+    common::start_spinner
+
+    [[ $(command -v cloudlens) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r CLOUDLENS_VERSION=$(curl -s "https://api.github.com/repos/one2nc/cloudlens/releases/latest" | jq -r '.tag_name')
+    local -r CLOUDLENS_REMOTE_CHECKSUMS="https://github.com/one2nc/cloudlens/releases/download/$CLOUDLENS_VERSION/checksums.txt"
+    local -r CLOUDLENS_URL_BIN="https://github.com/one2nc/cloudlens/releases/download/$CLOUDLENS_VERSION/cloudlens_${CLOUDLENS_VERSION/v/}_${OS}_${ARCH}.tar.gz"
+    local -r CLOUDLENS_CHECKSUMS_FILENAME=$(basename $CLOUDLENS_REMOTE_CHECKSUMS)
+    local -r CLOUDLENS_BIN_FILENAME=$(basename $CLOUDLENS_URL_BIN)
+
+    curl -fsSLO --output-dir $SANDBOX $CLOUDLENS_REMOTE_CHECKSUMS
+    curl -fsSLO --output-dir $SANDBOX $CLOUDLENS_URL_BIN
+
+    local -r CLOUDLENS_CHECKSUM=$(grep "${CLOUDLENS_BIN_FILENAME/v/}" "$SANDBOX/$CLOUDLENS_CHECKSUMS_FILENAME" | cut -d' ' -f1)
+
+    echo $CLOUDLENS_CHECKSUM $SANDBOX/$CLOUDLENS_BIN_FILENAME | sha256sum --check &>/dev/null || {
+        log::error "$CLOUDLENS_BIN_FILENAME checksum verification failed."
+    }
+
+    tar -xzf "$SANDBOX/$CLOUDLENS_BIN_FILENAME" -C $SANDBOX
+    install "$SANDBOX/cloudlens" "$BIN_DIR/cloudlens"
+
+    common::stop_spinner
+}
+
+function cmd::devbox() {
+
+    # https://jetify-com.vercel.app/docs/devbox/installing_devbox
+
+    common::start_spinner
+
+    [[ $(command -v devbox) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r DEVBOX_LATEST_VERSION=$(curl -s "https://api.github.com/repos/jetify-com/devbox/releases/latest" | jq -r '.tag_name')
+    local -r DEVBOX_RELEASE_URL="https://github.com/jetify-com/devbox/releases/download/$DEVBOX_LATEST_VERSION/devbox_${DEVBOX_LATEST_VERSION}_${OS}_${ARCH}.tar.gz"
+    local -r DEVBOX_CHECKSUMS_URL="https://github.com/jetify-com/devbox/releases/download/$DEVBOX_LATEST_VERSION/checksums.txt"
+    local -r DEVBOX_RELEASE_FILENAME=$(basename $DEVBOX_RELEASE_URL)
+    local -r DEVBOX_CHECKSUMS_FILENAME=$(basename $DEVBOX_CHECKSUMS_URL)
+
+    curl -fsSLO --output-dir $SANDBOX $DEVBOX_RELEASE_URL
+    curl -fsSLO --output-dir $SANDBOX $DEVBOX_CHECKSUMS_URL
+
+    local -r DEVBOX_UPSTREAM_CHECKSUM=$(grep $DEVBOX_RELEASE_FILENAME $SANDBOX/$DEVBOX_CHECKSUMS_FILENAME | cut -d' ' -f1)
+
+    echo $DEVBOX_UPSTREAM_CHECKSUM $SANDBOX/$DEVBOX_RELEASE_FILENAME | sha256sum --check &>/dev/null || {
+        log::error "$DEVBOX_RELEASE_FILENAME checksum verification failed."
+    }
+
+    tar -xzf $SANDBOX/$DEVBOX_RELEASE_FILENAME -C $SANDBOX
+    install "$SANDBOX/devbox" "$BIN_DIR/devbox"
+
+    common::stop_spinner
+}
+
+function base::stow() {
+
+    # https://www.gnu.org/software/stow/manual
+
+    common::start_spinner
+
+    [[ $(command -v stow) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r STOW_VERSION=2.4.1
+    local -r STOW_SOURCE_DOWNLOAD_URL="http://ftp.gnu.org/gnu/stow/stow-$STOW_VERSION.tar.gz"
+    local -r STOW_SOURCE_FILENAME=$(basename $STOW_SOURCE_DOWNLOAD_URL)
+    local -r STOW_EXTRACTED_FILENAME="${STOW_SOURCE_FILENAME//.tar.gz/}"
+    local -r STOW_GPG_SIGNATURE_DOWNLOAD_URL="http://ftp.gnu.org/gnu/stow/stow-$STOW_VERSION.tar.gz.sig"
+    local -r STOW_GPG_SIGNATURE_FILENAME=$(basename $STOW_GPG_SIGNATURE_DOWNLOAD_URL)
+    local -r GNU_GPG_KEYRING_DOWNLOAD_URL="http://ftp.gnu.org/gnu/gnu-keyring.gpg"
+
+    local -rA STOW_BASE_DEPENDENCIES=(
+        ["dnf"]="perl-Test-Simple perl-Test-Output perl-File-Copy"
+        ["apt-get"]="libtest-simple-perl libtest-output-perl libfile-ncopy-perl"
+    )
+
+    sudo $PKG_MANAGER install ${STOW_BASE_DEPENDENCIES[$PKG_MANAGER]} &>/dev/null
+
+    curl -fsS $GNU_GPG_KEYRING_DOWNLOAD_URL | gpg --import &>/dev/null
+    curl -fsSLO --output-dir $SANDBOX $STOW_SOURCE_DOWNLOAD_URL
+    curl -fsSLO --output-dir $SANDBOX $STOW_GPG_SIGNATURE_DOWNLOAD_URL
+
+    gpg --verify "$SANDBOX/$STOW_GPG_SIGNATURE_FILENAME" "$SANDBOX/$STOW_SOURCE_FILENAME" || {
+        log::error "Stow GPG signature couldn't be verified."
+    }
+    (
+        tar -xzf "$SANDBOX/$STOW_SOURCE_FILENAME" -C $SANDBOX && cd $SANDBOX/$STOW_EXTRACTED_FILENAME || {
+            log:error "Couldn't extract $STOW_EXTRACTED_FILENAME archive"
+        }
+
+        ./configure --prefix="$(basename $BIN_DIR)" && make install &>/dev/null || {
+            log:error "Couldn't compile and install $STOW_EXTRACTED_FILENAME"
+        }
+    )
+
+    common::stop_spinner
+}
+
+function base::nix() {
+
+    # https://nixos.org/download
+
+    common::start_spinner
+
+    [[ $(command -v nix) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r NIX_INSTALLER_URL=https://nixos.org/nix/install
+    # Multi-user installation - requires to have Selinux disabled
+    sh <(curl --proto '=https' --tlsv1.2 -L $NIX_INSTALLER_URL) --daemon
+
+    common::stop_spinner
+}
+
+function cmd::mise() {
+    # https://mise.jdx.dev/installing-mise.html#installation-methods
+
+    common::start_spinner
+
+    [[ $(command -v mise) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r MISE_INSTALLER_URL=https://mise.run
+    curl -fsSL $MISE_INSTALLER_URL | MISE_INSTALL_PATH="$BIN_DIR/mise" sh &>/dev/null
+
+    common::stop_spinner
+}
+
+function cmd::tldr() {
+
+    # https://github.com/tealdeer-rs/tealdeer
+
+    common::start_spinner
+
+    [[ $(command -v tldr) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r TLDR_LATEST_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/tealdeer-rs/tealdeer/releases/latest" | jq -r '.tag_name')
+    local -r TLDR_BIN_DOWNLOAD_URL="https://github.com/tealdeer-rs/tealdeer/releases/download/$TLDR_LATEST_RELEASE_VERSION/tealdeer-${OS}-$(uname -m)-musl"
+    local -r TLDR_SHA256_DOWNLOAD_URL="https://github.com/tealdeer-rs/tealdeer/releases/download/$TLDR_LATEST_RELEASE_VERSION/tealdeer-${OS}-$(uname -m)-musl.sha256"
+    local -r TLDR_BIN_FILENAME=$(basename $TLDR_BIN_DOWNLOAD_URL)
+    local -r TLDR_SHA256_FILENAME=$(basename $TLDR_SHA256_DOWNLOAD_URL)
+
+    curl -fsSLO --output-dir $SANDBOX $TLDR_BIN_DOWNLOAD_URL
+    curl -fsSLO --output-dir $SANDBOX $TLDR_SHA256_DOWNLOAD_URL
+
+    local -r TLDR_SHA256=$(grep $TLDR_BIN_FILENAME $SANDBOX/$TLDR_SHA256_FILENAME | cut -d' ' -f1)
+
+    echo "$TLDR_SHA256" "$SANDBOX/$TLDR_BIN_FILENAME" | sha256sum --check &>/dev/null || {
+        log::error "$TLDR_BIN_FILENAME checksum verification failed."
+
+    }
+
+    install "$SANDBOX/$TLDR_BIN_FILENAME" "$BIN_DIR/tldr"
+
+    common::stop_spinner
+}
+
+function base() {
+    base::packages
+    base::ueberzugpp
+    base::python
+    base::tmux
+    base::nvm
+    base::gvm
+    base::app_launcher
+    base::neovim
+    base::fonts
+    base::alacritty
+    base::dir_colors
+    base::i3wm
+    base::i3lock
+    base::wm_status_bar
+    base::stow
+}
+
+function cmd() {
+    cmd::mise
+    cmd::terraform
+    cmd::asdf
+    cmd::cloudlens
+    cmd::podman
+    cmd::docker
+    cmd::tldr
+}
+
+function kube() {
+    kube::kubectl
+    kube::kube_prompt
+}
+
+function main() {
+    main::setup
+    base
+    cmd
+    kube
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    PKG_MANAGER=$(common::package_manager)
+    main
+fi

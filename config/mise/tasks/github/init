@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+#MISE hide=true
+
+readonly GH_CLI_TOKEN_FILE="$HOME/.GITHUB_TOKEN"
+
+readonly GITHUB_CLI_EXTENSIONS=(
+    "meiji163/gh-notify"
+)
+
+if [[ -s $GH_CLI_TOKEN_FILE && -z $GITHUB_TOKEN ]]; then
+    gh auth login --with-token <"$GH_CLI_TOKEN_FILE"
+    for GITHUB_CLI_EXTENSION in "${GITHUB_CLI_EXTENSIONS[@]}"; do
+        gh extension install "$GITHUB_CLI_EXTENSION"
+    done
+fi

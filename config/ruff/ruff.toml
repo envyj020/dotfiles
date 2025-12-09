@@ -1,0 +1,82 @@
+# https://docs.astral.sh/ruff/rules
+
+line-length = 90
+indent-width = 4
+
+[format]
+indent-style = "space"
+quote-style = "double"
+line-ending = "auto"
+skip-magic-trailing-comma = false
+
+[lint]
+extend-select = [
+  "E",     # Pycodestyle errors
+  "W",     # Pycodestyle warnings
+  "C90",   # McCabe
+  "I",     # isort
+  "N",     # PEP8 Naming
+  "D",     # Pydocstyle
+  "UP",    # Pyupgrade
+  "YTT",   # Flake8-2020
+  "ASYNC", # Flake8-async
+  "S",     # Flake8-bandit
+  "BLE",   # Flake8-blind-except
+  "FBT",   # Flake8-boolean-trap
+  "B",     # Flake8-bugbear
+  "A",     # Flake8-builtins
+  "COM",   # Flake8-commas
+  "C4",    # Flake8-comprehensions
+  "DTZ",   # Flake8-datetimez
+  "T10",   # Flake8-debugger
+  "DJ",    # Flake8-django
+  "EM",    # Flake8-errmsg
+  "EXE",   # Flake8-executable
+  "FA",    # Flake8-future-annotations
+  "ISC",   # Flake8-implicit-str-concat
+  "ICN",   # Flake8-import-conventions
+  "LOG",   # Flake8-logging
+  "G",     # Flake8-logging-format
+  "INP",   # Flake8-no-pep420
+  "PIE",   # Flake8-pie
+  "PYI",   # Flake8-pyi
+  "PT",    # Flake8-pytest-style
+  "Q",     # Flake8-quotes
+  "RSE",   # Flake8-raise
+  "RET",   # Flake8-return
+  "SLF",   # Flake8-self
+  "SLOT",  # Flake8-slots
+  "SIM",   # Flake8-simplify
+  "TID",   # Flake8-tidy-imports
+  "TC",    # Flake8-type-checking
+  "INT",   # Flake8-gettext
+  "ARG",   # Flake8-unused-arguments
+  "PTH",   # Flake8-use-pathlib
+  "TD",    # Flake8-todos
+  "FIX",   # Flake8-fixme
+  "PD",    # Pandas-vet
+  "PGH",   # Pygrep-hooks
+  "PL",    # Pylint
+  "TRY",   # Tryceratops
+  "FLY",   # Flynt
+  "NPY",   # NumPy-specific rules
+  "FAST",  # FastAPI
+  "AIR",   # Airflow
+  "PERF",  # Perflint
+  "FURB",  # Refurb
+  "RUF",   # Ruff-specific rules
+]
+ignore = [
+  "E501",    # Pycodestyle
+  "D1",      # Pydocstyle
+  "FBT003",  # Flake8-boolean-trap
+  "D203",    # Pydocstyle
+  "D212",    # Pydocstyle
+  "D401",    # Pydocstyle
+  "S311",    # Flake8-bandit
+  "PERF401", # Perflint
+  "RET504",  # Flake8-return
+  "FA102",   # Flake8-future-annotations
+  "TRY003",  # Tryceratops
+  "EM101",   # Flake8-errmsg
+]

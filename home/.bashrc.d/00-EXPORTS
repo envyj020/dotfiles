@@ -1,0 +1,94 @@
+# vim: set ft=sh:
+# shellcheck disable=SC2155,SC1091
+
+export PYTHONIOENCODING='UTF-8'
+
+export FZF_COMPLETION_TRIGGER='**'
+
+FZF_EXCLUDE_DIRS=(
+    .git .svn .idea .vscode node_modules
+    target build out dist out-tsc .venv venv
+    charts vendor __pycache__
+)
+export FZF_DEFAULT_COMMAND="rg --files -. --no-ignore-vcs --sort path -g '!{$(printf "%s," "${FZF_EXCLUDE_DIRS[@]}" | sed 's/,$//')}'"
+export FZF_DEFAULT_OPTS='--height=40% --layout=reverse --info=inline --border --margin=1 --padding=1'
+
+export LANGUAGE=en_US.UTF-8
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+
+export VISUAL=nvim
+export EDITOR="$VISUAL"
+export TZ="Europe/Madrid"
+export TERM=xterm-256color
+export MANPAGER='nvim +Man!'
+export PAGER=less
+
+export NVIM_COLORSCHEME='catppuccin-mocha'
+export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
+
+export BAT_CONFIG_DIR="$XDG_CONFIG_HOME/bat"
+export BAT_CONFIG_PATH="$BAT_CONFIG_DIR/bat.conf"
+
+export EZA_COLUMNS=80
+export EZA_ICONS_AUTO=true
+export EZA_ICON_SPACING=1
+
+export LESS='-R'
+export LESS_COLOR_mb='bo;fg=red'
+export LESS_COLOR_md='bo;fg=red'
+export LESS_COLOR_so='bo;fg=yellow;bg=blue'
+export LESS_COLOR_us='ul;bo;fg=green'
+export LESS_COLOR_mr='rv'
+export LESS_COLOR_mh='di'
+export LESS_TERMCAP_ZN="$(tput ssubm)"
+export LESS_TERMCAP_ZV="$(tput rsubm)"
+export LESS_TERMCAP_ZO="$(tput ssupm)"
+export LESS_TERMCAP_ZW="$(tput rsupm)"
+
+export WORKSPACE="$HOME/workspace"
+export PIPENV_VENV_IN_PROJECT=1
+export PYENV_ROOT="$HOME/.pyenv"
+export NVM_DIR="$HOME/.nvm"
+
+export PROMPT_DIRTRIM=5
+export HISTCONTROL=ignoreboth
+export HISTSIZE='32768'
+export HISTFILESIZE="${HISTSIZE}"
+
+[ -s "$HOME/.GITHUB_TOKEN" ] && export GITHUB_TOKEN=$(<"$HOME/.GITHUB_TOKEN")
+[ -s "$HOME/.ANTHROPIC_TOKEN" ] && export ANTHROPIC_API_KEY=$(<"$HOME/.ANTHROPIC_TOKEN")
+[ -s "$HOME/.GEMINI_TOKEN" ] && export GEMINI_API_KEY=$(<"$HOME/.GEMINI_TOKEN")
+
+[ -s "$XDG_DATA_HOME/lscolors.sh" ] && source "$XDG_DATA_HOME/lscolors.sh"
+
+declare -a BIN=(
+    "$HOME/bin"
+    "$WORKSPACE/bin"
+    "$XDG_DATA_HOME/nvim/mason/bin"
+    "$XDG_DATA_HOME/bob/nvim-bin"
+    "$HOME/.local/bin/go/bin"
+    "$HOME/go/bin"
+    "$HOME/.local/bin"
+    "$HOME/.cargo/bin"
+    "$HOME/.krew/bin"
+    "$HOME/.rd/bin"
+    "$HOME/.asdf/shims"
+    "$HOME/.nix-profile"
+    "$HOME/.lmstudio/bin"
+    "$PYENV_ROOT/bin"
+    "/usr/local/bin"
+    "/usr/local/sbin"
+    "/bin"
+    "/usr/bin"
+    "/usr/sbin"
+    "/sbin"
+    "/snap/bin"
+    "/var/lib/snapd/snap/bin"
+)
+
+export PATH="$(printf "%s:" "${BIN[@]}" | sed 's/:$//')"
+unset BIN FZF_EXCLUDE_DIRS

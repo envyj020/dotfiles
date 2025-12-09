@@ -1,0 +1,53 @@
+$include /etc/inputrc
+
+# \e[1;2C = Shift+Right-Arrow
+# \e[1;2D = Shift+Left-Arrow
+# \e[1;5A = Ctrl+Up-Arrow
+
+"\C-p":history-search-backward
+"\C-n":history-search-forward
+"\C-w":backward-kill-word
+"\C-k":kill-line
+"\C-l":clear-screen
+"\C-f":transpose-chars
+"\e[1;2C":forward-word
+"\e[1;2D":backward-word
+"\e[1;5A":"cd ..\n"
+
+# Turns on Vi mode on shell instead of the default Emacs mode
+
+# set editing-mode vi
+# set show-mode-in-prompt on
+# set vi-ins-mode-string \1\e[34;1m\2>\1\e[0m\2
+# set vi-cmd-mode-string \1\e[33;1m\2>\1\e[0m\2
+
+# Don't bell on tab completion
+set bell-style none
+# sets readline to display possible completions using different colors to indicate their file types
+set colored-stats On
+# sets auto completion to ignore cases
+set completion-ignore-case On
+# Do not autocomplete hidden files unless the pattern explicitly begins with a dot
+set match-hidden-files Off
+# sets 3 to be the maximum number of characters to be the common prefix to display for completions
+set completion-prefix-display-length 3
+# sets every completion which is a symbolic link to a directory to have an @ appended
+set mark-symlinked-directories On
+# sets the completions to be listed immediately instead of ringing the bell, when the completing word has more than one possible completion
+set show-all-if-ambiguous On
+# sets the completions to be listed immediately instead of ringing the bell, when the completing word has more than one possible completion but no partial completion can be made
+set show-all-if-unmodified On
+# Preserve cursor position when navigating through the command history
+set history-preserve-point on
+# sets completions to be appended by characters that indicate their file types reported by the stat system call
+set visible-stats On
+# Smart autocomplete when cursor is between a word
+set skip-completed-text on
+# Show all autocomplete results at once
+set page-completions off
+# If there are more than 200 possible completions for a word, ask to show them all
+set completion-query-items 200
+# Allow UTF-8 input and output, instead of showing stuff like $'\0123\0456'
+set input-meta on
+set output-meta on
+set convert-meta off

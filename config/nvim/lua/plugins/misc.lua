@@ -1,0 +1,90 @@
+local renamer_u = require("renamer.mappings.utils")
+
+require("renamer").setup({
+    title = "Rename",
+    padding = {
+        top = 0,
+        left = 0,
+        bottom = 0,
+        right = 0,
+    },
+    min_width = 15,
+    max_width = 45,
+    border = true,
+    border_chars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+    show_refs = true,
+    with_qf_list = true,
+    with_popup = true,
+
+    --- @diagnostic disable-next-line: assign-type-mismatch
+    mappings = {
+        ["<c-i>"] = renamer_u.set_cursor_to_start,
+        ["<c-a>"] = renamer_u.set_cursor_to_end,
+        ["<c-e>"] = renamer_u.set_cursor_to_word_end,
+        ["<c-b>"] = renamer_u.set_cursor_to_word_start,
+        ["<c-c>"] = renamer_u.clear_line,
+        ["<c-u>"] = renamer_u.undo,
+        ["<c-r>"] = renamer_u.redo,
+    },
+    --- @diagnostic disable-next-line: assign-type-mismatch
+    handler = nil,
+})
+
+require("twilight").setup()
+
+require("dressing").setup({
+    input = {
+        enabled = true,
+        relative = "win",
+    },
+})
+
+require("schema-companion").setup({
+    formatting = false,
+    enable_telescope = true,
+    matchers = {
+        require("schema-companion.matchers.kubernetes").setup({ version = "v1.32.4" }),
+    },
+})
+
+require("nvim-toc").setup({
+    toc_header = "Table of contents",
+})
+
+require("render-markdown").setup({
+    completions = { lsp = { enabled = true } },
+    latext = { enabled = false },
+    file_types = { "markdown", "norg", "rmd", "org", "codecompanion", "quarto", "vimwiki" },
+    render_modes = { "n", "c", "t" },
+    heading = {
+        position = "inline",
+    },
+})
+
+require("urlview").setup({
+    default_title = "Links:",
+    default_picker = "telescope",
+    default_prefix = "https://",
+    navigate_method = "system",
+    unique = true,
+    sorted = true,
+    debug = false,
+    -- NOTE: captures follow Lua pattern matching (https://riptutorial.com/lua/example/20315/lua-pattern-matching)
+    custom_searches = {
+        -- KEY: search source name
+        -- VALUE: custom search function or table (map with keys capture, format)
+        jira = {
+            capture = "JIRA%-%d+",
+            format = "https://jira.xxxx.com/browse/%s",
+        },
+    },
+})
+
+require("cutlass").setup({
+    cut_key = "x",
+    registers = {
+        select = "_",
+        delete = "_",
+        change = "_",
+    },
+})

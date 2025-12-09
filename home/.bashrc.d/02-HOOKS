@@ -1,0 +1,43 @@
+# vim: set ft=sh:
+# shellcheck disable=SC1091,SC1090,SC2046
+
+# Running bash in non-POSIX mode
+if ! shopt -oq posix; then
+    if [ -f /usr/share/bash-completion/bash_completion ]; then
+        source /usr/share/bash-completion/bash_completion
+    elif [ -f /etc/bash_completion ]; then
+        source /etc/bash_completion
+    fi
+fi
+
+# ENTRYPOINTS/SHIMS
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+[ -s "$HOME/.gvm/scripts/gvm" ] && source "$HOME/.gvm/scripts/gvm"
+
+# COMPLETIONS
+[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+
+command_exists 'kubectl' 'yq' && {
+    yq -e '.clusters | length > 0' ~/.kube/config &>/dev/null && {
+        source <(kubectl completion bash)
+        complete -F __start_kubectl k
+    }
+}
+
+command_exists 'asdf' && source <(asdf completion bash)
+command_exists 'task' && source <(task --completion bash)
+command_exists 'helm' && source <(helm completion bash)
+command_exists 'krew' && source <(krew completion bash)
+command_exists 'yq' && source <(yq completion bash)
+command_exists 'bob' && source <(bob complete bash)
+command_exists 'fzf' && source <(fzf --bash)
+command_exists 'aws_completer' && complete -C $(which aws_completer) aws
+command_exists 'mise' 'usage' && source <(mise completion bash --include-bash-completion-lib)
+
+# HOOKS
+command_exists 'pyenv' && eval "$(pyenv init - bash)"
+command_exists 'pyenv' && eval "$(pyenv virtualenv-init -)"
+command_exists 'mise' && eval "$(mise activate bash)"
+command_exists 'starship' && eval "$(starship init bash)"
+command_exists 'direnv' && eval "$(direnv hook bash)"
+command_exists 'zoxide' && eval "$(zoxide init bash)"

@@ -1,0 +1,70 @@
+// https://github.com/davatorium/rofi/blob/next/CONFIG.md
+
+@theme "rounded-nord-dark"
+
+* {
+    base0:    #1e1e2e;
+    base1:    #242537;
+    surface0: #313244;
+    surface1: #45475a;
+    surface2: #585b70;
+    overlay0: #6c7086;
+    overlay1: #7f849c;
+    overlay2: #9399b2;
+    subtext0: #a6adc8;
+    subtext1: #bac2de;
+    font: "JetBrainsMonoNL Nerd Font 14";
+}
+
+window {
+    y-offset: calc(10% + 50px);
+    background-color: @base1;
+}
+
+inputbar {
+    border-color: @surface2;
+}
+
+element selected normal, element selected active {
+    background-color:   @overlay0;
+}
+
+element selected {
+    text-color: @base0;
+}
+
+configuration {
+    modes: "window,drun,run,ssh,filebrowser,combi";
+    combi-modes: "window,drun,run,ssh,filebrowser";
+    show-icons: true;
+    location: 2;
+    lines: 5;
+    case-sensitive: false;
+    fixed-num-lines: true;
+    display-window: "";
+    display-windowcd: "";
+    display-run: "";
+    display-ssh: "";
+    display-drun: "";
+    display-combi: "";
+    display-keys: "";
+    parse-hosts: false;
+    parse-known-hosts: true;
+    run,drun {
+        fallback-icon: "application-x-addon";
+    }
+    filebrowser {
+        fallback-icon: "text-x-generic";
+    }
+    ssh {
+        fallback-icon: "face-monkey-symbolic";
+    }
+    timeout {
+        delay:  15;
+        action: "kb-cancel";
+    }
+     filebrowser {
+         directories-first: true;
+         sorting-method:    "name";
+    }
+}

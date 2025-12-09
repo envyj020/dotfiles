@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+#MISE hide=true
+
+readonly KREW_PLUGINS=(
+    grep
+    ktop
+    commander
+    cyclonus
+    dumpy
+    explore
+    foreach
+    kc
+    kor
+    neat
+    popeye
+    sniff
+    resource-capacity
+    access-matrix
+    deprecations
+)
+
+krew install "${KREW_PLUGINS[@]}" &>/dev/null

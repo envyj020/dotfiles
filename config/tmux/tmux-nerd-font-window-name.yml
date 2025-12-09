@@ -1,0 +1,6 @@
+---
+config:
+  show-name: false
+  icon-position: "left"
+icons:
+  kubectl-kc: "󱃾"

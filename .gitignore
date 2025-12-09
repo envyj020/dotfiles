@@ -1,0 +1,6 @@
+config/albert/*
+!config/albert/config
+config/yazi/plugins
+config/yazi/bookmarks
+config/tmux/plugins
+config/i3/i3-bar

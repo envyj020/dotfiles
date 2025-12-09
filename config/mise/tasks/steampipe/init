@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+#MISE hide=true
+
+readonly STEAMPIPE_PLUGINS=(
+    steampipe
+    grafana
+    prometheus
+    terraform
+    theapsgroup/vault
+    kubernetes
+    docker
+    github
+    gcp
+    aws
+)
+
+steampipe plugin install "${STEAMPIPE_PLUGINS[@]}"

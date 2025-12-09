@@ -1,0 +1,164 @@
+# vim:fileencoding=utf-8:ft=conf:foldmethod=marker
+
+#: General {{{
+#: https://alacritty.org/config-alacritty.html#general
+
+[general]
+working_directory = "~"
+live_config_reload = true
+
+#: }}}
+
+#: Colors {{{
+#: https://alacritty.org/config-alacritty.html#colors
+
+[colors.primary]
+background = '#1e1e2e'
+foreground = '#cdd6f4'
+
+[colors.normal]
+black = '#15161e'
+red = '#f7768e'
+green = '#9ece6a'
+yellow = '#e0af68'
+blue = '#7aa2f7'
+magenta = '#bb9af7'
+cyan = '#7dcfff'
+white = '#a9b1d6'
+
+[colors.bright]
+black = '#414868'
+red = '#ff899d'
+green = '#9fe044'
+yellow = '#faba4a'
+blue = '#8db0ff'
+magenta = '#c7a9ff'
+cyan = '#a4daff'
+white = '#c0caf5'
+
+[colors]
+transparent_background_colors = false
+indexed_colors = [
+    { index = 16, color = '#ff9e64' },
+    { index = 17, color = '#db4b4b' }
+]
+
+#: }}}
+
+#: Fonts {{{
+#: https://alacritty.org/config-alacritty.html#font
+
+[font]
+size = 10
+
+[font.normal]
+family = "JetBrainsMonoNL Nerd Font"
+style = "Regular"
+
+[font.bold]
+family = "JetBrainsMonoNL Nerd Font"
+style = "Bold"
+
+[font.italic]
+family = "JetBrainsMonoNL Nerd Font"
+style = "Italic"
+
+[font.bold_italic]
+family = "JetBrainsMonoNL Nerd Font"
+style = "Bold Italic"
+
+[font.glyph_offset]
+x = 0
+y = 0
+
+[font.offset]
+x = 0
+y = 0
+
+#: }}}
+
+#: Window {{{
+#: https://alacritty.org/config-alacritty.html#window
+
+[window]
+decorations = "Transparent"
+startup_mode = "Maximized"
+dynamic_padding = false
+dynamic_title = true
+opacity = 0.99
+
+[window.dimensions]
+columns = 0
+lines = 0
+
+[window.padding]
+x = 5
+y = 0
+
+[window.position]
+x = 0
+y = 0
+
+#: }}}
+
+#: Mouse {{{
+#: https://alacritty.org/config-alacritty.html#mouse
+
+[mouse]
+hide_when_typing = true
+
+#: }}}
+
+#: Cursor {{{
+#: https://alacritty.org/config-alacritty.html#cursor
+
+[cursor]
+unfocused_hollow = true
+blink_interval = 500
+blink_timeout = 0
+thickness = 0.25
+
+[cursor.vi_mode_style]
+shape = "Block"
+blinking = "Off"
+
+[cursor.style]
+shape = "Beam"
+blinking = "Always"
+
+#: }}}
+
+#: Scrolling {{{
+#: https://alacritty.org/config-alacritty.html#scrolling
+
+[scrolling]
+history = 15000
+multiplier = 20
+
+#: }}}
+
+#: Selection {{{
+#: https://alacritty.org/config-alacritty.html#selection
+
+[selection]
+save_to_clipboard = true
+semantic_escape_chars = ''',│`|:"' ()[]{}<>='''
+
+#: }}}
+
+#: Environment {{{
+#: https://alacritty.org/config-alacritty.html#env
+
+[env]
+TERM = "xterm-256color"
+WINIT_X11_SCALE_FACTOR = "1.0"
+
+#: }}}
+
+#: Bell {{{
+#: https://alacritty.org/config-alacritty.html#bell
+
+[bell]
+duration = 0
+
+#: }}}
