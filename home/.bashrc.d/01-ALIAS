@@ -37,11 +37,6 @@ alias knet='kubectl run -it --rm net \
     --image=praqma/network-multitool \
     --restart=Never -- /bin/bash'
 
-alias screenx='xrandr \
-    --output eDP-1 --primary --mode 1920x1080 \
-    --output HDMI-1-2 --mode 1920x1080 --left-of eDP-1 \
-    --output DP-1 --mode 1920x1080 --right-of eDP-1'
-
 function command_exists() {
     for cmd in "$@"; do
         command -v "$cmd" &>/dev/null

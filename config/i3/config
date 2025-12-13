@@ -216,11 +216,7 @@ exec_always --no-startup-id setxkbmap -layout es,us -option grp:win_space_toggle
 exec --no-startup-id picom
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
-
-# screen layout
-exec --no-startup-id xrandr --output eDP-1 --primary --mode 1920x1080 \
-    --output HDMI-1-2 --mode 1920x1080 --left-of eDP-1 \
-    --output DP-1 --mode 1920x1080 --right-of eDP-1
+exec --no-startup-id autorandr --change
 
 # i3 status bar
 include i3-bar
