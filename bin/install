@@ -548,6 +548,7 @@ function base::bumblebee() {
     local -ra PIP_PACKAGES=(
         bumblebee-status
         psutil
+        xkbgroup
         netifaces
     )
 
