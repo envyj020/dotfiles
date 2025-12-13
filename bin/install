@@ -51,8 +51,8 @@ function base::packages() {
     local -ra BASE_PACKAGES=(
         python3 python3-pip fd-find git-lfs ibus-m17n
         coreutils binutils mercurial ffmpeg zoxide
-        p7zip unzip xclip make bison wget2 curl
-        arandr tmux rpm gcc jq btop fastfetch
+        p7zip unzip xclip make bison wget2 curl arandr
+        autorandr tmux rpm gcc jq btop fastfetch
     )
 
     # shellcheck disable=SC2206
