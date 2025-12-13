@@ -73,7 +73,6 @@ for_window [class="krunner"] floating enable, border none
 for_window [class="Kmix"] floating enable, border none
 for_window [class="Klipper"] floating enable, border none
 for_window [class="Plasmoidviewer"] floating enable, border none
-for_window [class="(?i)*nextcloud*"] floating disable
 for_window [class="plasmashell" window_type="notification"] floating enable; border none
 for_window [window_role="pop-up"] floating enable; border none
 no_focus [class="plasmashell" window_type="notification"]
@@ -212,11 +211,11 @@ bindsym $mod+a focus parent
 # exec
 exec_always --no-startup-id wmctrl -c Plasma
 exec_always --no-startup-id feh --bg-fill ~/Pictures/aesthetic.jpg
+exec_always --no-startup-id setxkbmap -layout es,us -option grp:win_space_toggle
 
 exec --no-startup-id picom
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
-exec --no-startup-id setxkbmap -layout es,us -option 'grp:alt_shift_toggle'
 
 # screen layout
 exec --no-startup-id xrandr --output eDP-1 --primary --mode 1920x1080 \
