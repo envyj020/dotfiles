@@ -29,21 +29,21 @@ mise: stow ## Installs system-wide mise packages
 
 .PHONY: mise
 
-stow-check:
+chk-stow:
 	command -v stow &>/dev/null || { \
-		echo -e "$(RED)stow not found in your PATH, either install it or run$(NC) $(GREEN)make base$(NC)"; \
+		echo -e "$(RED)stow not found, run$(NC) $(GREEN)make base$(NC)"; \
 		exit 1; \
 	}
 
-.PHONY: stow-check
+.PHONY: chk-stow
 
-stow: stow-check init ## Symlinks dotfiles
+stow: chk-stow init ## Symlinks dotfiles
 	stow home -t $(HOME)
 	stow config -t $(HOME)/.config
 
 .PHONY: stow
 
-unstow: stow-check ## Removes dotfiles symlinks
+unstow: chk-stow ## Removes dotfiles symlinks
 	stow -D home -t $(HOME)
 	stow -D config -t $(HOME)/.config
 
