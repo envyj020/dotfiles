@@ -34,6 +34,7 @@ export BAT_CONFIG_DIR="$XDG_CONFIG_HOME/bat"
 export BAT_CONFIG_PATH="$BAT_CONFIG_DIR/bat.conf"
 
 export MOST_EDITOR='nvim +%d %s'
+export MOST_INITFILE="$XDG_CONFIG_HOME/most/mostrc"
 
 export EZA_COLUMNS=80
 export EZA_ICONS_AUTO=true
