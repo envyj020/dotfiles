@@ -50,40 +50,17 @@ floating_modifier $mod
 focus_follows_mouse no
 smart_borders on
 
+# Reference: https://userbase.kde.org/Tutorials/Using_Other_Window_Managers_with_Plasma
+
 # window rules
-
-# avoid tiling popups, dropdown windows...
-for_window [class="plasmashell"] floating enable
-for_window [class="Plasma"] floating enable
-for_window [class="krunner"] floating enable
-for_window [class="Kmix"] floating enable
-for_window [class="Klipper"] floating enable
-for_window [class="Plasmoidviewer"] floating enable
-for_window [class="Blueman-manager"] floating enable
-for_window [class="Wireshark"] floating enable
-for_window [title="Desktop — Plasma"] kill
-
-# From wiki https://userbase.kde.org/Tutorials/Using_Other_Window_Managers_with_Plasma
-for_window [title="Desktop — Plasma"] kill, floating enable, border none
-for_window [class="plasmashell"] floating enable
-for_window [class="Plasma"] floating enable, border none
-for_window [title="plasma-desktop"] floating enable, border none
-for_window [title="win7"] floating enable, border none
-for_window [class="krunner"] floating enable, border none
-for_window [class="Kmix"] floating enable, border none
-for_window [class="Klipper"] floating enable, border none
-for_window [class="Plasmoidviewer"] floating enable, border none
-for_window [class="plasmashell" window_type="notification"] floating enable; border none
-for_window [window_role="pop-up"] floating enable; border none
-no_focus [class="plasmashell" window_type="notification"]
-
-for_window [class="Albert"] border none
-for_window [class="zoom"] floating enable; border none
-for_window [class="VirtualBox Manager"] floating enable; border none
+for_window [class="(?i)blueman-manager"] floating enable
+for_window [class="(?i)wireshark"] floating enable
+for_window [class="(?i)albert"] border none
+for_window [class="(?i)zoom"] floating enable; border none
 
 # Workspace app assignment - case sensitive: check: xprop | grep CLASS
-assign [class="firefox"] $ws2
-assign [class="zoom"] $ws3
+assign [class="(?i)firefox"] $ws2
+assign [class="(?i)zoom"] $ws3
 
 # Workspace screen assignment
 workspace $ws1 output eDP-1
