@@ -1,5 +1,5 @@
 # vim: set ft=sh:
-# shellcheck disable=SC2015,SC2155
+# shellcheck disable=SC2015
 
 alias path='echo -e ${PATH//:/\\n}'
 
@@ -39,10 +39,10 @@ alias knet='kubectl run -it --rm "$USER-knet" \
     --restart=Never -- /bin/bash'
 
 function command_exists() {
-    local PKG
+    local CMD
 
-    for PKG in "$@"; do
-        command -v "$PKG" &>/dev/null
+    for CMD in "$@"; do
+        command -v "$CMD" &>/dev/null
     done
 }
 
@@ -169,7 +169,9 @@ function eza() {
 }
 
 function yy() {
-    local TMP="$(mktemp -t "yazi-cwd.XXXXXX")" CWD
+    local TMP CWD
+
+    TMP="$(mktemp -t "yazi-cwd.XXXXXX")" CWD
     yazi "$@" --cwd-file="$TMP"
     IFS= read -r -d '' CWD <"$TMP"
     [ -n "$CWD" ] && [ "$CWD" != "$PWD" ] && cd -- "$CWD" || return 1
@@ -213,7 +215,8 @@ function datauri() {
         echo >&2 "Usage: ${FUNCNAME[0]} FILE"
         return 1
     }
-    local MIMETYPE=$(file -b --mime-type "$1")
+    local MIMETYPE
+    MIMETYPE=$(file -b --mime-type "$1")
 
     if [[ $MIMETYPE == text/* ]]; then
         MIMETYPE="${MIMETYPE};charset=utf-8"
