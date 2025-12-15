@@ -40,6 +40,8 @@ export EZA_COLUMNS=80
 export EZA_ICONS_AUTO=true
 export EZA_ICON_SPACING=1
 
+export CONTAINER_ENGINE_PREFERENCE=docker
+
 export LESS='-R -F -X -i'
 export LESS_TERMCAP_mb=$'\e[1;35m'
 export LESS_TERMCAP_md=$'\e[1;36m'
@@ -59,9 +61,12 @@ export HISTCONTROL=ignoreboth
 export HISTSIZE='32768'
 export HISTFILESIZE="${HISTSIZE}"
 
+export RED='\033[1;31m' YELLOW='\033[1;33m' GREEN='\033[1;32m' NC='\033[0m'
+
 [ -s "$HOME/.GITHUB_TOKEN" ] && export GITHUB_TOKEN=$(<"$HOME/.GITHUB_TOKEN")
 [ -s "$HOME/.ANTHROPIC_TOKEN" ] && export ANTHROPIC_API_KEY=$(<"$HOME/.ANTHROPIC_TOKEN")
 [ -s "$HOME/.GEMINI_TOKEN" ] && export GEMINI_API_KEY=$(<"$HOME/.GEMINI_TOKEN")
+[ -s "$HOME/.TINYURL_TOKEN" ] && export TINYURL_TOKEN=$(<"$HOME/.TINYURL_TOKEN")
 
 [ -s "$XDG_DATA_HOME/lscolors.sh" ] && source "$XDG_DATA_HOME/lscolors.sh"
 
