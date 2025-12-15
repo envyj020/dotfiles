@@ -31,7 +31,7 @@ mise: stow ## Installs system-wide mise packages
 
 chk-stow:
 	command -v stow &>/dev/null || { \
-		echo -e "$(RED)stow not found, run$(NC) $(GREEN)make base$(NC)"; \
+		echo -e "$(RED)stow not found, run $(GREEN)make base$(NC)"; \
 		exit 1; \
 	}
 
