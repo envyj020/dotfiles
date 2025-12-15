@@ -10,12 +10,13 @@ alias lt='ls -s -1 -S -F'
 alias fd='find . -type d -iname'
 alias ff='find . -type f -iname'
 
+alias vim='nvim'
 alias bashrc='exec ${SHELL} -l'
 alias hgrep='history | grep'
 alias mkdir='mkdir -p'
-alias vim='nvim'
 alias open='xdg-open'
 alias tmux-create='tmux new-session -A -s'
+alias asciinema-record='asciinema rec -i 1.5 --overwrite'
 
 alias .1='cd ..'
 alias .2='cd ../..'
@@ -23,8 +24,8 @@ alias .3='cd ../../..'
 alias .4='cd ../../../..'
 alias .5='cd ../../../../..'
 
-alias yarn='corepack yarn'
 alias yarnpkg='corepack yarnpkg'
+alias yarn='corepack yarn'
 alias pnpm='corepack pnpm'
 alias pnpx='corepack pnpm dlx'
 alias npm='corepack npm'
@@ -33,19 +34,36 @@ alias npx='corepack npx'
 alias k='kubectl'
 alias kctx="k kc switch"
 alias kns="k kc namespace"
-alias knet='kubectl run -it --rm net \
+alias knet='kubectl run -it --rm "$USER-knet" \
     --image=praqma/network-multitool \
     --restart=Never -- /bin/bash'
 
 function command_exists() {
-    for cmd in "$@"; do
-        command -v "$cmd" &>/dev/null
+    local PKG
+
+    for PKG in "$@"; do
+        command -v "$PKG" &>/dev/null
     done
+}
+
+function container_cmd() {
+    local ENGINE
+
+    [[ -n "${CONTAINER_ENGINE_PREFERENCE:-}" ]] && {
+        command_exists "$CONTAINER_ENGINE_PREFERENCE" &&
+            echo "$CONTAINER_ENGINE_PREFERENCE" && return 0
+    }
+    for ENGINE in docker podman; do
+        command_exists "$ENGINE" && echo $ENGINE && return 0
+    done
+
+    echo >&2 "${FUNCNAME[1]} error: requires docker or podman"
+    return 1
 }
 
 function dik() {
     [[ $# -ne 2 ]] && {
-        echo 1>&2 "Usage: ${FUNCNAME[0]} RECORD_TYPE DOMAIN"
+        echo >&2 "Usage: ${FUNCNAME[0]} RECORD_TYPE DOMAIN"
         return 1
     }
     dig +nocmd "$1" "$2" +multiline +noall +answer
@@ -53,7 +71,7 @@ function dik() {
 
 function diff() {
     [[ $# -ne 2 ]] && {
-        echo 1>&2 "Usage: ${FUNCNAME[0]} FILE1 FILE2"
+        echo >&2 "Usage: ${FUNCNAME[0]} FILE1 FILE2"
         return 1
     }
     git diff --no-index --color-words "$@"
@@ -61,7 +79,7 @@ function diff() {
 
 function mkd() {
     [[ $# -lt 1 ]] && {
-        echo 1>&2 "Usage: ${FUNCNAME[0]} DIR..."
+        echo >&2 "Usage: ${FUNCNAME[0]} DIR..."
         return 1
     }
     mkdir -p "$@" && cd "$_" || return 1
@@ -79,11 +97,30 @@ function cat() {
     command_exists 'bat' && bat "$@" || command cat "$@"
 }
 
-function switch_status_bar() {
+function asciinema_to_gif() {
+    local CONTAINER_CMD
+
+    CONTAINER_CMD=$(container_cmd) || return 1
+
+    [[ $# -ne 2 ]] && {
+        echo >&2 "Usage: ${FUNCNAME[0]} INPUT.cast OUTPUT.gif"
+        return 1
+    }
+
+    [[ ! -f "$1" ]] && {
+        echo >&2 "Error: '$1' not found"
+        return 1
+    }
+
+    $CONTAINER_CMD run --rm -u "$(id -u):$(id -g)" -v "$PWD:/data" \
+        ghcr.io/asciinema/agg "$1" "$2"
+}
+
+function choose_status_bar() {
+    local PS3="Choose a status bar:" CHOICE REPLY
+
     local -r I3_CONFIG_DIR="$XDG_CONFIG_HOME/i3"
     local -r I3_CURRENT_STATUS_BAR_SYMLINK="$I3_CONFIG_DIR/i3-bar"
-    local -r RED='\e[1m\e[31m' NC='\e[0m'
-    local -r PS3="Choose a status bar:"
 
     local -ra OPTIONS=(
         "Polybar"
@@ -93,7 +130,7 @@ function switch_status_bar() {
 
     function show_options {
         for i in "${!OPTIONS[@]}"; do
-            printf "%d) %s\n" $((i + 1)) "${OPTIONS[$i]}"
+            printf "${GREEN}%d)${NC} %s\n" $((i + 1)) "${OPTIONS[$i]}"
         done
     }
     select CHOICE in "${OPTIONS[@]}"; do
@@ -101,19 +138,21 @@ function switch_status_bar() {
         Polybar)
             ln -sfn "$I3_CONFIG_DIR/i3bar/polybar" "$I3_CURRENT_STATUS_BAR_SYMLINK"
             i3-msg restart &>/dev/null
+            echo -e "${GREEN}$CHOICE activated${NC}"
             break
             ;;
         Bumblebee)
             polybar-msg cmd quit &>/dev/null
             ln -sfn "$I3_CONFIG_DIR/i3bar/bumblebee-status" "$I3_CURRENT_STATUS_BAR_SYMLINK"
             i3-msg restart &>/dev/null
+            echo -e "${GREEN}$CHOICE activated${NC}"
             break
             ;;
         Quit)
             break
             ;;
         *)
-            echo -e "${RED} Invalid option: ${REPLY}${NC}"
+            echo -e "${RED} Invalid option: ${REPLY}${NC}"
             show_options
             ;;
         esac
@@ -139,7 +178,7 @@ function yy() {
 
 function search() {
     [[ $# -ne 1 ]] && {
-        echo 1>&2 "Usage: ${FUNCNAME[0]} SEARCH_TERM"
+        echo >&2 "Usage: ${FUNCNAME[0]} SEARCH_TERM"
         return 1
     }
     open "https://www.google.com/search?q=$1"
@@ -147,7 +186,7 @@ function search() {
 
 function ckp() {
     [[ $# -ne 1 ]] && {
-        echo 1>&2 "Usage: ${FUNCNAME[0]} PORT"
+        echo >&2 "Usage: ${FUNCNAME[0]} PORT"
         return 1
     }
     sudo lsof -ni4TCP:"$1" || echo "Port $1 is not bound"
@@ -155,7 +194,7 @@ function ckp() {
 
 function kp() {
     [[ $# -ne 1 ]] && {
-        echo 1>&2 "Usage: ${FUNCNAME[0]} PORT"
+        echo >&2 "Usage: ${FUNCNAME[0]} PORT"
         return 1
     }
     sudo fuser -k -n tcp "$1" || echo "Port $1 is not bound"
@@ -163,7 +202,7 @@ function kp() {
 
 function copycat() {
     [[ $# -ne 1 ]] && {
-        echo 1>&2 "Usage: ${FUNCNAME[0]} FILE"
+        echo >&2 "Usage: ${FUNCNAME[0]} FILE"
         return 1
     }
     command cat "$1" | xclip -selection clipboard
@@ -171,7 +210,7 @@ function copycat() {
 
 function datauri() {
     [[ $# -ne 1 ]] && {
-        echo 1>&2 "Usage: ${FUNCNAME[0]} FILE"
+        echo >&2 "Usage: ${FUNCNAME[0]} FILE"
         return 1
     }
     local MIMETYPE=$(file -b --mime-type "$1")
@@ -195,10 +234,10 @@ function codepoint() {
 
 function isup() {
     [[ $# -ne 1 ]] && {
-        echo 1>&2 "Usage: ${FUNCNAME[0]} DOMAIN"
+        echo >&2 "Usage: ${FUNCNAME[0]} DOMAIN"
         return 1
     }
-    curl -SsLfI -m 5 -XGET -A "Mozilla/5.0 (X11; Fedora; Linux x86_64; rv:121.0)" "$1" >/dev/null &&
+    curl -sSLfI -m 5 -XGET -A "Mozilla/5.0 (X11; BSD; Linux x86_64; rv:1)" "$1" >/dev/null &&
         notify-send -u low -t 2000 "$1 is UP" ||
         notify-send -u critical -t 2000 "$1 is DOWN"
 }
@@ -210,33 +249,20 @@ function epoch() {
 
 function shortener() {
     [[ $# -ne 1 ]] && {
-        echo 1>&2 "Usage: ${FUNCNAME[0]} URL"
+        echo >&2 "Usage: ${FUNCNAME[0]} URL"
         return 1
     }
-    local SHORTENER_ENDPOINT=https://api.encurtador.dev/encurtamentos
-    curl -s -XPOST $SHORTENER_ENDPOINT \
-        -H 'content-type: application/json' \
-        -d "{ \"url\": \"$1\" }" | jq -r '"http://" + .urlEncurtada'
+    curl -s -XPOST https://api.tinyurl.com/create \
+        -H "Authorization: Bearer $TINYURL_TOKEN" \
+        -H 'Content-type: application/json' \
+        -d "{ \"url\": \"$1\" }" | jq -r '.data.tiny_url'
 }
 
 function readcert() {
     [[ $# -ne 1 ]] && {
-        echo 1>&2 "Usage: ${FUNCNAME[0]} DOMAIN"
+        echo >&2 "Usage: ${FUNCNAME[0]} DOMAIN"
         return 1
     }
-    local -r DOMAIN="$1"
-    local -r RED='\e[1m\e[31m'
-    local -r NC='\e[0m'
-
-    local -r CERT_START_NEEDLE="-----BEGIN CERTIFICATE-----"
-    local -r CERT_DETAILS=$(echo -e "GET / HTTP/1.0\nEOT" |
-        openssl s_client -connect "$DOMAIN:443" -servername "$DOMAIN" 2>&1)
-
-    [[ ! "$CERT_DETAILS" =~ ${CERT_START_NEEDLE} ]] && {
-        echo 1>&2 "Error: certificate not found for $DOMAIN"
-        return 1
-    }
-
     local -ra CERT_OPTS=(
         "no_aux"
         "no_header"
@@ -248,25 +274,14 @@ function readcert() {
         "no_version"
     )
 
-    local -r CERT_TEXT=$(echo "$CERT_DETAILS" | openssl x509 -text -certopt "$(printf "%s," "${CERT_OPTS[@]}" | sed 's/,$//')" 2>/dev/null)
-
-    [[ -z "$CERT_TEXT" ]] && {
-        echo 1>&2 "Error: Failed to parse certificate."
+    local -r CERT_INFO=$(echo | openssl s_client -connect "$1:443" -servername "$1" 2>/dev/null | \
+        openssl x509 -text -certopt "$(printf "%s," "${CERT_OPTS[@]}" | sed 's/,$//')" 2>/dev/null) || {
+        echo >&2 "Error: Failed to fetch certificate for $1"
         return 1
     }
 
-    local -r SANS=$(echo "$CERT_TEXT" | grep -A 1 "Subject Alternative Name:" | tail -n 1 | sed -E 's/DNS://g; s/\s//g' | tr ',' '\n')
-    local -r SUBJECT=$(echo "$CERT_TEXT" | grep -o 'Subject: CN=[^ ]*' | sed 's/Subject: CN=//')
-    local -r ISSUER=$(echo "$CERT_TEXT" | grep -oP 'O=\K[^,]*')
-
-    echo -e "${RED}Issued by:${NC}"
-    echo "$ISSUER"
-
-    echo -e "${RED}Issued for:${NC}"
-    echo "$SUBJECT"
-
-    echo -e "${RED}SAN(s):${NC}"
-    echo "$SANS"
+    echo -e "${YELLOW}Certificate for $1:${NC}"
+    echo "$CERT_INFO"
 
     return 0
 }
