@@ -46,6 +46,9 @@ version = "latest"
 [tools."aqua:starship/starship"]
 version = "latest"
 
+[tools."aqua:chmln/sd"]
+version = "latest"
+
 [tools."aqua:mikefarah/yq"]
 version = "latest"
 

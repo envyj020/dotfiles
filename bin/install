@@ -45,7 +45,7 @@ function base::packages() {
         ["dnf"]="git-core dnf-command(config-manager) poppler ImageMagick \
             libnotify pango navi"
         ["apt-get"]="git git-extras poppler-utils imagemagick python-is-python3 \
-            build-essential libnotify-bin libpango-1.0.0 gping sd"
+            build-essential libnotify-bin libpango-1.0.0 gping"
     )
 
     local -ra BASE_PACKAGES=(
