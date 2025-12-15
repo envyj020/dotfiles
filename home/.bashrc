@@ -1,6 +1,5 @@
-# shellcheck disable=SC2148,SC1091,SC1090
-
-# void on non-interactive sessions
+# vim: set ft=sh:
+# skip on non-interactive sessions
 case $- in
 *i*) ;;
 *) return ;;
@@ -12,7 +11,7 @@ shopt -s histverify
 shopt -s histappend
 shopt -s checkwinsize
 
-# Requires Bash >= v4
+# requires bash >= v4
 shopt -s cdspell 2>/dev/null || true
 shopt -s autocd 2>/dev/null || true
 
@@ -20,6 +19,7 @@ shopt -s autocd 2>/dev/null || true
 
 if [ -d "$HOME/.bashrc.d" ]; then
     for rc in "$HOME/.bashrc.d"/*; do
+        # shellcheck source=/dev/null
         source "$rc"
     done
 fi
