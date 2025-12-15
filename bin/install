@@ -994,7 +994,7 @@ function cmd::tldr() {
     common::stop_spinner
 }
 
-function base() {
+function main::base() {
     base::packages
     base::ueberzugpp
     base::python
@@ -1012,7 +1012,7 @@ function base() {
     base::stow
 }
 
-function cmd() {
+function main::cmd() {
     cmd::mise
     cmd::terraform
     cmd::asdf
@@ -1022,16 +1022,16 @@ function cmd() {
     cmd::tldr
 }
 
-function kube() {
+function main::kube() {
     kube::kubectl
     kube::kube_prompt
 }
 
 function main() {
     main::setup
-    base
-    cmd
-    kube
+    main::base
+    main::cmd
+    main::kube
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
