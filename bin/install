@@ -43,16 +43,17 @@ function base::packages() {
 
     local -rA OS_SPECIFIC_PACKAGES=(
         ["dnf"]="git-core dnf-command(config-manager) poppler ImageMagick \
-            libnotify pango"
+            libnotify pango navi"
         ["apt-get"]="git git-extras poppler-utils imagemagick python-is-python3 \
-            build-essential libnotify-bin libpango-1.0.0"
+            build-essential libnotify-bin libpango-1.0.0 gping sd"
     )
 
     local -ra BASE_PACKAGES=(
         python3 python3-pip fd-find git-lfs ibus-m17n
         coreutils binutils mercurial ffmpeg zoxide
         p7zip unzip xclip make bison wget2 curl arandr
-        autorandr tmux rpm gcc jq btop fastfetch
+        autorandr tmux rpm gcc jq btop fastfetch duf
+        hyperfine httpie asciinema
     )
 
     # shellcheck disable=SC2206
