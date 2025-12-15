@@ -1,0 +1,19 @@
+[record]
+command = /bin/bash -l
+stdin = yes
+env = SHELL,TERM,USER
+idle_time_limit = 2
+yes = false
+quiet = true
+pause_key = C-p
+add_marker_key = C-x
+
+[play]
+idle_time_limit = 1
+speed = 2
+step_key = s
+pause_key = p
+next_marker_key = m
+
+[notifications]
+enabled = yes
