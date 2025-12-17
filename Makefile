@@ -12,8 +12,7 @@ help:
 		awk 'BEGIN {FS = ":.*?## "}; {printf "$(BLUE)%-30s$(NC) %s\n", $$1, $$2}'
 
 init:
-	git submodule init
-	git submodule update
+    git submodule update --init --recursive
 	git lfs pull
 
 .PHONY: init
