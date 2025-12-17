@@ -26,8 +26,8 @@ function main::tear_down() {
 function main::setup() {
 
     local -r PATHS_TO_PREPEND=(
-        "$BIN_DIR"
-        "$BIN_DIR/go/bin"
+        "$XDG_BIN_HOME"
+        "$XDG_BIN_HOME/go/bin"
         "$HOME/.pyenv/bin"
         "$HOME/.gvm/bin"
     )
@@ -81,7 +81,7 @@ function base::tmux() {
         git clone --depth 1 --branch "$ENTR_LATEST_TAG" "$ENTR_REPOSITORY_URL" "$SANDBOX/$ENTR_REPOSITORY_BASENAME" &>/dev/null && cd $_ || {
             log::error "Couldn't clone repository: $ENTR_REPOSITORY_URL"
         }
-        ./configure && PREFIX=$(dirname $BIN_DIR) make install &>/dev/null || {
+        ./configure && PREFIX=$(dirname $XDG_BIN_HOME) make install &>/dev/null || {
             log::error "Couldn't compile and install $ENTR_REPOSITORY_BASENAME"
         }
     )
@@ -160,7 +160,7 @@ function base::gvm() {
     local -r GVM_INSTALLER_URL="$RAW_GITHUB_URL/moovweb/gvm/master/binscripts/gvm-installer"
 
     [[ $(command -v go) ]] || {
-        curl -fsSL $GO_REMOTE_DOWNLOAD_URL | tar -C $BIN_DIR -xzf - || {
+        curl -fsSL $GO_REMOTE_DOWNLOAD_URL | tar -C $XDG_BIN_HOME -xzf - || {
             log:error "Couldn't download and extract $GO_FILENAME archive"
         }
     }
@@ -225,7 +225,7 @@ function base::neovim() {
     [[ $(command -v bob) ]] || {
         curl -fsSLO --output-dir "$SANDBOX" "$BOB_RELEASE_URL"
         unzip -qq "$SANDBOX/$BOB_PACKAGE_FILENAME" -d "$SANDBOX"
-        install "$SANDBOX/${BOB_PACKAGE_FILENAME%.*}/bob" "$BIN_DIR/bob"
+        install "$SANDBOX/${BOB_PACKAGE_FILENAME%.*}/bob" "$XDG_BIN_HOME/bob"
         bob use stable
     }
 
@@ -325,7 +325,7 @@ function base::alacritty() {
                 log::error "Couldn't compile alacritty"
             }
         }
-        sudo cp "$ALACRITTY_RELEASE_BIN" "$BIN_DIR"
+        sudo cp "$ALACRITTY_RELEASE_BIN" "$XDG_BIN_HOME"
         sudo cp "$ALACRITTY_RELEASE_SVG_LOGO" "$DESKTOP_APP_ICONS_DIR/Alacritty.svg"
         sudo desktop-file-install $ALACRITTY_RELEASE_DESKTOP_FILE
         sudo update-desktop-database
@@ -368,10 +368,10 @@ function base::rofi() {
     for ROFI_DMENU_SCRIPT in "${ROFI_DMENU_SCRIPTS[@]}"; do
         local MODULE_NAME=$(basename $ROFI_DMENU_SCRIPT)
 
-        [[ -f "$BIN_DIR/$MODULE_NAME" ]] && continue
+        [[ -f "$XDG_BIN_HOME/$MODULE_NAME" ]] && continue
 
         curl -fsSLO --output-dir $SANDBOX $ROFI_DMENU_SCRIPT
-        install "$SANDBOX/$MODULE_NAME" "$BIN_DIR/$MODULE_NAME"
+        install "$SANDBOX/$MODULE_NAME" "$XDG_BIN_HOME/$MODULE_NAME"
     done
 
     [[ $(command -v rofi) ]] && {
@@ -423,7 +423,7 @@ function base::rofi() {
 
         cd "$SANDBOX/$(basename $ROFI_PACKAGE_FILENAME .tar.gz)"
 
-        meson setup build --prefix "$(dirname $BIN_DIR)" -Dwayland=disabled &>/dev/null
+        meson setup build --prefix "$(dirname $XDG_BIN_HOME)" -Dwayland=disabled &>/dev/null
         ninja -C build &>/dev/null && ninja -C build install &>/dev/null || {
             log::error "Couldn't compile and install Rofi"
         }
@@ -623,7 +623,7 @@ function base::i3lock() {
         git clone --depth 1 --branch "$I3LOCK_COLOR_LATEST_TAG" "$I3LOCK_COLOR_REPOSITORY_URL" "$SANDBOX/$I3LOCK_COLOR_REPOSITORY_BASENAME" &>/dev/null && cd $_ || {
             log::error "Couldn't clone repository: $I3LOCK_COLOR_REPOSITORY_URL"
         }
-        PREFIX=$(dirname $BIN_DIR) ./install-i3lock-color.sh &>/dev/null
+        PREFIX=$(dirname $XDG_BIN_HOME) ./install-i3lock-color.sh &>/dev/null
     )
 
     common::stop_spinner
@@ -644,7 +644,7 @@ function cmd::terraform() {
     }
 
     git clone --depth 1 $TOFUENV_REPOSITORY $TOFUENV_INSTALL_DIR &>/dev/null
-    ln -s $TOFUENV_INSTALL_DIR/bin/* $BIN_DIR
+    ln -s $TOFUENV_INSTALL_DIR/bin/* $XDG_BIN_HOME
     tofuenv install < <(tofuenv list-remote | head -n1) &>/dev/null
 
     common::stop_spinner
@@ -676,8 +676,8 @@ function kube::kubectl() {
     }
 
     tar -xzf "$SANDBOX/$KUBERLR_FILENAME" -C $SANDBOX >/dev/null
-    install "$SANDBOX/$(basename $KUBERLR_FILENAME .tar.gz)/kuberlr" "$BIN_DIR/kuberlr"
-    ln -sfn $BIN_DIR/kuberlr $BIN_DIR/kubectl
+    install "$SANDBOX/$(basename $KUBERLR_FILENAME .tar.gz)/kuberlr" "$XDG_BIN_HOME/kuberlr"
+    ln -sfn $XDG_BIN_HOME/kuberlr $XDG_BIN_HOME/kubectl
 
     common::stop_spinner
 }
@@ -733,7 +733,7 @@ function kube::kube_prompt() {
 
     curl -fsSLO --output-dir $SANDBOX $KUBEPROMPT_RELEASE_URL
     unzip -qq "$SANDBOX/$KUBEPROMPT_FILENAME" -d $SANDBOX
-    install "$SANDBOX/kube-prompt" "$BIN_DIR/kube-prompt"
+    install "$SANDBOX/kube-prompt" "$XDG_BIN_HOME/kube-prompt"
 
     common::stop_spinner
 }
@@ -813,7 +813,7 @@ function cmd::asdf() {
         log::error "$ASDF_TAR_FILENAME checksum verification failed."
     }
     tar -xzf "$SANDBOX/$ASDF_TAR_FILENAME" -C $SANDBOX
-    install $SANDBOX/asdf $BIN_DIR/asdf
+    install $SANDBOX/asdf $XDG_BIN_HOME/asdf
 
     common::stop_spinner
 }
@@ -845,7 +845,7 @@ function cmd::cloudlens() {
     }
 
     tar -xzf "$SANDBOX/$CLOUDLENS_BIN_FILENAME" -C $SANDBOX
-    install "$SANDBOX/cloudlens" "$BIN_DIR/cloudlens"
+    install "$SANDBOX/cloudlens" "$XDG_BIN_HOME/cloudlens"
 
     common::stop_spinner
 }
@@ -877,7 +877,7 @@ function cmd::devbox() {
     }
 
     tar -xzf $SANDBOX/$DEVBOX_RELEASE_FILENAME -C $SANDBOX
-    install "$SANDBOX/devbox" "$BIN_DIR/devbox"
+    install "$SANDBOX/devbox" "$XDG_BIN_HOME/devbox"
 
     common::stop_spinner
 }
@@ -920,7 +920,7 @@ function base::stow() {
             log:error "Couldn't extract $STOW_EXTRACTED_FILENAME archive"
         }
 
-        ./configure --prefix="$(basename $BIN_DIR)" && make install &>/dev/null || {
+        ./configure --prefix="$(basename $XDG_BIN_HOME)" && make install &>/dev/null || {
             log:error "Couldn't compile and install $STOW_EXTRACTED_FILENAME"
         }
     )
@@ -957,7 +957,7 @@ function cmd::mise() {
     }
 
     local -r MISE_INSTALLER_URL=https://mise.run
-    curl -fsSL $MISE_INSTALLER_URL | MISE_INSTALL_PATH="$BIN_DIR/mise" sh &>/dev/null
+    curl -fsSL $MISE_INSTALLER_URL | MISE_INSTALL_PATH="$XDG_BIN_HOME/mise" sh &>/dev/null
 
     common::stop_spinner
 }
@@ -989,7 +989,7 @@ function cmd::tldr() {
 
     }
 
-    install "$SANDBOX/$TLDR_BIN_FILENAME" "$BIN_DIR/tldr"
+    install "$SANDBOX/$TLDR_BIN_FILENAME" "$XDG_BIN_HOME/tldr"
 
     common::stop_spinner
 }

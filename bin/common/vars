@@ -7,8 +7,13 @@ REPOSITORY_DIR=$(realpath "$(dirname -- "${BASH_SOURCE[0]}")/../..")
 
 source "$REPOSITORY_DIR/bin/common/logging"
 
-readonly XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-readonly XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+: "${XDG_BIN_HOME:=$HOME/.local/bin}"
+: "${XDG_CONFIG_HOME:=$HOME/.config}"
+: "${XDG_DATA_HOME:=$HOME/.local/share}"
+: "${XDG_CACHE_HOME:=$HOME/.cache}"
+: "${XDG_STATE_HOME:=$HOME/.local/state}"
+
+readonly XDG_BIN_HOME XDG_CONFIG_HOME XDG_DATA_HOME XDG_CACHE_HOME XDG_STATE_HOME
 
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
 ARCH="$(uname -m | sed -e 's/x86_64/amd64/' -e 's/\(arm\)\(64\)\?.*/\1\2/' -e 's/aarch64$/arm64/')"
@@ -17,7 +22,6 @@ OS_VERSION=$(awk -F'=' '/^VERSION_ID=/ {gsub(/"/, "", $2); print $2}' /etc/os-re
 
 readonly REPOSITORY_DIR OS ARCH OS_NAME OS_VERSION
 
-readonly BIN_DIR="$HOME/.local/bin"
 readonly UDEV_RULES_DIR=/etc/udev/rules.d
 readonly I3_CONFIG_DIR="$XDG_CONFIG_HOME/i3"
 readonly I3_CURRENT_STATUS_BAR_SYMLINK="$I3_CONFIG_DIR/i3-bar"
