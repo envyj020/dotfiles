@@ -167,6 +167,7 @@ common::choose() {
         "$FN_NAME" "$FN_ARGS"
         break
     done
+    unset -f show_options
 }
 
 # Displays a progress spinner. Requires to properly handle its clean up
