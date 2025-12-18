@@ -435,6 +435,7 @@ base::albert() {
     esac
 
     common::stop_spinner
+    unset -f IS_OS_RELEASE_VERSION_SUPPORTED
 }
 
 base::app_launcher() {
