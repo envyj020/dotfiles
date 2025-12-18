@@ -1,9 +1,52 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2124,SC203
+# shellcheck disable=SC2124
 
 set -ueo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/logging"
+
+# This function queries an inventory file using 'yq' to retrieve
+# dependencies for a specific caller or target. It combines universal
+# packages names with those specific to the current $OS and $PKG_MANAGER.
+#
+# Globals:
+#   OS
+#   ARCH
+#   XDG_BIN_HOME
+#   PKG_MANAGER
+#   PKG_INVENTORY
+#
+# Arguments:
+#   $1 - FUNCTION_CALLEE Optional. The key to look up in the YAML.
+#        Defaults to the name of the calling function without its namespace.
+#
+# Outputs:
+#   Writes a space-separated string of package names to stdout.
+#
+# Returns:
+#   0 on success
+#   non-zero if any Global is not set or yq installation fails.
+function common::dependencies_from() {
+
+    local -r FUNCTION_CALLEE="${1:-FUNCNAME[1]##*::}"
+
+    : "${OS:?Error: OS is not set but required}"
+    : "${ARCH:?Error: ARCH is not set but required}"
+    : "${XDG_BIN_HOME:?Error: XDG_BIN_HOME is not set but required}"
+    : "${PKG_MANAGER:?Error: PKG_MANAGER is not set but required}"
+    : "${PKG_INVENTORY:?Error: PKG_INVENTORY is not set but required}"
+
+    [[ ! $(command -v yq) ]] && {
+        curl -sSfLo "$XDG_BIN_HOME/yq" "$YQ_LATEST_RELEASE_DOWNLOAD_URL" && chmod +x "$XDG_BIN_HOME/yq"
+    }
+
+    local COMMON_PKGS OS_PKGS
+
+    COMMON_PKGS=$(yq -r ".dependencies.${FUNCTION_CALLEE}.common // [] | join(\" \")" "$PKG_INVENTORY_FILE")
+    OS_PKGS=$(yq -r ".dependencies.${FUNCTION_CALLEE}.${PKG_MANAGER} // [] | join(\" \")" "$PKG_INVENTORY_FILE")
+
+    echo "$COMMON_PKGS $OS_PKGS"
+}
 
 # Detects the system's package manager by checking available commands
 # and OS release files.
@@ -16,8 +59,8 @@ source "$(dirname "${BASH_SOURCE[0]}")/logging"
 # Arguments:
 #   None
 # Outputs:
-#   Writes the package manager name to stdout
-#   Error to stderr
+#   Writes the package manager to stdout
+#   Any error to stderr
 # Returns:
 #   0 if package manager is detected
 #   1 if no package manager could be determined
@@ -40,12 +83,12 @@ function common::package_manager() {
     done
 
     local -rA OS_FILENAMES=(
+        ["/etc/debian_version"]=apt-get
         ["/etc/redhat-release"]=dnf
         ["/etc/arch-release"]=pacman
-        ["/etc/gentoo-release"]=emerge
         ["/etc/SUSE-release"]=zypper
-        ["/etc/debian_version"]=apt-get
         ["/etc/alpine-release"]=apk
+        ["/etc/gentoo-release"]=emerge
     )
 
     for DISTRIBUTION in "${!OS_FILENAMES[@]}"; do
@@ -62,11 +105,12 @@ function common::package_manager() {
 # Globals:
 #   PS3
 # Arguments:
-#   $1 - An associative array where each key is an option and the value is the function to execute
-#   $2 - Optional prompt text (default: "Select an option")
+#   $1 - SETTINGS.        An associative array where each key is an option and the value is the function to execute
+#   $2 - PROMPT Optional. Prompt text.
+#                         Default: "Select an option"
 # Outputs:
 #   Options and function output to stdout
-#   Error to stderr
+#   Any error to stderr
 # Returns:
 #   0 on success
 #   1 if the mapped function doesn't exist
@@ -79,6 +123,7 @@ function common::package_manager() {
 #   common::choose options "Choose a package"
 
 function common::choose() {
+
     local -n SETTINGS=$1
     local -r PROMPT=${2:-"Select an option"}
     local -a OPTIONS=()
@@ -128,11 +173,16 @@ function common::choose() {
 #   ON_SUCCESS_MSG
 #   ON_ERROR_MSG
 # Arguments:
-#   $1: Message to show while the action is progressing
-#   $2: Message on success
-#   $3: Message on error
+#   $1 - PROGRESS_MSG   Optional: Message to show while the action is progressing
+#                       Default: Installing $FUNCTION_CALLEE_NAME...
+#   $2 - ON_SUCCESS_MSG Optional: Message on success
+#                       Default: $FUNCTION_CALLE_NAME OK
+#   $3 - ON_ERROR_MSG   Optional: Message on error
+#                       Default: $FUNCTION_CALLE_NAME KO
 # Outputs:
-#   progress and success or error messages to stdout
+#   PROGRESS_MSG to stdout
+#   ON_SUCCESS_MSG to stdout
+#   ON_ERROR_MSG to stderr
 # Example:
 #   common::start_spinner
 #   do_something
@@ -146,6 +196,7 @@ ON_ERROR_MSG=""
 SPIN_PID=""
 
 function common::__init_spinner() {
+
     local i=0
     local -r MESSAGE="$1"
     local -r n=${#SPIN_CHARS}
@@ -160,6 +211,7 @@ function common::__init_spinner() {
 }
 
 function common::start_spinner() {
+
     local -r FUNCTION_CALLEE="${FUNCNAME[1]##*::}"
     local -r PROGRESS_MSG="${1:-"Installing ${FUNCTION_CALLEE}..."}"
 
@@ -172,6 +224,7 @@ function common::start_spinner() {
 }
 
 function common::__stop_spinner() {
+
     local EXIT_CODE=${1:-0}
     local TRIGGERED_BY_SIGNAL=${2:-false}
 
@@ -192,6 +245,7 @@ function common::__stop_spinner() {
 }
 
 function common::stop_spinner() {
+
     local -r EXIT_CODE=$?
     ON_SUCCESS_MSG=${1:-$ON_SUCCESS_MSG}
     common::__stop_spinner $EXIT_CODE

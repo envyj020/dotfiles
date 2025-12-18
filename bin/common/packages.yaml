@@ -1,0 +1,192 @@
+---
+dependencies:
+  packages:
+    common:
+      - python3
+      - python3-pip
+      - fd-find
+      - git-lfs
+      - ibus-m17n
+      - coreutils
+      - binutils
+      - mercurial
+      - ffmpeg
+      - zoxide
+      - p7zip
+      - unzip
+      - xclip
+      - make
+      - bison
+      - wget2
+      - curl
+      - arandr
+      - autorandr
+      - tmux
+      - rpm
+      - gcc
+      - jq
+      - btop
+      - fastfetch
+      - duf
+      - hyperfine
+      - httpie
+      - asciinema
+    apt-get:
+      - git
+      - git-extras
+      - poppler-utils
+      - imagemagick
+      - python-is-python3
+      - build-essential
+      - libnotify-bin
+      - libpango-1.0.0
+      - gping
+    dnf:
+      - git-core
+      - dnf-command(config-manager)
+      - poppler
+      - ImageMagick
+      - libnotify
+      - pango
+      - navi
+  fonts:
+    dnf:
+      - google-noto-sans-fonts
+      - google-noto-cjk-fonts
+      - google-noto-emoji-fonts
+      - google-noto-sans-symbols-fonts
+    apt-get:
+      - fonts-noto-core
+      - fonts-noto-cjk
+      - fonts-noto-color-emoji
+  alacritty:
+    common:
+      - cmake
+      - g++
+    dnf:
+      - freetype-devel
+      - fontconfig-devel
+      - libxcb-devel
+      - libxkbcommon-devel
+    apt-get:
+      - pkg-config
+      - libfreetype6-dev
+      - libfontconfig1-dev
+      - libxcb-xfixes0-dev
+      - libxkbcommon-dev
+  rofi:
+    common:
+      - flex
+      - meson
+      - ninja-build
+    dnf:
+      - alsa-lib-devel
+      - libmpdclient-devel
+      - pango-devel
+      - gdk-pixbuf2-devel
+      - startup-notification-devel
+      - cairo-devel
+      - libxkbcommon-devel
+      - libxkbcommon-x11-devel
+      - libxcb-devel
+      - xcb-util-devel
+      - xcb-util-wm-devel
+      - xcb-util-cursor-devel
+      - xcb-imdkit-devel
+      - xcb-util-keysyms-devel
+    apt-get:
+      - libasound2-dev
+      - libmpdclient-dev
+      - libpango1.0-dev
+      - libgdk-pixbuf-2.0-dev
+      - libstartup-notification0-dev
+      - libcairo2-dev
+      - libxkbcommon-dev
+      - libxkbcommon-x11-dev
+      - libxcb1-dev
+      - libxcb-util-dev
+      - libxcb-ewmh-dev
+      - libxcb-cursor-dev
+      - libxcb-imdkit-dev
+      - libxcb-keysyms1-dev
+  bumblebee:
+    dnf:
+      - python3-devel
+      - python3-tkinter
+    apt-get:
+      - python3-dev
+      - python3-tk
+  i3wm:
+    common:
+      - blueman
+      - xss-lock
+      - picom
+      - pavucontrol
+      - gnome-system-monitor
+      - automake
+      - autoconf
+      - light
+      - maim
+      - dunst
+      - i3
+      - xbacklight
+      - wmctrl
+      - asciidoc
+      - feh
+      - dunst
+      - papirus-icon-theme
+    dnf:
+      - network-manager-applet
+      - python3-devel
+      - python3-tkinter
+      - conky
+    apt-get:
+      - network-manager
+      - python3-dev
+      - python3-tk
+      - conky-all
+  i3lock:
+    dnf:
+      - pkgconf
+      - cairo-devel
+      - fontconfig
+      - libev-devel
+      - libjpeg-turbo-devel
+      - libXinerama
+      - libxkbcommon-devel
+      - libxkbcommon-x11-devel
+      - libXrandr
+      - pam-devel
+      - xcb-util-image-devel
+      - xcb-util-xrm-devel
+    apt-get:
+      - pkg-config
+      - libpam0g-dev
+      - libcairo2-dev
+      - libfontconfig1-dev
+      - libxcb-composite0-dev
+      - libev-dev
+      - libx11-xcb-dev
+      - libxcb-xkb-dev
+      - libxcb-xinerama0-dev
+      - libxcb-randr0-dev
+      - libxcb-image0-dev
+      - libxcb-util0-dev
+      - libxcb-xrm-dev
+      - libxkbcommon-dev
+      - libxkbcommon-x11-dev
+      - libjpeg-dev
+      - libgif-dev
+  rancher:
+    common:
+      - pass
+      - gnupg2
+  stow:
+    dnf:
+      - perl-Test-Simple
+      - perl-Test-Output
+      - perl-File-Copy
+    apt-get:
+      - libtest-simple-perl
+      - libtest-output-perl
+      - libfile-ncopy-perl

@@ -41,25 +41,8 @@ function base::packages() {
 
     common::start_spinner
 
-    local -rA OS_SPECIFIC_PACKAGES=(
-        ["dnf"]="git-core dnf-command(config-manager) poppler ImageMagick \
-            libnotify pango navi"
-        ["apt-get"]="git git-extras poppler-utils imagemagick python-is-python3 \
-            build-essential libnotify-bin libpango-1.0.0 gping"
-    )
-
-    local -ra BASE_PACKAGES=(
-        python3 python3-pip fd-find git-lfs ibus-m17n
-        coreutils binutils mercurial ffmpeg zoxide
-        p7zip unzip xclip make bison wget2 curl arandr
-        autorandr tmux rpm gcc jq btop fastfetch duf
-        hyperfine httpie asciinema
-    )
-
-    # shellcheck disable=SC2206
-    local -ra PACKAGES=(${OS_SPECIFIC_PACKAGES[$PKG_MANAGER]} "${BASE_PACKAGES[@]}")
-
-    sudo $PKG_MANAGER install -y "${PACKAGES[@]}" &>/dev/null
+    BASE_PACKAGES=$(common::dependencies_from "packages")
+    sudo $PKG_MANAGER install -y $BASE_PACKAGES &>/dev/null
 
     common::stop_spinner
 }
@@ -246,12 +229,8 @@ function base::fonts() {
 
     common::start_spinner
 
-    local -rA NOTO_FONTS_PACKAGES=(
-        ["dnf"]="google-noto-sans-fonts google-noto-cjk-fonts google-noto-emoji-fonts google-noto-sans-symbols-fonts"
-        ["apt-get"]="fonts-noto-core fonts-noto-cjk fonts-noto-color-emoji "
-    )
-
-    sudo $PKG_MANAGER install -y ${NOTO_FONTS_PACKAGES[$PKG_MANAGER]} &>/dev/null
+    NOTO_FONTS_PACKAGES=$(common::dependencies_from "fonts")
+    sudo $PKG_MANAGER install -y $NOTO_FONTS_PACKAGES &>/dev/null
 
     local -r POWERLINE_FONTS_REPOSITORY=https://github.com/powerline/fonts.git
     local -r POWERLINE_FONTS_DIRNAME=$(basename $POWERLINE_FONTS_REPOSITORY .git)
@@ -291,30 +270,21 @@ function base::alacritty() {
 
     common::start_spinner
 
-    local -r ALACRITTY_GH_REPOSITORY='https://github.com/alacritty/alacritty.git'
-    local -r ALACRITTY_DOWNLOAD_DIR="$SANDBOX/$(basename $ALACRITTY_GH_REPOSITORY .git)"
-    local -r ALACRITTY_RELEASE_BIN='target/release/alacritty'
-    local -r ALACRITTY_RELEASE_SVG_LOGO='extra/logo/alacritty-term.svg'
-    local -r ALACRITTY_RELEASE_DESKTOP_FILE='extra/linux/Alacritty.desktop'
-
-    local -rA ALACRITTY_OS_SPECIFIC_DEPENDENCIES=(
-        ["dnf"]="freetype-devel fontconfig-devel libxcb-devel libxkbcommon-devel"
-        ["apt-get"]="pkg-config libfreetype6-dev libfontconfig1-dev libxcb-xfixes0-dev libxkbcommon-dev"
-    )
-
-    local -ra ALACRITTY_BASE_DEPENDENCIES=(
-        cmake
-        g++
-    )
 
     [[ $(command -v alacritty) ]] && {
         common::stop_spinner
         return 0
     }
 
-    # shellcheck disable=SC2206
-    local -ra ALACRITTY_DEPENDENCIES=(${ALACRITTY_OS_SPECIFIC_DEPENDENCIES[$PKG_MANAGER]} "${ALACRITTY_BASE_DEPENDENCIES[@]}")
-    sudo $PKG_MANAGER install -y "${ALACRITTY_DEPENDENCIES[@]}"
+    local -r ALACRITTY_GH_REPOSITORY='https://github.com/alacritty/alacritty.git'
+    local -r ALACRITTY_DOWNLOAD_DIR="$SANDBOX/$(basename $ALACRITTY_GH_REPOSITORY .git)"
+    local -r ALACRITTY_RELEASE_BIN='target/release/alacritty'
+    local -r ALACRITTY_RELEASE_SVG_LOGO='extra/logo/alacritty-term.svg'
+    local -r ALACRITTY_RELEASE_DESKTOP_FILE='extra/linux/Alacritty.desktop'
+
+    ALACRITTY_PACKAGES=$(common::dependencies_from "alacritty")
+    sudo $PKG_MANAGER install -y $ALACRITTY_PACKAGES >/dev/null
+
     (
         git clone --depth 1 $ALACRITTY_GH_REPOSITORY $ALACRITTY_DOWNLOAD_DIR && cd $_ || {
             log::error "Couldn't clone alacritty github repository: $ALACRITTY_GH_REPOSITORY"
@@ -379,25 +349,6 @@ function base::rofi() {
         return 0
     }
 
-    local -rA ROFI_OS_SPECIFIC_PACKAGES=(
-        ["dnf"]="alsa-lib-devel libmpdclient-devel pango-devel \
-            gdk-pixbuf2-devel startup-notification-devel cairo-devel \
-            libxkbcommon-devel libxkbcommon-x11-devel libxcb-devel \
-            xcb-util-devel xcb-util-wm-devel xcb-util-cursor-devel \
-            xcb-imdkit-devel xcb-util-keysyms-devel"
-        ["apt-get"]="libasound2-dev libmpdclient-dev libpango1.0-dev \
-            libgdk-pixbuf-2.0-dev libstartup-notification0-dev \
-            libcairo2-dev libxkbcommon-dev libxkbcommon-x11-dev libxcb1-dev \
-            libxcb-util-dev libxcb-ewmh-dev libxcb-cursor-dev \
-            libxcb-imdkit-dev libxcb-keysyms1-dev"
-    )
-
-    local -ra ROFI_BASE_PACKAGES=(
-        flex
-        meson
-        ninja-build
-    )
-
     local -r ROFI_THEMES_REPOSITORY=https://github.com/newmanls/rofi-themes-collection.git
     local -r ROFI_THEMES_DESTINATION_DIRECTORY="$XDG_DATA_HOME/rofi/themes"
     local -r ROFI_THEMES_REPOSITORY_BASENAME=$(basename $ROFI_THEMES_REPOSITORY .git)
@@ -413,9 +364,8 @@ function base::rofi() {
     local -r ROFI_PACKAGE_FILENAME=$(basename $ROFI_RELEASE_URL)
 
     (
-        # shellcheck disable=SC2206
-        local -ra ROFI_DEPENDENCIES=(${ROFI_OS_SPECIFIC_PACKAGES[$PKG_MANAGER]} "${ROFI_BASE_PACKAGES[@]}")
-        sudo $PKG_MANAGER install -y "${ROFI_DEPENDENCIES[@]}" &>/dev/null
+        ROFI_PACKAGES=$(common::dependencies_from "rofi")
+        sudo $PKG_MANAGER install -y $ROFI_PACKAGES &>/dev/null
 
         curl -fsSL $ROFI_RELEASE_URL | tar -xzf - -C $SANDBOX || {
             log:error "Couldn't download and extract $ROFI_PACKAGE_FILENAME archive"
@@ -542,10 +492,6 @@ function base::bumblebee() {
         return 0
     }
 
-    local -rA OS_SPECIFIC_PACKAGES=(
-        ["dnf"]="python3-devel python3-tkinter"
-        ["apt-get"]="python3-dev python3-tk"
-    )
     local -ra PIP_PACKAGES=(
         bumblebee-status
         psutil
@@ -553,7 +499,9 @@ function base::bumblebee() {
         netifaces
     )
 
-    sudo $PKG_MANAGER install -y ${OS_SPECIFIC_PACKAGES[$PKG_MANAGER]} &>/dev/null
+    BUMBLEBEE_PACKAGES=$(common::dependencies_from "bumblebee")
+    sudo $PKG_MANAGER install -y $BUMBLEBEE_PACKAGES &>/dev/null
+
     pip install --user "${PIP_PACKAGES[@]}" &>/dev/null
     ln -sfn "$I3_CONFIG_DIR/i3bar/bumblebee-status" "$I3_CURRENT_STATUS_BAR_SYMLINK"
 
@@ -571,22 +519,8 @@ function base::i3wm() {
         return 0
     }
 
-    local -ra I3_BASE_PACKAGES=(
-        blueman xss-lock picom
-        pavucontrol gnome-system-monitor
-        automake autoconf light maim
-        dunst i3 xbacklight wmctrl
-        asciidoc feh dunst papirus-icon-theme
-    )
-
-    local -rA OS_SPECIFIC_PACKAGES=(
-        ["dnf"]="network-manager-applet python3-devel python3-tkinter conky"
-        ["apt-get"]="network-manager python3-dev python3-tk conky-all"
-    )
-
-    # shellcheck disable=SC2206
-    local -ra I3_PACKAGES=(${OS_SPECIFIC_PACKAGES[$PKG_MANAGER]} "${I3_BASE_PACKAGES[@]}")
-    sudo $PKG_MANAGER install -y "${I3_PACKAGES[@]}" &>/dev/null
+    I3_PACKAGES=$(common::dependencies_from "i3wm")
+    sudo $PKG_MANAGER install -y $I3_PACKAGES &>/dev/null
 
     common::stop_spinner
 }
@@ -606,18 +540,8 @@ function base::i3lock() {
     local -r I3LOCK_COLOR_REPOSITORY_URL=https://github.com/Raymo111/i3lock-color.git
     local -r I3LOCK_COLOR_REPOSITORY_BASENAME=$(basename $I3LOCK_COLOR_REPOSITORY_URL .git)
 
-    local -rA I3LOCK_COLOR_OS_PACKAGES=(
-        ["dnf"]="pkgconf cairo-devel fontconfig libev-devel \
-            libjpeg-turbo-devel libXinerama libxkbcommon-devel libxkbcommon-x11-devel \
-            libXrandr pam-devel xcb-util-image-devel xcb-util-xrm-devel"
-        ["apt-get"]="pkg-config libpam0g-dev libcairo2-dev \
-            libfontconfig1-dev libxcb-composite0-dev libev-dev libx11-xcb-dev \
-            libxcb-xkb-dev libxcb-xinerama0-dev libxcb-randr0-dev libxcb-image0-dev \
-            libxcb-util0-dev libxcb-xrm-dev libxkbcommon-dev libxkbcommon-x11-dev \
-            libjpeg-dev libgif-dev"
-    )
-
-    sudo $PKG_MANAGER install -y ${I3LOCK_COLOR_OS_PACKAGES[$PKG_MANAGER]} &>/dev/null
+    I3LOCK_COLOR_PACKAGES=$(common::dependencies_from "i3lock")
+    sudo $PKG_MANAGER install -y $I3LOCK_COLOR_PACKAGES &>/dev/null
 
     (
         git clone --depth 1 --branch "$I3LOCK_COLOR_LATEST_TAG" "$I3LOCK_COLOR_REPOSITORY_URL" "$SANDBOX/$I3LOCK_COLOR_REPOSITORY_BASENAME" &>/dev/null && cd $_ || {
@@ -769,12 +693,9 @@ function kube::rancher_desktop() {
 
     local -r RANCHER_DESKTOP_DOWNLOAD_URL="https://download.opensuse.org/repositories/isv:/Rancher:/stable/AppImage/rancher-desktop-latest-$(uname -m).AppImage"
     local -r RANCHER_DESKTOP_FILENAME=$(basename $RANCHER_DESKTOP_DOWNLOAD_URL)
-    local -r RANCHER_DEPENDENCIES=(
-        pass
-        gnupg2
-    )
 
-    sudo $PKG_MANAGER install -y "${RANCHER_DEPENDENCIES[@]}" >/dev/null
+    RANCHER_PACKAGES=$(common::dependencies_from "rancher")
+    sudo $PKG_MANAGER install -y $RANCHER_PACKAGES >/dev/null
 
     if [[ ! -f $APPIMAGE_DIR/$RANCHER_DESKTOP_FILENAME ]]; then
         curl -fsSLO --output-dir $APPIMAGE_DIR $RANCHER_DESKTOP_DOWNLOAD_URL
@@ -901,12 +822,8 @@ function base::stow() {
     local -r STOW_GPG_SIGNATURE_FILENAME=$(basename $STOW_GPG_SIGNATURE_DOWNLOAD_URL)
     local -r GNU_GPG_KEYRING_DOWNLOAD_URL="http://ftp.gnu.org/gnu/gnu-keyring.gpg"
 
-    local -rA STOW_BASE_DEPENDENCIES=(
-        ["dnf"]="perl-Test-Simple perl-Test-Output perl-File-Copy"
-        ["apt-get"]="libtest-simple-perl libtest-output-perl libfile-ncopy-perl"
-    )
-
-    sudo $PKG_MANAGER install ${STOW_BASE_DEPENDENCIES[$PKG_MANAGER]} &>/dev/null
+    STOW_PACKAGES=$(common::dependencies_from "stow")
+    sudo $PKG_MANAGER install -y $STOW_PACKAGES &>/dev/null
 
     curl -fsS $GNU_GPG_KEYRING_DOWNLOAD_URL | gpg --import &>/dev/null
     curl -fsSLO --output-dir $SANDBOX $STOW_SOURCE_DOWNLOAD_URL

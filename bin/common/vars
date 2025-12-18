@@ -34,6 +34,8 @@ readonly APT_GPG_KEYS_DIR=/etc/apt/trusted.gpg.d
 
 readonly RAW_GITHUB_URL=https://raw.githubusercontent.com
 
+readonly PKG_INVENTORY_FILE="$REPOSITORY_DIR/bin/common/packages.yaml"
+
 readonly -a NERD_FONTS_TO_INSTALL=(
     "JetBrainsMono"
     "RobotoMono"
