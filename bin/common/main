@@ -26,7 +26,8 @@ source "$(dirname "${BASH_SOURCE[0]}")/logging"
 # Returns:
 #   0 on success
 #   non-zero if any Global is not set or yq installation fails.
-function common::dependencies_from() {
+
+common::dependencies_from() {
 
     local -r FUNCTION_CALLEE="${1:-FUNCNAME[1]##*::}"
 
@@ -34,9 +35,10 @@ function common::dependencies_from() {
     : "${ARCH:?Error: ARCH is not set but required}"
     : "${XDG_BIN_HOME:?Error: XDG_BIN_HOME is not set but required}"
     : "${PKG_MANAGER:?Error: PKG_MANAGER is not set but required}"
-    : "${PKG_INVENTORY:?Error: PKG_INVENTORY is not set but required}"
+    : "${PKG_INVENTORY_FILE:?Error: PKG_INVENTORY_FILE is not set but required}"
 
     [[ ! $(command -v yq) ]] && {
+        local -r YQ_LATEST_RELEASE_DOWNLOAD_URL="https://github.com/mikefarah/yq/releases/latest/download/yq_${OS}_${ARCH}"
         curl -sSfLo "$XDG_BIN_HOME/yq" "$YQ_LATEST_RELEASE_DOWNLOAD_URL" && chmod +x "$XDG_BIN_HOME/yq"
     }
 
@@ -64,7 +66,8 @@ function common::dependencies_from() {
 # Returns:
 #   0 if package manager is detected
 #   1 if no package manager could be determined
-function common::package_manager() {
+
+common::package_manager() {
 
     local -ra PACKAGE_MANAGERS=(
         "apt-get"
@@ -101,7 +104,8 @@ function common::package_manager() {
     log::error "Couldn't determine the OS package manager."
 }
 
-# Displays an interactive menu using bash select and executes the chosen function.
+# Displays an interactive menu using bash select and executes
+# the selected option mapped function.
 # Globals:
 #   PS3
 # Arguments:
@@ -122,7 +126,7 @@ function common::package_manager() {
 #
 #   common::choose options "Choose a package"
 
-function common::choose() {
+common::choose() {
 
     local -n SETTINGS=$1
     local -r PROMPT=${2:-"Select an option"}
@@ -195,7 +199,27 @@ ON_ERROR_MSG=""
 
 SPIN_PID=""
 
-function common::__init_spinner() {
+common::start_spinner() {
+
+    local -r FUNCTION_CALLEE="${FUNCNAME[1]##*::}"
+    local -r PROGRESS_MSG="${1:-"Installing ${FUNCTION_CALLEE}..."}"
+
+    ON_SUCCESS_MSG="${2:-"${BOLD}${FUNCTION_CALLEE} ${GREEN}OK${NC}"}"
+    ON_ERROR_MSG="${3:-"${BOLD}${FUNCTION_CALLEE} ${RED}KO${NC}"}"
+
+    common::__init_spinner "$PROGRESS_MSG" &
+    SPIN_PID=$!
+    disown
+}
+
+common::stop_spinner() {
+
+    local -r EXIT_CODE=$?
+    ON_SUCCESS_MSG=${1:-$ON_SUCCESS_MSG}
+    common::__stop_spinner $EXIT_CODE
+}
+
+common::__init_spinner() {
 
     local i=0
     local -r MESSAGE="$1"
@@ -210,20 +234,7 @@ function common::__init_spinner() {
     done
 }
 
-function common::start_spinner() {
-
-    local -r FUNCTION_CALLEE="${FUNCNAME[1]##*::}"
-    local -r PROGRESS_MSG="${1:-"Installing ${FUNCTION_CALLEE}..."}"
-
-    ON_SUCCESS_MSG="${2:-"${BOLD}${FUNCTION_CALLEE} ${GREEN}OK${NC}"}"
-    ON_ERROR_MSG="${3:-"${BOLD}${FUNCTION_CALLEE} ${RED}KO${NC}"}"
-
-    common::__init_spinner "$PROGRESS_MSG" &
-    SPIN_PID=$!
-    disown
-}
-
-function common::__stop_spinner() {
+common::__stop_spinner() {
 
     local EXIT_CODE=${1:-0}
     local TRIGGERED_BY_SIGNAL=${2:-false}
@@ -242,13 +253,6 @@ function common::__stop_spinner() {
         echo -ne "\r\033[K${RED}✖${NC} ${ON_ERROR_MSG}\n" >&2
 
     SPIN_PID=""
-}
-
-function common::stop_spinner() {
-
-    local -r EXIT_CODE=$?
-    ON_SUCCESS_MSG=${1:-$ON_SUCCESS_MSG}
-    common::__stop_spinner $EXIT_CODE
 }
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then

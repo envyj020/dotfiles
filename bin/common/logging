@@ -9,20 +9,20 @@ LOGGING_IS_LOADED=1
 
 BOLD='\033[1m' RED='\033[1;31m' YELLOW='\033[0;33m' GREEN='\033[1;32m' NC='\033[0m'
 
-function log::error() {
+log::error() {
     echo -e "${RED}ERROR: ${0}:${FUNCNAME[1]}:${NC}" "$@" >&2
     exit 1
 }
 
-function log::warn() {
+log::warn() {
     echo -e "${YELLOW}WARNING: ${0}:${FUNCNAME[1]}:${NC}" "$@"
 }
 
-function log::info() {
+log::info() {
     echo -e "${GREEN}INFO: ${0}:${FUNCNAME[1]}:${NC}" "$@"
 }
 
-function log::not_implemented() {
+log::not_implemented() {
     local -r TARGET=${1:-${FUNCNAME[1]##*::}}
     log::warn "${TARGET} not yet implemented for ${OS_NAME}:${OS_VERSION}. Skipping!"
 }

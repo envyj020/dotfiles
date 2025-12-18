@@ -14,7 +14,7 @@ source "$SCRIPT_DIR/common/main"
 
 trap main::tear_down EXIT INT QUIT TERM
 
-function main::tear_down() {
+main::tear_down() {
     local EXIT_CODE=$?
     common::__stop_spinner $EXIT_CODE true
     rm -rf "$SANDBOX"
@@ -23,7 +23,7 @@ function main::tear_down() {
 
 # Ensures script idempotency by prepending required dirs
 # to the PATH variable during execution until full dotfiles installation.
-function main::setup() {
+main::setup() {
 
     local -r PATHS_TO_PREPEND=(
         "$XDG_BIN_HOME"
@@ -37,7 +37,7 @@ function main::setup() {
     done
 }
 
-function base::packages() {
+base::packages() {
 
     common::start_spinner
 
@@ -47,7 +47,7 @@ function base::packages() {
     common::stop_spinner
 }
 
-function base::tmux() {
+base::tmux() {
 
     common::start_spinner
 
@@ -71,7 +71,7 @@ function base::tmux() {
     common::stop_spinner
 }
 
-function base::ueberzugpp() {
+base::ueberzugpp() {
 
     # https://github.com/jstkdng/ueberzugpp
 
@@ -106,7 +106,7 @@ function base::ueberzugpp() {
     common::stop_spinner
 }
 
-function base::nvm() {
+base::nvm() {
 
     # https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
 
@@ -131,7 +131,7 @@ function base::nvm() {
     common::stop_spinner
 }
 
-function base::gvm() {
+base::gvm() {
 
     # https://github.com/moovweb/gvm
 
@@ -155,7 +155,7 @@ function base::gvm() {
     common::stop_spinner
 }
 
-function base::app_image_launcher() {
+base::app_image_launcher() {
 
     # https://github.com/TheAssassin/AppImageLauncher
 
@@ -195,7 +195,7 @@ function base::app_image_launcher() {
     common::stop_spinner
 }
 
-function base::neovim() {
+base::neovim() {
 
     # https://github.com/MordechaiHadad/bob
 
@@ -225,7 +225,7 @@ function base::neovim() {
     common::stop_spinner
 }
 
-function base::fonts() {
+base::fonts() {
 
     common::start_spinner
 
@@ -264,12 +264,11 @@ function base::fonts() {
     common::stop_spinner
 }
 
-function base::alacritty() {
+base::alacritty() {
 
     # https://alacritty.org/config-alacritty.html
 
     common::start_spinner
-
 
     [[ $(command -v alacritty) ]] && {
         common::stop_spinner
@@ -304,7 +303,7 @@ function base::alacritty() {
     common::stop_spinner
 }
 
-function base::dir_colors() {
+base::dir_colors() {
 
     common::start_spinner
 
@@ -325,7 +324,7 @@ function base::dir_colors() {
     common::stop_spinner
 }
 
-function base::rofi() {
+base::rofi() {
 
     # https://github.com/davatorium/rofi/blob/next/INSTALL.md
 
@@ -382,7 +381,7 @@ function base::rofi() {
     common::stop_spinner
 }
 
-function base::albert() {
+base::albert() {
 
     # https://albertlauncher.github.io/gettingstarted/install
 
@@ -392,7 +391,7 @@ function base::albert() {
     local -r ALBERT_REPOSITORY_BASE_URL=https://download.opensuse.org/repositories/$ALBERT_REPOSITORY_NAME
     local -r VERSION_IDENTIFIER="${OS_NAME}_${OS_VERSION}"
 
-    function IS_OS_RELEASE_VERSION_SUPPORTED() {
+    IS_OS_RELEASE_VERSION_SUPPORTED() {
 
         local -r VERSION="$1"
         local -r ALBERT_REPOSITORY_HTML=$(curl -fsSL "${ALBERT_REPOSITORY_BASE_URL/:m/:\/m}")
@@ -438,7 +437,7 @@ function base::albert() {
     common::stop_spinner
 }
 
-function base::app_launcher() {
+base::app_launcher() {
 
     # shellcheck disable=SC2034
     local -rA options=(
@@ -448,7 +447,7 @@ function base::app_launcher() {
     common::choose options "Choose an Application Launcher"
 }
 
-function base::wm_status_bar() {
+base::wm_status_bar() {
 
     # shellcheck disable=SC2034
     local -rA options=(
@@ -458,7 +457,7 @@ function base::wm_status_bar() {
     common::choose options "Choose an Status Bar"
 }
 
-function base::polybar() {
+base::polybar() {
 
     # https://polybar.readthedocs.io
 
@@ -481,7 +480,7 @@ EOF
     common::stop_spinner
 }
 
-function base::bumblebee() {
+base::bumblebee() {
 
     # https://bumblebee-status.readthedocs.io
 
@@ -508,7 +507,7 @@ function base::bumblebee() {
     common::stop_spinner
 }
 
-function base::i3wm() {
+base::i3wm() {
 
     # https://i3wm.org/docs
 
@@ -525,7 +524,7 @@ function base::i3wm() {
     common::stop_spinner
 }
 
-function base::i3lock() {
+base::i3lock() {
 
     # https://github.com/Raymo111/i3lock-color
 
@@ -553,7 +552,7 @@ function base::i3lock() {
     common::stop_spinner
 }
 
-function cmd::terraform() {
+cmd::terraform() {
 
     # https://github.com/tofuutils/tofuenv
 
@@ -574,7 +573,7 @@ function cmd::terraform() {
     common::stop_spinner
 }
 
-function kube::kubectl() {
+kube::kubectl() {
 
     # https://github.com/flavio/kuberlr
 
@@ -606,7 +605,7 @@ function kube::kubectl() {
     common::stop_spinner
 }
 
-function cmd::podman() {
+cmd::podman() {
 
     # https://podman.io/docs/installation
 
@@ -622,7 +621,7 @@ function cmd::podman() {
     common::stop_spinner
 }
 
-function cmd::docker() {
+cmd::docker() {
 
     # https://docs.docker.com/engine/install
 
@@ -640,7 +639,7 @@ function cmd::docker() {
     common::stop_spinner
 }
 
-function kube::kube_prompt() {
+kube::kube_prompt() {
 
     # https://github.com/c-bata/kube-prompt
 
@@ -662,7 +661,7 @@ function kube::kube_prompt() {
     common::stop_spinner
 }
 
-function base::python() {
+base::python() {
 
     # misc user-wide python packages
 
@@ -685,7 +684,7 @@ function base::python() {
     common::stop_spinner
 }
 
-function kube::rancher_desktop() {
+kube::rancher_desktop() {
 
     # https://docs.rancherdesktop.io/getting-started/installation
 
@@ -704,7 +703,7 @@ function kube::rancher_desktop() {
     common::stop_spinner
 }
 
-function cmd::asdf() {
+cmd::asdf() {
 
     # https://asdf-vm.com/guide/getting-started.html
 
@@ -739,7 +738,7 @@ function cmd::asdf() {
     common::stop_spinner
 }
 
-function cmd::cloudlens() {
+cmd::cloudlens() {
 
     # https://one2n.gitbook.io/docs
 
@@ -771,7 +770,7 @@ function cmd::cloudlens() {
     common::stop_spinner
 }
 
-function cmd::devbox() {
+cmd::devbox() {
 
     # https://jetify-com.vercel.app/docs/devbox/installing_devbox
 
@@ -803,7 +802,7 @@ function cmd::devbox() {
     common::stop_spinner
 }
 
-function base::stow() {
+base::stow() {
 
     # https://www.gnu.org/software/stow/manual
 
@@ -845,7 +844,7 @@ function base::stow() {
     common::stop_spinner
 }
 
-function base::nix() {
+base::nix() {
 
     # https://nixos.org/download
 
@@ -863,7 +862,7 @@ function base::nix() {
     common::stop_spinner
 }
 
-function cmd::mise() {
+cmd::mise() {
     # https://mise.jdx.dev/installing-mise.html#installation-methods
 
     common::start_spinner
@@ -879,7 +878,7 @@ function cmd::mise() {
     common::stop_spinner
 }
 
-function cmd::tldr() {
+cmd::tldr() {
 
     # https://github.com/tealdeer-rs/tealdeer
 
@@ -911,7 +910,7 @@ function cmd::tldr() {
     common::stop_spinner
 }
 
-function main::base() {
+main::base() {
     base::packages
     base::ueberzugpp
     base::python
@@ -929,7 +928,7 @@ function main::base() {
     base::stow
 }
 
-function main::cmd() {
+main::cmd() {
     cmd::mise
     cmd::terraform
     cmd::asdf
@@ -939,12 +938,12 @@ function main::cmd() {
     cmd::tldr
 }
 
-function main::kube() {
+main::kube() {
     kube::kubectl
     kube::kube_prompt
 }
 
-function main() {
+main() {
     main::setup
     main::base
     main::cmd
