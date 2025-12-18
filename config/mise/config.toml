@@ -49,9 +49,6 @@ version = "latest"
 [tools."aqua:chmln/sd"]
 version = "latest"
 
-[tools."aqua:mikefarah/yq"]
-version = "latest"
-
 [tools."aqua:sharkdp/bat"]
 version = "latest"
 
