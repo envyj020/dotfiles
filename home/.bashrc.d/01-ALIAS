@@ -1,8 +1,6 @@
 # vim: set ft=sh:
 # shellcheck disable=SC2015
 
-alias path='echo -e ${PATH//:/\\n}'
-
 alias ls='ls -F -h --color=always --time-style=long-iso'
 alias ll='ls -la'
 alias lt='ls -s -1 -S -F'
@@ -38,7 +36,9 @@ alias knet='kubectl run -it --rm "$USER-knet" \
     --image=praqma/network-multitool \
     --restart=Never -- /bin/bash'
 
-function command_exists() {
+alias path='echo -e ${PATH//:/\\n}'
+
+command_exists() {
     local CMD
 
     for CMD in "$@"; do
@@ -46,22 +46,22 @@ function command_exists() {
     done
 }
 
-function container_cmd() {
-    local ENGINE
+container_cmd() {
+    local CONTAINER_ENGINE
 
     [[ -n "${CONTAINER_ENGINE_PREFERENCE:-}" ]] && {
         command_exists "$CONTAINER_ENGINE_PREFERENCE" &&
             echo "$CONTAINER_ENGINE_PREFERENCE" && return 0
     }
-    for ENGINE in docker podman; do
-        command_exists "$ENGINE" && echo $ENGINE && return 0
+    for CONTAINER_ENGINE in docker podman; do
+        command_exists "$CONTAINER_ENGINE" && echo $CONTAINER_ENGINE && return 0
     done
 
     echo >&2 "${FUNCNAME[1]} error: requires docker or podman"
     return 1
 }
 
-function dik() {
+dik() {
     [[ $# -ne 2 ]] && {
         echo >&2 "Usage: ${FUNCNAME[0]} RECORD_TYPE DOMAIN"
         return 1
@@ -69,7 +69,7 @@ function dik() {
     dig +nocmd "$1" "$2" +multiline +noall +answer
 }
 
-function diff() {
+diff() {
     [[ $# -ne 2 ]] && {
         echo >&2 "Usage: ${FUNCNAME[0]} FILE1 FILE2"
         return 1
@@ -77,7 +77,7 @@ function diff() {
     git diff --no-index --color-words "$@"
 }
 
-function mkd() {
+mkd() {
     [[ $# -lt 1 ]] && {
         echo >&2 "Usage: ${FUNCNAME[0]} DIR..."
         return 1
@@ -85,19 +85,19 @@ function mkd() {
     mkdir -p "$@" && cd "$_" || return 1
 }
 
-function tmpd() {
+tmpd() {
     cd "$(mktemp -d ${1:+-t "$1".XXXXXXXXXX})" || return 1
 }
 
-function fs() {
+fs() {
     [[ -n "$*" ]] && du -sbh -- "$@" || du -sbh .[^.]* ./*
 }
 
-function cat() {
+cat() {
     command_exists 'bat' && bat "$@" || command cat "$@"
 }
 
-function asciinema_to_gif() {
+asciinema_to_gif() {
     local CONTAINER_CMD
 
     CONTAINER_CMD=$(container_cmd) || return 1
@@ -116,7 +116,7 @@ function asciinema_to_gif() {
         ghcr.io/asciinema/agg "$1" "$2"
 }
 
-function choose_status_bar() {
+choose_status_bar() {
     local PS3="Choose a status bar:" CHOICE REPLY
 
     local -r I3_CONFIG_DIR="$XDG_CONFIG_HOME/i3"
@@ -128,7 +128,7 @@ function choose_status_bar() {
         "Quit"
     )
 
-    function show_options {
+    show_options() {
         for i in "${!OPTIONS[@]}"; do
             printf "${GREEN}%d)${NC} %s\n" $((i + 1)) "${OPTIONS[$i]}"
         done
@@ -157,9 +157,10 @@ function choose_status_bar() {
             ;;
         esac
     done
+    unset -f show_options
 }
 
-function eza() {
+eza() {
     ! command_exists 'eza' && {
         echo 2>&1 "${FUNCNAME[0]} not found in your PATH"
         return 1
@@ -168,7 +169,7 @@ function eza() {
         --no-permissions --time-style=long-iso "$@"
 }
 
-function yy() {
+yy() {
     local TMP CWD
 
     TMP="$(mktemp -t "yazi-cwd.XXXXXX")" CWD
@@ -178,7 +179,7 @@ function yy() {
     rm -f -- "$TMP"
 }
 
-function search() {
+search() {
     [[ $# -ne 1 ]] && {
         echo >&2 "Usage: ${FUNCNAME[0]} SEARCH_TERM"
         return 1
@@ -186,7 +187,7 @@ function search() {
     open "https://www.google.com/search?q=$1"
 }
 
-function ckp() {
+ckp() {
     [[ $# -ne 1 ]] && {
         echo >&2 "Usage: ${FUNCNAME[0]} PORT"
         return 1
@@ -194,7 +195,7 @@ function ckp() {
     sudo lsof -ni4TCP:"$1" || echo "Port $1 is not bound"
 }
 
-function kp() {
+kp() {
     [[ $# -ne 1 ]] && {
         echo >&2 "Usage: ${FUNCNAME[0]} PORT"
         return 1
@@ -202,7 +203,7 @@ function kp() {
     sudo fuser -k -n tcp "$1" || echo "Port $1 is not bound"
 }
 
-function copycat() {
+copycat() {
     [[ $# -ne 1 ]] && {
         echo >&2 "Usage: ${FUNCNAME[0]} FILE"
         return 1
@@ -210,7 +211,7 @@ function copycat() {
     command cat "$1" | xclip -selection clipboard
 }
 
-function datauri() {
+datauri() {
     [[ $# -ne 1 ]] && {
         echo >&2 "Usage: ${FUNCNAME[0]} FILE"
         return 1
@@ -225,17 +226,17 @@ function datauri() {
     echo "data:${MIMETYPE};base64,$(openssl base64 -in "$1" | tr -d '\n')"
 }
 
-function unidecode() {
+unidecode() {
     perl -e "binmode(STDOUT, ':utf8'); print \"$*\""
     [[ -t 1 ]] && echo ""
 }
 
-function codepoint() {
+codepoint() {
     perl -e "use utf8; print sprintf('U+%04X', ord(\"$*\"))"
     [[ -t 1 ]] && echo ""
 }
 
-function isup() {
+isup() {
     [[ $# -ne 1 ]] && {
         echo >&2 "Usage: ${FUNCNAME[0]} DOMAIN"
         return 1
@@ -245,12 +246,12 @@ function isup() {
         notify-send -u critical -t 2000 "$1 is DOWN"
 }
 
-function epoch() {
+epoch() {
     local TIMESTAMP=${1:--1}
     printf '%(%B %d, %Y %-I:%M:%S %p %Z)T\n' "$TIMESTAMP"
 }
 
-function shortener() {
+shortener() {
     [[ $# -ne 1 ]] && {
         echo >&2 "Usage: ${FUNCNAME[0]} URL"
         return 1
@@ -261,7 +262,7 @@ function shortener() {
         -d "{ \"url\": \"$1\" }" | jq -r '.data.tiny_url'
 }
 
-function readcert() {
+readcert() {
     [[ $# -ne 1 ]] && {
         echo >&2 "Usage: ${FUNCNAME[0]} DOMAIN"
         return 1

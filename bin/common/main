@@ -5,9 +5,9 @@ set -ueo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/logging"
 
-# This function queries an inventory file using 'yq' to retrieve
-# dependencies for a specific caller or target. It combines universal
-# packages names with those specific to the current $OS and $PKG_MANAGER.
+# Queries an inventory file using 'yq' to retrieve dependencies for a
+# specific caller or target. It combines common packages names with
+# those specific to the current $OS and $PKG_MANAGER.
 #
 # Globals:
 #   OS
@@ -25,7 +25,7 @@ source "$(dirname "${BASH_SOURCE[0]}")/logging"
 #
 # Returns:
 #   0 on success
-#   non-zero if any Global is not set or yq installation fails.
+#   non-zero if any global is not set or yq installation fails.
 
 common::dependencies_from() {
 
@@ -37,9 +37,9 @@ common::dependencies_from() {
     : "${PKG_MANAGER:?Error: PKG_MANAGER is not set but required}"
     : "${PKG_INVENTORY_FILE:?Error: PKG_INVENTORY_FILE is not set but required}"
 
-    [[ ! $(command -v yq) ]] && {
-        local -r YQ_LATEST_RELEASE_DOWNLOAD_URL="https://github.com/mikefarah/yq/releases/latest/download/yq_${OS}_${ARCH}"
-        curl -sSfLo "$XDG_BIN_HOME/yq" "$YQ_LATEST_RELEASE_DOWNLOAD_URL" && chmod +x "$XDG_BIN_HOME/yq"
+    [[ $(command -v yq) ]] || {
+        local -r YQ_LATEST_BIN_RELEASE_URL="https://github.com/mikefarah/yq/releases/latest/download/yq_${OS}_${ARCH}"
+        curl -sSfLo "$XDG_BIN_HOME/yq" "$YQ_LATEST_BIN_RELEASE_URL" && chmod +x "$XDG_BIN_HOME/yq"
     }
 
     local COMMON_PKGS OS_PKGS
@@ -138,7 +138,7 @@ common::choose() {
 
     PS3="${PROMPT}: "
 
-    function show_options {
+    show_options() {
         for i in "${!OPTIONS[@]}"; do
             printf "%d) %s\n" $((i + 1)) "${OPTIONS[$i]}"
         done
