@@ -31,11 +31,9 @@ common::dependencies_from() {
 
     local -r FUNCTION_CALLEE="${1:-FUNCNAME[1]##*::}"
 
-    : "${OS:?Error: OS is not set but required}"
-    : "${ARCH:?Error: ARCH is not set but required}"
-    : "${XDG_BIN_HOME:?Error: XDG_BIN_HOME is not set but required}"
-    : "${PKG_MANAGER:?Error: PKG_MANAGER is not set but required}"
-    : "${PKG_INVENTORY_FILE:?Error: PKG_INVENTORY_FILE is not set but required}"
+    for GLOBAL in OS ARCH XDG_BIN_HOME PKG_MANAGER PKG_INVENTORY_FILE; do
+        : "${!GLOBAL:?Error: $GLOBAL is not set but required}"
+    done
 
     [[ $(command -v yq) ]] || {
         local -r YQ_LATEST_BIN_RELEASE_URL="https://github.com/mikefarah/yq/releases/latest/download/yq_${OS}_${ARCH}"
