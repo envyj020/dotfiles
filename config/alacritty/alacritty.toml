@@ -83,7 +83,7 @@ y = 0
 [window]
 decorations = "Transparent"
 startup_mode = "Maximized"
-dynamic_padding = false
+dynamic_padding = true
 dynamic_title = true
 opacity = 0.99
 
