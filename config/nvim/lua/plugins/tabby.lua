@@ -16,7 +16,7 @@ require("tabby").setup({
     line = function(line)
         return {
             {
-                { " ", hl = { fg = "#7FBBB3", bg = palette.base } },
+                { "  ", hl = { fg = palette.green, bg = palette.base } },
                 line.sep("", theme.head, theme.fill),
             },
             line.tabs().foreach(function(tab)
