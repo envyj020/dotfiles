@@ -19,6 +19,8 @@
 window {
     y-offset: calc(10% + 50px);
     background-color: @base1;
+    border: 1px;
+    border-color: @surface0;
 }
 
 inputbar {
