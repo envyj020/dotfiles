@@ -5,3 +5,4 @@ config/yazi/plugins
 config/yazi/bookmarks
 config/tmux/plugins
 config/i3/i3-bar
+docs/node_modules
