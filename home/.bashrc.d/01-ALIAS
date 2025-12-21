@@ -172,7 +172,7 @@ eza() {
 yy() {
     local TMP CWD
 
-    TMP="$(mktemp -t "yazi-cwd.XXXXXX")" CWD
+    TMP="$(mktemp -t "yazi-cwd.XXXXXX")"
     yazi "$@" --cwd-file="$TMP"
     IFS= read -r -d '' CWD <"$TMP"
     [ -n "$CWD" ] && [ "$CWD" != "$PWD" ] && cd -- "$CWD" || return 1
