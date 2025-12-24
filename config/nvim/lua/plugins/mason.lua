@@ -82,6 +82,7 @@ local MASON_INSTALLER_PACKAGES = common.concat_tables(
 )
 
 require("mason-lspconfig").setup({
+    automatic_enable = false,
     ensure_installed = MASON_SUPPORTED_PACKAGES,
 })
 

@@ -9,7 +9,7 @@ Plug("folke/tokyonight.nvim")
 Plug("catppuccin/nvim")
 
 --- Treesitter
-Plug("nvim-treesitter/nvim-treesitter", { ["do"] = ":TSUpdate" })
+Plug("nvim-treesitter/nvim-treesitter", { ["do"] = ":TSUpdate", ["branch"] = 'master' })
 Plug("nvim-treesitter/nvim-treesitter-refactor")
 Plug("nvim-treesitter/nvim-treesitter-textobjects")
 Plug("nvim-treesitter/playground")
@@ -48,8 +48,8 @@ Plug("isakbm/gitgraph.nvim")
 Plug("lewis6991/gitsigns.nvim")
 
 --- Package Manager
-Plug("williamboman/mason.nvim", { tag = "v1.11.0" })
-Plug("williamboman/mason-lspconfig.nvim", { tag = "v1.32.0" })
+Plug("williamboman/mason.nvim", { tag = "stable" })
+Plug("williamboman/mason-lspconfig.nvim", { tag = "stable" })
 Plug("WhoIsSethDaniel/mason-tool-installer.nvim")
 
 --- LSP
