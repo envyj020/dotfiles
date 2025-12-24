@@ -9,6 +9,7 @@ dependencies:
       - ibus-m17n
       - coreutils
       - binutils
+      - asciidoc
       - mercurial
       - ffmpeg
       - zoxide
@@ -19,37 +20,43 @@ dependencies:
       - bison
       - wget2
       - curl
+      - pass
+      - gnupg2
       - arandr
       - autorandr
-      - tmux
-      - rpm
-      - gcc
-      - jq
       - btop
       - fastfetch
       - duf
       - hyperfine
       - httpie
       - asciinema
-    apt-get:
-      - git
-      - git-extras
-      - poppler-utils
-      - imagemagick
-      - python-is-python3
-      - build-essential
-      - libnotify-bin
-      - libpango-1.0.0
-      - gping
+      - tmux
+      - rpm
+      - gcc
+      - jq
     dnf:
       - git-core
       - dnf-command(config-manager)
+      - pkgconf
       - poppler
       - ImageMagick
       - libnotify
       - pango
       - navi
+    apt-get:
+      - git
+      - git-extras
+      - pkg-config
+      - poppler-utils
+      - imagemagick
+      - libnotify-bin
+      - libpango-1.0.0
+      - python-is-python3
+      - build-essential
+      - gping
   fonts:
+    common:
+      - fontconfig
     dnf:
       - google-noto-sans-fonts
       - google-noto-cjk-fonts
@@ -69,7 +76,6 @@ dependencies:
       - libxcb-devel
       - libxkbcommon-devel
     apt-get:
-      - pkg-config
       - libfreetype6-dev
       - libfontconfig1-dev
       - libxcb-xfixes0-dev
@@ -122,17 +128,15 @@ dependencies:
       - xss-lock
       - picom
       - pavucontrol
-      - gnome-system-monitor
       - automake
       - autoconf
       - light
       - maim
       - dunst
+      - feh
       - i3
       - xbacklight
       - wmctrl
-      - asciidoc
-      - feh
       - dunst
       - papirus-icon-theme
     dnf:
@@ -147,9 +151,7 @@ dependencies:
       - conky-all
   i3lock:
     dnf:
-      - pkgconf
       - cairo-devel
-      - fontconfig
       - libev-devel
       - libjpeg-turbo-devel
       - libXinerama
@@ -160,8 +162,6 @@ dependencies:
       - xcb-util-image-devel
       - xcb-util-xrm-devel
     apt-get:
-      - pkg-config
-      - libpam0g-dev
       - libcairo2-dev
       - libfontconfig1-dev
       - libxcb-composite0-dev
@@ -173,14 +173,11 @@ dependencies:
       - libxcb-image0-dev
       - libxcb-util0-dev
       - libxcb-xrm-dev
+      - libpam0g-dev
       - libxkbcommon-dev
       - libxkbcommon-x11-dev
       - libjpeg-dev
       - libgif-dev
-  rancher:
-    common:
-      - pass
-      - gnupg2
   stow:
     dnf:
       - perl-Test-Simple
