@@ -108,6 +108,7 @@ Plug("folke/twilight.nvim")
 Plug("jghauser/mkdir.nvim")
 Plug("filipdutescu/renamer.nvim", { branch = "master" })
 Plug("cenk1cenk2/schema-companion.nvim", { commit = "71c9e53b399dc7063381c693b7f06f7144772d45" })
+Plug("davidmh/mdx.nvim")
 Plug("ray-x/go.nvim")
 Plug("kcl-lang/kcl.nvim")
 
