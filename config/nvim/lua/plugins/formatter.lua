@@ -18,6 +18,7 @@ require("formatter").setup({
         go = { require("formatter.filetypes.go").goimports },
         terraform = { require("formatter.filetypes.terraform").terraformfmt },
         kcl = { require("formatters.kcl").kclfmt },
+        mdx = { require("formatters.mdx").prettierd },
         ["*"] = { require("formatter.filetypes.any").remove_trailing_whitespace },
     },
 })
