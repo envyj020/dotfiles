@@ -64,6 +64,8 @@ local MASON_SUPPORTED_PACKAGES = {
     "dockerls",
     "terraformls",
     "gopls@v0.18.1",
+    "astro",
+    "mdx_analyzer",
     "lua_ls",
     "emmet_ls",
     "pyright",
