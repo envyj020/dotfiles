@@ -7,6 +7,8 @@ require("formatter").setup({
         typescript = { require("formatter.filetypes.typescript").prettierd },
         javascriptreact = { require("formatter.filetypes.javascriptreact").prettierd },
         typescriptreact = { require("formatter.filetypes.typescriptreact").prettierd },
+        html = { require("formatter.filetypes.html").prettierd },
+        css = { require("formatter.filetypes.css").prettierd },
         markdown = { require("formatter.filetypes.markdown").prettierd },
         json = { require("formatter.filetypes.json").prettierd },
         yaml = { require("formatter.filetypes.yaml").prettierd },

@@ -29,6 +29,7 @@ local MASON_UNSUPPORTED_LINTER_PACKAGES = {
     "yamllint",
     "actionlint",
     "ansible-lint",
+    "stylelint",
     "markdownlint",
     "markdownlint-cli2",
     "golangci-lint",
