@@ -11,8 +11,10 @@ help:
 	grep -E '^[a-zA-Z._-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "$(BLUE)%-30s$(NC) %s\n", $$1, $$2}'
 
+.PHONY: help
+
 init:
-    git submodule update --init --recursive
+	git submodule update --init --recursive
 	git lfs pull
 
 .PHONY: init
@@ -28,22 +30,22 @@ mise: stow ## Installs system-wide mise packages
 
 .PHONY: mise
 
-chk-stow:
-	command -v stow &>/dev/null || { \
-		echo -e "$(RED)stow not found, run $(GREEN)make base$(NC)"; \
+x-stow:
+	command -v stow > /dev/null 2>&1 || { \
+		printf "$(RED)stow not found, run $(GREEN)make base$(NC)\n"; \
 		exit 1; \
 	}
 
-.PHONY: chk-stow
+.PHONY: x-stow
 
-stow: chk-stow init ## Symlinks dotfiles
+stow: x-stow init ## Symlinks dotfiles
 	stow home -t $(HOME)
 	stow config -t $(HOME)/.config
 
 .PHONY: stow
 
-unstow: chk-stow ## Removes dotfiles symlinks
+unstow: x-stow ## Removes dotfiles symlinks
 	stow -D home -t $(HOME)
 	stow -D config -t $(HOME)/.config
 
-.PHONY: stow
+.PHONY: unstow
