@@ -1,7 +1,7 @@
 [user]
-    name = Ivan Fernandez Villar
-    email = ifernandez@omw.me
-    username = envyj020
+    name = GIT_NAME_PLACEHOLDER
+    email = GIT_EMAIL_PLACEHOLDER
+    username = GIT_USERNAME_PLACEHOLDER
 
 [fetch]
     prune = true
