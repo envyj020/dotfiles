@@ -1,8 +1,8 @@
 config/albert/*
 !config/albert/config
-!config/asciinema/install-id
-config/yazi/plugins
-config/yazi/bookmarks
+config/asciinema/install-id
 config/tmux/plugins
 config/i3/i3-bar
+pkg/yazi/plugins
+pkg/yazi/bookmarks
 docs/node_modules

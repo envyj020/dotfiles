@@ -24,7 +24,8 @@ base: init ## Installs base OS packages
 
 .PHONY: base
 
-mise: stow ## Installs system-wide mise packages
+mise: x-stow ## Installs system-wide mise packages
+	stow pkg -t $(HOME)/.config
 	mise install
 	ya pkg install
 
@@ -41,11 +42,13 @@ x-stow:
 stow: x-stow init ## Symlinks dotfiles
 	stow home -t $(HOME)
 	stow config -t $(HOME)/.config
+	stow pkg -t $(HOME)/.config
 
 .PHONY: stow
 
 unstow: x-stow ## Removes dotfiles symlinks
 	stow -D home -t $(HOME)
 	stow -D config -t $(HOME)/.config
+	stow -D pkg -t $(HOME)/.config
 
 .PHONY: unstow
