@@ -21,8 +21,6 @@ main::tear_down() {
     exit $EXIT_CODE
 }
 
-# Ensures script idempotency by prepending required dirs
-# to the PATH variable during execution until full dotfiles installation.
 main::setup() {
 
     local -r PATHS_TO_PREPEND=(
@@ -35,6 +33,11 @@ main::setup() {
     for PATH_TO_PREPEND in "${PATHS_TO_PREPEND[@]}"; do
         PATH="$PATH_TO_PREPEND:$PATH"
     done
+
+    case $OS_NAME in
+    fedora | rhel | centos | XUbuntu | debian) return 0 ;;
+    *) log::error "OS: $OS_NAME is not supported by this script" ;;
+    esac
 }
 
 base::packages() {
