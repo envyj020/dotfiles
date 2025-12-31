@@ -7,7 +7,7 @@ import UnoCSS from "unocss/astro";
 // https://astro.build/config
 export default defineConfig({
   site: "https://envyj020.github.io",
-  base: import.meta.env.PROD ? "/dotfiles" : "/",
+  base: "/dotfiles",
   integrations: [
     UnoCSS(),
     Icons({
@@ -25,7 +25,7 @@ export default defineConfig({
           replacesTitle: false,
         },
         editLink: {
-          baseUrl: "https://github.com/envyj020/dotfiles/edit/main/",
+          baseUrl: "https://github.com/envyj020/dotfiles/edit/main/docs/",
         },
         customCss: [
           "@fontsource/jetbrains-mono/400.css",
