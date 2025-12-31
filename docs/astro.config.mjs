@@ -9,7 +9,6 @@ export default defineConfig({
   site: "https://envyj020.github.io",
   base: "/dotfiles",
   integrations: [
-    UnoCSS(),
     Icons({
       sidebar: true,
       extractSafelist: true,
@@ -79,5 +78,6 @@ export default defineConfig({
         ],
       },
     }),
+    UnoCSS(),
   ],
 });
