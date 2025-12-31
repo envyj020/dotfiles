@@ -1,0 +1,118 @@
+---
+title: Tmux
+description: Tmux Keybindings Reference
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+A comprehensive reference of all custom keybindings configured in Tmux.
+
+<Aside icon="seti:lock" title="Prefix key">
+  The prefix key is mapped to `Ctrl+a`. For example, `prefix + c` means press
+  `Ctrl+a` then release, then press `c`.
+</Aside>
+
+<div class="keybindings-page">
+
+## Mouse Control
+
+| Key          | Description        |
+| ------------ | ------------------ |
+| `prefix + h` | Enable mouse mode  |
+| `prefix + H` | Disable mouse mode |
+
+## Pane Synchronization
+
+| Key          | Description                  |
+| ------------ | ---------------------------- |
+| `prefix + e` | Enable pane synchronization  |
+| `prefix + E` | Disable pane synchronization |
+
+## Window Management
+
+| Key               | Description                   |
+| ----------------- | ----------------------------- |
+| `Ctrl+Left`       | Previous window               |
+| `Ctrl+Right`      | Next window                   |
+| `prefix + Ctrl+w` | Create new window with prompt |
+| `prefix + Ctrl+,` | Rename current window         |
+
+## Pane Management
+
+| Key           | Description             |
+| ------------- | ----------------------- |
+| `prefix + \|` | Split pane horizontally |
+| `prefix + -`  | Split pane vertically   |
+
+## Pane Navigation
+
+| Key         | Description              |
+| ----------- | ------------------------ |
+| `Alt+Left`  | Select pane to the left  |
+| `Alt+Right` | Select pane to the right |
+| `Alt+Up`    | Select pane above        |
+| `Alt+Down`  | Select pane below        |
+
+## Pane Resizing
+
+| Key              | Description       |
+| ---------------- | ----------------- |
+| `prefix + Up`    | Resize pane up    |
+| `prefix + Down`  | Resize pane down  |
+| `prefix + Left`  | Resize pane left  |
+| `prefix + Right` | Resize pane right |
+
+## Copy Mode
+
+| Key            | Description       |
+| -------------- | ----------------- |
+| `prefix + [`   | Enter copy mode   |
+| `Space`        | Start selection   |
+| `Enter` or `y` | Yank selection    |
+| `prefix + ]`   | Paste yanked text |
+
+## Plugin: Tmux Resurrect
+
+| Key               | Description          |
+| ----------------- | -------------------- |
+| `prefix + Ctrl+s` | Save tmux session    |
+| `prefix + Ctrl+r` | Restore tmux session |
+
+## Plugin: Tmux Open
+
+| Key      | Description                  |
+| -------- | ---------------------------- |
+| `Ctrl+o` | Open selection with \$EDITOR |
+| `o`      | Open selection with xdg-open |
+| `S`      | Search selection on Google   |
+
+## Plugin: Tmux Gentrify
+
+| Key              | Description |
+| ---------------- | ----------- |
+| `prefix + Alt+x` | Cut pane    |
+| `prefix + Alt+v` | Paste pane  |
+
+## Plugin: Session Wizard
+
+| Key          | Description         |
+| ------------ | ------------------- |
+| `prefix + T` | Open session wizard |
+
+## Plugin: Extrakto
+
+| Key            | Description                           |
+| -------------- | ------------------------------------- |
+| `prefix + Tab` | Open fuzzy finder for text extraction |
+| `Enter`        | Copy selected text (in extrakto)      |
+| `Tab`          | Insert selected text (in extrakto)    |
+
+## Plugin: Tmux Notify
+
+| Key              | Description                                                    |
+| ---------------- | -------------------------------------------------------------- |
+| `prefix + m`     | Enable command completion notification                         |
+| `prefix + M`     | Disable command completion notification                        |
+| `prefix + Alt+m` | Enable command notification and autofocus window on completion |
+
+</div>
