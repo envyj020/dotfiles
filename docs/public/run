@@ -18,15 +18,15 @@ set -euo pipefail
     : "${XDG_CACHE_HOME:=$HOME/.cache}"
 
     info() {
-        printf "${BLUE}INFO: %s:${NC} ${BOLD}%b${NC}\n" "$0" "$*"
+        printf "${BLUE}INFO:${NC} ${BOLD}%b${NC}\n" "$*"
     }
 
     warning() {
-        printf "${YELLOW}WARNING: %s:${NC} ${BOLD}%b${NC}\n" "$0" "$*"
+        printf "${YELLOW}WARNING:${NC} ${BOLD}%b${NC}\n" "$*"
     }
 
     error() {
-        printf "${RED}ERROR: %s:${NC} %s\n" "$0" "$*" >&2
+        printf "${RED}ERROR:${NC} ${BOLD}%s${NC}\n" "$*" >&2
         exit 1
     }
 
