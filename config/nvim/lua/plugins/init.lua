@@ -99,7 +99,7 @@ Plug("jghauser/follow-md-links.nvim")
 
 --- Development
 Plug("jonsmithers/vim-html-template-literals")
-Plug("ap/vim-css-color")
+Plug("catgoose/nvim-colorizer.lua")
 Plug("mhartington/formatter.nvim")
 Plug("mfussenegger/nvim-lint")
 Plug("akinsho/toggleterm.nvim")
@@ -128,7 +128,7 @@ vim.call("plug#end")
 local NVIM_COLORSCHEME = os.getenv("NVIM_COLORSCHEME") or "catppuccin-mocha"
 vim.cmd("colorscheme " .. NVIM_COLORSCHEME)
 
---- Plugins Config
+--- Import Plugins config
 require("plugins.avante")
 require("plugins.cmp")
 require("plugins.dap")

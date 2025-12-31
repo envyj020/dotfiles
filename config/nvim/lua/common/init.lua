@@ -14,7 +14,7 @@ end
 
 --- Reloads Neovim configuration
 function M.nvim_config_reload()
-    local modules = { "^common", "^core", "^formatters" }
+    local modules = { "^common", "^core", "^formatters", "^plugins" }
 
     for name, _ in pairs(package.loaded) do
         for _, pattern in ipairs(modules) do

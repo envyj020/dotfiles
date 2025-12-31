@@ -32,6 +32,20 @@ require("renamer").setup({
 
 require("twilight").setup()
 
+require("colorizer").setup({
+    user_default_options = {
+        names = false,
+        RRGGBBAA = true,
+        AARRGGBB = true,
+        rgb_fn = true,
+        hsl_fn = true,
+        mode = "virtualtext",
+        virtualtext = "󱓻 ",
+        virtualtext_inline = true,
+        virtualtext_mode = "foreground",
+    },
+})
+
 require("dressing").setup({
     input = {
         enabled = true,
