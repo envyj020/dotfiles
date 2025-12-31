@@ -6,14 +6,19 @@ on:   # yamllint disable-line rule:truthy
     branches:
       - main
     paths:
-      - 'docs/src/**'
-      - 'docs/public/**'
+      - 'docs/**'
+      - '!docs/README.md'
+      - '!docs/.gitignore'
   workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
 
 jobs:
   build:
