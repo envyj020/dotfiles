@@ -18,6 +18,7 @@ export default defineConfig({
         title: "Yes, yet another dotfiles",
         favicon: "favicon.png",
         lastUpdated: true,
+        tableOfContents: { minHeadingLevel: 1, maxHeadingLevel: 2 },
         logo: {
           dark: "./src/assets/logos/home/100x100-dark.png",
           light: "./src/assets/logos/home/100x100-light.png",
@@ -62,6 +63,11 @@ export default defineConfig({
                 icon: "i-catppuccin:vim",
                 label: "Neovim",
                 link: "keybindings/neovim",
+              },
+              {
+                icon: "i-catppuccin:3d",
+                label: "Tmux",
+                link: "keybindings/tmux",
               },
               {
                 icon: "i-catppuccin:taskfile",
