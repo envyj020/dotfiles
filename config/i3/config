@@ -187,7 +187,7 @@ bindsym $mod+a focus parent
 
 # exec
 exec_always --no-startup-id wmctrl -c Plasma
-exec_always --no-startup-id feh --bg-fill ~/Pictures/aesthetic.jpg
+exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpaper.jpg
 exec_always --no-startup-id setxkbmap -layout es,us -option grp:win_space_toggle
 
 exec --no-startup-id picom
