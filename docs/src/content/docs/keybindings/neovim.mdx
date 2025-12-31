@@ -8,8 +8,8 @@ import { Aside } from "@astrojs/starlight/components";
 A comprehensive reference of all custom keybindings configured in Neovim.
 
 <Aside icon="vim" title="Neovim Leader Key: <Space>">
-  Please note, many of the keybindings listed below reference actions or
-  commands provided by custom plugins.
+  Please note that many of the keybindings listed below reference actions or
+  commands provided by third party plugins.
 </Aside>
 
 <div class="keybindings-page">
@@ -157,12 +157,6 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | ------------ | ---------------------- | ------------- |
 | `<Leader>rn` | Insert, Normal, Visual | Rename symbol |
 
-## Twilight
-
-| Key          | Mode   | Description     |
-| ------------ | ------ | --------------- |
-| `<Leader>tw` | Normal | Toggle Twilight |
-
 ## Markdown
 
 | Key            | Mode   | Description                 |
@@ -240,38 +234,24 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 
 ## Utilities
 
-| Key           | Mode   | Description |
-| ------------- | ------ | ----------- |
-| `<Leader>url` | Normal | View URLs   |
+| Key           | Mode   | Description     |
+| ------------- | ------ | --------------- |
+| `<Leader>url` | Normal | View URLs       |
+| `<Leader>tw`  | Normal | Toggle Twilight |
 
 ## Editing Shortcuts
 
-| Key         | Mode   | Description                             |
-| ----------- | ------ | --------------------------------------- |
-| `<Del>`     | Insert | Delete previous word                    |
-| `<Del>`     | Normal | Delete previous word                    |
-| `su`        | Normal | Surround word with double quotes        |
-| `<Leader>q` | Normal | Toggle between single and double quotes |
-
-## Undo Break Points
-
-| Key | Mode   | Description      |
-| --- | ------ | ---------------- |
-| `,` | Insert | Undo break point |
-| `.` | Insert | Undo break point |
-| `!` | Insert | Undo break point |
-| `?` | Insert | Undo break point |
-| `:` | Insert | Undo break point |
-| `;` | Insert | Undo break point |
+| Key         | Mode           | Description                             |
+| ----------- | -------------- | --------------------------------------- |
+| `<Del>`     | Normal, Insert | Delete previous word                    |
+| `su`        | Normal         | Surround word with double quotes        |
+| `<Leader>q` | Normal         | Toggle between single and double quotes |
 
 ## Folding
 
-| Key | Mode     | Description |
-| --- | -------- | ----------- |
-| `¨` | Insert   | Toggle fold |
-| `¨` | Normal   | Toggle fold |
-| `¨` | Operator | Toggle fold |
-| `¨` | Visual   | Create fold |
+| Key | Mode                             | Description |
+| --- | -------------------------------- | ----------- |
+| `¨` | Normal, Insert, Operator, Visual | Toggle fold |
 
 ## Indentation
 
@@ -287,7 +267,7 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | `{n}k` | Normal | Move up n lines   |
 | `{n}j` | Normal | Move down n lines |
 
-## VSnip Snippets
+## Snippets
 
 | Key           | Mode           | Description                  |
 | ------------- | -------------- | ---------------------------- |
