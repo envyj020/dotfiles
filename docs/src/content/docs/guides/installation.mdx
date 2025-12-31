@@ -1,0 +1,93 @@
+---
+title: Installation
+description: Installation Instructions
+tableOfContents:
+  minHeadingLevel: 2
+  maxHeadingLevel: 2
+---
+
+import {
+  Tabs,
+  TabItem,
+  Code,
+  Aside,
+  Steps,
+  Card,
+  CardGrid,
+  LinkCard,
+} from "@astrojs/starlight/components";
+
+The installation is an interactive process. Whether using the standalone installer or the manual method,
+you will need to provide your own preferences.
+
+<Aside icon="magnifier">
+  [GNU Stow](https://www.gnu.org/software/stow) is used to manage symlinks and
+  it might fail to do so if it finds an existing file (like a default .bashrc)
+  where it's trying to create a symlink. You may skip this step; otherwise,
+  ensure any conflicting files are backed up to a non-standard location before
+  re-running any of the outlined methods below.
+</Aside>
+
+<Tabs>
+  <TabItem label="Standalone Installer" icon="rocket">
+    <Code
+      code="sh <(curl -sSfL https://envyj020.github.io/dotfiles/run)"
+      lang="sh"
+    />
+    <Aside type="tip">
+      The standalone installer may be inspected before use:
+      <Code
+        code="curl -sSfL https://envyj020.github.io/dotfiles/run | less"
+        lang="sh"
+      />
+      Alternatively, the installer or raw code can be reviewed directly on
+      [GitHub](https://github.com/envyj020/dotfiles).
+    </Aside>
+  </TabItem>
+  <TabItem label="Manual Installation" icon="seti:powershell">
+    <Steps>
+      1. Clone the repository:
+          ```sh
+          git clone --depth 1 --recursive https://github.com/envyj020/dotfiles.git
+          cd dotfiles
+          ```
+      2. Install the OS baseline packages:
+          ```sh
+          make base
+          make mise
+          ```
+      3. Symlink dotfiles settings:
+          ```sh
+          make stow
+          ```
+    </Steps>
+  </TabItem>
+</Tabs>
+
+## Post-Installation
+
+Congratulations! You’ve successfully installed everything.
+To ensure your workspace looks and behaves correctly after a reboot, please complete these two quick steps:
+
+### 1. Optional - Set your wallpaper
+
+The i3 configuration is hardcoded to look for the wallpaper in a specific location.
+While a default wallpaper is provided, you can set your own by overriding the one under `~/Pictures/wallpaper.jpg`.
+
+### 2. Configure your displays
+
+Open your terminal and run the following command once you have your monitors arranged how you like them:
+
+<Code code="autorandr --save default" lang="sh" />
+<Aside title="autorandr">
+  `autorandr` was installed as part of the OS baseline. The command above will
+  save your monitor setup so i3 will know which settings to apply upon startup.
+</Aside>
+
+## Further reading
+
+<CardGrid stagger>
+  <LinkCard title="Neovim keybindings" href="/keybindings/neovim" />
+  <LinkCard title="i3wm keybindings" href="/keybindings/i3" />
+  <LinkCard title="GNU Readline keybindings" href="/keybindings/readline" />
+</CardGrid>

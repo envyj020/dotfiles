@@ -1,0 +1,159 @@
+#!/bin/sh
+
+set -euo pipefail
+
+{
+    readonly WALLPAPER_DIR="$HOME/Pictures"
+
+    readonly GITHUB_BASE_URL=https://github.com
+    readonly GITHUB_OWNER=envyj020
+    readonly GITHUB_REPOSITORY=dotfiles
+
+    readonly BOLD='\033[1m'
+    readonly RED='\033[1;31m'
+    readonly BLUE='\033[1;36m'
+    readonly YELLOW='\033[0;33m'
+    readonly NC='\033[0m'
+
+    : "${XDG_CACHE_HOME:=$HOME/.cache}"
+
+    info() {
+        printf "${BLUE}INFO: %s:${NC} ${BOLD}%b${NC}\n" "$0" "$*"
+    }
+
+    warning() {
+        printf "${YELLOW}WARNING: %s:${NC} ${BOLD}%b${NC}\n" "$0" "$*"
+    }
+
+    error() {
+        printf "${RED}ERROR: %s:${NC} %s\n" "$0" "$*" >&2
+        exit 1
+    }
+
+    separator() (
+        CHAR="${1:-=}"
+        COUNT="${2:-40}"
+        printf "${BLUE}%${COUNT}s${NC}\n" | tr ' ' "$CHAR"
+    )
+
+    checkout() {
+        [ -d "$2" ] || {
+            info "Cloning $1 into: $2"
+            git -c advice.detachedHead=0 \
+                -c core.autocrlf=false clone \
+                --branch "$3" --depth 1 --recursive \
+                --quiet "$1" "$2" || error "Couldn't clone $1 repository into $2"
+        }
+    }
+
+    require_os() {
+        OS_NAME=$(awk -F'=' '/^ID=/ {print $2}' /etc/os-release)
+        case $OS_NAME in
+        fedora | rhel | centos | ubuntu | debian) return 0 ;;
+        *) return 1 ;;
+        esac
+    }
+
+    add_wallpaper() {
+        separator "=" 80
+        info "Do you want to include the default wallpaper from ${YELLOW}$GITHUB_OWNER/$GITHUB_REPOSITORY${NC}"
+        warning "If not, you must save yours under \$HOME/Pictures/wallpaper.jpg"
+        separator "=" 80
+
+        info "Press [y] to add or [s] to skip: "
+        while true; do
+            read -r choice
+            case $choice in
+            [sS])
+                info "Skipping $GITHUB_OWNER/$GITHUB_REPOSITORY default wallpaper"
+                return 0
+                ;;
+            [yY])
+                mkdir -p "$WALLPAPER_DIR"
+                cp -f static/wallpaper.jpg "$WALLPAPER_DIR"
+                info "Saved successfully! If you want to set your own, remember"
+                info "to replace: \$HOME/Pictures/wallpaper.jpg"
+                return 0
+                ;;
+            *)
+                echo "Please press [y] to save it or [s] to skip."
+                ;;
+            esac
+        done
+    }
+    run_base() {
+        require_os || error "OS: $OS_NAME is not supported"
+
+        separator "=" 80
+        info "You are about to install ${YELLOW}$GITHUB_OWNER/$GITHUB_REPOSITORY${NC}${BOLD} package baseline."
+        info "This process requires temporary ${RED}sudo${NC}${BOLD} privileges and will prompt"
+        info "for manual configuration preferences."
+        separator "=" 80
+
+        info "Press [c] to continue, [s] to skip or [e] to exit: "
+        while true; do
+            read -r choice
+            case $choice in
+            [sS])
+                info "Skipping $GITHUB_OWNER/$GITHUB_REPOSITORY baseline packages."
+                return 0
+                ;;
+            [eE])
+                error "Baseline bootstrap aborted."
+                ;;
+            [cC])
+                make base || error "Failed to run 'make base'"
+                make mise || error "Failed to run 'make mise'"
+                return 0
+                ;;
+            *)
+                echo "Please press [c] to continue, [s] to skip or [e] to exit."
+                ;;
+            esac
+        done
+    }
+
+    run_stow() {
+        separator "=" 80
+        info "Do you want to include symbolic links from ${YELLOW}$GITHUB_OWNER/$GITHUB_REPOSITORY${NC}"
+        info "to your ${YELLOW}\$HOME${NC} and ${YELLOW}\$HOME/.config${NC}${BOLD} directories."
+        warning "Existing files at these locations may cause conflicts and"
+        warning "will require to manually move them prior to rerun this task"
+        separator "=" 80
+
+        info "Press [c] to continue or [s] to skip: "
+        while true; do
+            read -r choice
+            case $choice in
+            [sS])
+                info "Skipping $GITHUB_OWNER/$GITHUB_REPOSITORY symlinks."
+                return 0
+                ;;
+            [cC])
+                make stow || error "Failed to run 'make stow'"
+                return 0
+                ;;
+            *)
+                echo "Please press [c] to continue or [s] to skip."
+                ;;
+            esac
+        done
+    }
+
+    main() {
+        mkdir -p "$XDG_CACHE_HOME"
+        checkout "$GITHUB_BASE_URL/$GITHUB_OWNER/$GITHUB_REPOSITORY.git" \
+            "$XDG_CACHE_HOME/$GITHUB_REPOSITORY" \
+            "main"
+        (
+            cd "$XDG_CACHE_HOME/$GITHUB_REPOSITORY" || error "Failed to change directory to: $XDG_CACHE_HOME/$GITHUB_REPOSITORY"
+            add_wallpaper
+            run_base
+            run_stow
+        )
+    }
+
+    command -v git >/dev/null 2>&1 || error "Git is not installed."
+    [ -t 0 ] || error "Interactive terminal required."
+    main
+}

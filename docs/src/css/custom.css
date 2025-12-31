@@ -1,0 +1,235 @@
+:root {
+  --sl-font: "JetBrains Mono";
+  --sl-font-mono: "JetBrains Mono";
+  --sl-text-base: 0.8rem;
+  --sl-text-xs: 0.8rem;
+  --sl-text-sm: 0.8rem;
+  --sl-text-lg: 1rem;
+  --sl-text-xl: 1.2rem;
+  --sl-text-2xl: 1.5rem;
+  --sl-text-3xl: 1.875rem;
+  --sl-text-4xl: 2.25rem;
+  --sl-text-5xl: 3rem;
+  --sl-color-accent-low: #dbeafe;
+  --sl-color-accent: #2563eb;
+  --sl-color-accent-high: #1e40af;
+  --sl-color-white: #0f172a;
+  --sl-color-gray-1: #1e293b;
+  --sl-color-gray-2: #334155;
+  --sl-color-gray-3: #64748b;
+  --sl-color-gray-4: #94a3b8;
+  --sl-color-gray-5: #cbd5e1;
+  --sl-color-gray-6: #f1f5f9;
+  --sl-color-black: #ffffff;
+  --spi-sidebar-icon-size: 1.25rem;
+  --spi-sidebar-icon-gap: 0.25rem;
+}
+
+[data-theme="dark"] {
+  --sl-color-accent-low: #1e3a8a;
+  --sl-color-accent: #60a5fa;
+  --sl-color-accent-high: #93c5fd;
+  --sl-color-white: #f8fafc;
+  --sl-color-gray-1: #cbd5e1;
+  --sl-color-gray-2: #94a3b8;
+  --sl-color-gray-3: #64748b;
+  --sl-color-gray-4: #475569;
+  --sl-color-gray-5: #334155;
+  --sl-color-gray-6: #1e293b;
+  --sl-color-gray-7: #0f172a;
+  --sl-color-black: #020617;
+}
+
+.splide__slide img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.distro-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin: 2rem 0;
+  align-items: end;
+}
+
+@media (max-width: 460px) {
+  .distro-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.distro-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem 1.5rem;
+  background: var(--sl-color-gray-7);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.distro-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--sl-color-accent);
+  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.15);
+  background: var(--sl-color-gray-6);
+}
+
+.distro-card img {
+  width: 64px;
+  height: 64px;
+  transition: transform 0.3s ease;
+}
+
+.distro-card:hover img {
+  transform: scale(1.15);
+}
+
+.distro-card p {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--sl-color-white);
+  transition: color 0.3s ease;
+}
+
+.distro-card:hover p {
+  color: var(--sl-color-accent);
+}
+
+a.nova-link-button {
+  font-weight: 800;
+}
+
+.overview-table table {
+  display: table;
+  width: 100%;
+  margin: 2rem auto;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.overview-table th,
+.overview-table td {
+  padding: 1rem 1.5rem;
+  text-align: left;
+}
+
+.overview-table th {
+  background: var(--sl-color-accent);
+  color: white;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.overview-table tbody tr {
+  background: var(--sl-color-gray-7);
+  transition: all 0.3s ease;
+}
+
+.overview-table tbody tr:hover {
+  background: var(--sl-color-gray-5);
+  transform: scale(1.02);
+}
+
+.overview-table td:first-child {
+  font-weight: 600;
+  color: var(--sl-color-accent);
+  width: 40%;
+}
+
+.overview-table td:last-child {
+  color: var(--sl-color-white);
+}
+
+.overview-table tbody tr:not(:last-child) {
+  border-bottom: 1px solid var(--sl-color-gray-5);
+}
+
+.keybindings-page h2 {
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--sl-color-accent);
+  color: var(--sl-color-accent);
+}
+
+.keybindings-page table {
+  display: table;
+  width: 100%;
+  margin: 1.5rem 0;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.keybindings-page th {
+  background: var(--sl-color-accent);
+  color: white;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.keybindings-page th:first-child {
+  width: 25%;
+}
+
+.keybindings-page th:nth-child(2) {
+  width: 15%;
+}
+
+.keybindings-page tbody tr {
+  background: var(--sl-color-gray-6);
+  transition: background 0.2s ease;
+}
+
+.keybindings-page tbody tr:hover {
+  background: var(--sl-color-gray-5);
+}
+
+.keybindings-page td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--sl-color-gray-5);
+}
+
+.keybindings-page tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.keybindings-page td:first-child {
+  font-family:
+    ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.9rem;
+  background: var(--sl-color-gray-5);
+  color: var(--sl-color-accent);
+  font-weight: 600;
+}
+
+.keybindings-page td:first-child {
+  background: var(--sl-color-gray-7);
+}
+
+.keybindings-page td:nth-child(2) {
+  font-weight: 500;
+  color: var(--sl-color-gray-3);
+  font-size: 0.85rem;
+  text-transform: capitalize;
+}
+
+.keybindings-page td:last-child {
+  color: var(--sl-color-white);
+}

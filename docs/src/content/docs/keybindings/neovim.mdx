@@ -1,0 +1,299 @@
+---
+title: Neovim
+description: Neovim Keybindings Reference
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+A comprehensive reference of all custom keybindings configured in Neovim.
+
+<Aside icon="vim" title="Neovim Leader Key: <Space>">
+  Please note, many of the keybindings listed below reference actions or
+  commands provided by custom plugins.
+</Aside>
+
+<div class="keybindings-page">
+
+## Neovim Configuration
+
+| Key          | Mode   | Description                 |
+| ------------ | ------ | --------------------------- |
+| `<Leader>cr` | Normal | Reload Neovim configuration |
+
+## Session Management
+
+| Key          | Mode   | Description          |
+| ------------ | ------ | -------------------- |
+| `<Leader>oc` | Normal | Create a new session |
+| `<Leader>od` | Normal | Delete a session     |
+| `<Leader>ol` | Normal | Load a session       |
+
+## Scrolling
+
+| Key            | Mode              | Description |
+| -------------- | ----------------- | ----------- |
+| `<Shift-Up>`   | Normal, Visual, X | Scroll up   |
+| `<Shift-Down>` | Normal, Visual, X | Scroll down |
+
+## Code Formatting
+
+| Key   | Mode   | Description      |
+| ----- | ------ | ---------------- |
+| `ff`  | Normal | Format code      |
+| `FF`  | Normal | Format and write |
+| `jq`  | Normal | Jq/Yq quickfix   |
+| `jqq` | Normal | Jq/Yq query      |
+
+## File Explorer
+
+| Key         | Mode   | Description    |
+| ----------- | ------ | -------------- |
+| `<Leader>t` | Normal | Toggle NeoTree |
+
+## Buffer Navigation
+
+| Key           | Mode   | Description     |
+| ------------- | ------ | --------------- |
+| `<Ctrl-Down>` | Normal | Previous buffer |
+| `<Ctrl-Up>`   | Normal | Next buffer     |
+| `<Ctrl-x>`    | Normal | Close buffer    |
+
+## Window Navigation
+
+| Key               | Mode   | Description        |
+| ----------------- | ------ | ------------------ |
+| `<Ctrl-w><Left>`  | Normal | Focus left window  |
+| `<Ctrl-w><Right>` | Normal | Focus right window |
+| `<Ctrl-w><Up>`    | Normal | Focus up window    |
+| `<Ctrl-w><Down>`  | Normal | Focus down window  |
+| `<Leader>wm`      | Normal | Window move swap   |
+| `<Leader>win`     | Normal | Pick window        |
+
+## Window Management
+
+| Key           | Mode   | Description         |
+| ------------- | ------ | ------------------- |
+| `<Ctrl-w>x`   | Normal | Close window        |
+| `<Leader>w-`  | Normal | Horizontal split    |
+| `<Leader>w\|` | Normal | Vertical split      |
+| `w<Left>`     | Normal | Resize window left  |
+| `w<Right>`    | Normal | Resize window right |
+| `w<Up>`       | Normal | Resize window up    |
+| `w<Down>`     | Normal | Resize window down  |
+
+## Window Placement
+
+| Key                | Mode   | Description       |
+| ------------------ | ------ | ----------------- |
+| `<Leader>w<Left>`  | Normal | Move window left  |
+| `<Leader>w<Right>` | Normal | Move window right |
+| `<Leader>w<Up>`    | Normal | Move window up    |
+| `<Leader>w<Down>`  | Normal | Move window down  |
+
+## Window Maximizer
+
+| Key          | Mode   | Description                   |
+| ------------ | ------ | ----------------------------- |
+| `<Leader>fs` | Normal | Maximize window               |
+| `<Ctrl-w>=`  | Normal | Equalize windows width/height |
+
+## Tab Navigation
+
+| Key            | Mode   | Description  |
+| -------------- | ------ | ------------ |
+| `<Tab><Right>` | Normal | Next tab     |
+| `<Tab><Left>`  | Normal | Previous tab |
+
+## Tab Management
+
+| Key      | Mode   | Description     |
+| -------- | ------ | --------------- |
+| `<Tab>n` | Normal | New tab         |
+| `<Tab>q` | Normal | Close tab       |
+| `<Tab>w` | Normal | Save everything |
+
+## LSP Navigation
+
+| Key                  | Mode   | Description         |
+| -------------------- | ------ | ------------------- |
+| `<Ctrl-Shift-Left>`  | Normal | Go to definition    |
+| `<Ctrl-Shift-Right>` | Normal | Go to declaration   |
+| `K`                  | Normal | Hover documentation |
+| `<Ctrl-k>`           | Insert | Signature help      |
+
+## LSP Diagnostics
+
+| Key          | Mode   | Description           |
+| ------------ | ------ | --------------------- |
+| `<Leader>ee` | Normal | Show line diagnostics |
+| `<Ctrl-e>`   | Normal | Next diagnostic       |
+| `<Ctrl-p>`   | Normal | Previous diagnostic   |
+
+## LSP Actions
+
+| Key           | Mode   | Description             |
+| ------------- | ------ | ----------------------- |
+| `<Leader>sa`  | Normal | Code actions            |
+| `<Leader>sd`  | Normal | Search diagnostics      |
+| `<Leader>sra` | Normal | LSP ref, def, dec, impl |
+| `<Leader>sde` | Normal | LSP definitions         |
+| `<Leader>sr`  | Normal | LSP references          |
+| `<Leader>sff` | Normal | LSP document symbols    |
+| `<Leader>sic` | Normal | LSP incoming calls      |
+| `<Leader>soc` | Normal | LSP outgoing calls      |
+| `<Leader>si`  | Normal | LSP implementations     |
+
+## Code Comments
+
+| Key           | Mode           | Description       |
+| ------------- | -------------- | ----------------- |
+| `<Leader>doc` | Normal, Visual | Create annotation |
+| `<Leader>cc`  | Normal, Visual | Toggle comment    |
+| `<Leader>cb`  | Normal, Visual | Comment block     |
+
+## Rename
+
+| Key          | Mode                   | Description   |
+| ------------ | ---------------------- | ------------- |
+| `<Leader>rn` | Insert, Normal, Visual | Rename symbol |
+
+## Twilight
+
+| Key          | Mode   | Description     |
+| ------------ | ------ | --------------- |
+| `<Leader>tw` | Normal | Toggle Twilight |
+
+## Markdown
+
+| Key            | Mode   | Description                 |
+| -------------- | ------ | --------------------------- |
+| `<Leader>mk`   | Normal | Markdown inline render      |
+| `<Leader>mp`   | Normal | Markdown preview            |
+| `<Leader>tocu` | Normal | Markdown ToC unordered list |
+| `<Leader>toco` | Normal | Markdown ToC ordered list   |
+| `<bs>`         | Normal | Previous markdown file      |
+
+## Git
+
+| Key           | Mode   | Description      |
+| ------------- | ------ | ---------------- |
+| `<Leader>g`   | Normal | Open Neogit      |
+| `<Leader>gb`  | Normal | Git blame        |
+| `<Leader>gbi` | Normal | Git inline blame |
+| `<Leader>gl`  | Normal | Git log          |
+| `<Leader>gs`  | Normal | Git status       |
+| `<Leader>gc`  | Normal | Git commits      |
+
+## Telescope
+
+| Key          | Mode   | Description      |
+| ------------ | ------ | ---------------- |
+| `<Leader>sh` | Normal | Search help tags |
+| `<Leader>sk` | Normal | Search keymaps   |
+| `<Leader>sf` | Normal | Find files       |
+| `<Leader>sw` | Normal | Grep string      |
+| `<Leader>sg` | Normal | Live grep        |
+| `<Leader>so` | Normal | Recent files     |
+| `<Leader>sb` | Normal | Search buffers   |
+
+## YAML Schema
+
+| Key           | Mode   | Description                   |
+| ------------- | ------ | ----------------------------- |
+| `<Leader>yr`  | Normal | YAML schema match             |
+| `<Leader>syc` | Normal | Select buffer YAML schema     |
+| `<Leader>sy`  | Normal | Select matching YAML schemas  |
+| `<Leader>kv`  | Normal | Change Kubernetes YAML schema |
+
+## DAP
+
+| Key           | Mode   | Description                   |
+| ------------- | ------ | ----------------------------- |
+| `<Leader>dB`  | Normal | Set breakpoint with condition |
+| `<Leader>dn`  | Normal | Start new session             |
+| `<Leader>dc`  | Normal | Continue or start session     |
+| `<Leader>db`  | Normal | Toggle breakpoint             |
+| `<Leader>dso` | Normal | Step over                     |
+| `<Leader>dsi` | Normal | Step into                     |
+| `<Leader>do`  | Normal | Step out                      |
+| `<Leader>dp`  | Normal | Pause execution               |
+| `<Leader>ds`  | Normal | Stop session                  |
+| `<Leader>dex` | Normal | Toggle REPL                   |
+| `nb`          | Normal | Next breakpoint               |
+| `pb`          | Normal | Previous breakpoint           |
+| `sb`          | Normal | Current stopped breakpoint    |
+
+## DAP Language Specific
+
+| Key           | Mode   | Description                    |
+| ------------- | ------ | ------------------------------ |
+| `<Leader>dgt` | Normal | Debug Go test under cursor     |
+| `<Leader>dpt` | Normal | Debug Python test under cursor |
+| `<Leader>dpc` | Normal | Debug Python class             |
+
+## Terminal
+
+| Key         | Mode     | Description        |
+| ----------- | -------- | ------------------ |
+| `<Leader>;` | Normal   | Toggle terminal    |
+| `<Esc>`     | Terminal | Exit terminal mode |
+
+## Utilities
+
+| Key           | Mode   | Description |
+| ------------- | ------ | ----------- |
+| `<Leader>url` | Normal | View URLs   |
+
+## Editing Shortcuts
+
+| Key         | Mode   | Description                             |
+| ----------- | ------ | --------------------------------------- |
+| `<Del>`     | Insert | Delete previous word                    |
+| `<Del>`     | Normal | Delete previous word                    |
+| `su`        | Normal | Surround word with double quotes        |
+| `<Leader>q` | Normal | Toggle between single and double quotes |
+
+## Undo Break Points
+
+| Key | Mode   | Description      |
+| --- | ------ | ---------------- |
+| `,` | Insert | Undo break point |
+| `.` | Insert | Undo break point |
+| `!` | Insert | Undo break point |
+| `?` | Insert | Undo break point |
+| `:` | Insert | Undo break point |
+| `;` | Insert | Undo break point |
+
+## Folding
+
+| Key | Mode     | Description |
+| --- | -------- | ----------- |
+| `¨` | Insert   | Toggle fold |
+| `¨` | Normal   | Toggle fold |
+| `¨` | Operator | Toggle fold |
+| `¨` | Visual   | Create fold |
+
+## Indentation
+
+| Key | Mode   | Description           |
+| --- | ------ | --------------------- |
+| `<` | Visual | Unindent and reselect |
+| `>` | Visual | Indent and reselect   |
+
+## Movement
+
+| Key    | Mode   | Description       |
+| ------ | ------ | ----------------- |
+| `{n}k` | Normal | Move up n lines   |
+| `{n}j` | Normal | Move down n lines |
+
+## VSnip Snippets
+
+| Key           | Mode           | Description                  |
+| ------------- | -------------- | ---------------------------- |
+| `<Ctrl-j>`    | Insert, Select | Expand snippet               |
+| `<Ctrl-l>`    | Insert, Select | Expand or jump               |
+| `<Tab>`       | Insert, Select | Jump to next placeholder     |
+| `<Shift-Tab>` | Insert, Select | Jump to previous placeholder |
+
+</div>

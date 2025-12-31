@@ -1,0 +1,138 @@
+---
+title: i3wm
+description: i3wm Keybindings Reference
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+A comprehensive reference of all custom keybindings configured in i3wm.
+
+<Aside icon="laptop" title="i3 Modifier Keys">
+    - `$mod` is mapped to `Super` - Windows key
+    - `$ctrl` is mapped to `Control`
+</Aside>
+<div class="keybindings-page">
+
+## Core Applications
+
+| Key           | Description               |
+| ------------- | ------------------------- |
+| `$mod+Return` | Open terminal             |
+| `$mod+d`      | Open application launcher |
+
+## Workspace Navigation
+
+| Key      | Description            |
+| -------- | ---------------------- |
+| `$mod+1` | Switch to workspace 1  |
+| `$mod+2` | Switch to workspace 2  |
+| `$mod+3` | Switch to workspace 3  |
+| `$mod+4` | Switch to workspace 4  |
+| `$mod+5` | Switch to workspace 5  |
+| `$mod+6` | Switch to workspace 6  |
+| `$mod+7` | Switch to workspace 7  |
+| `$mod+8` | Switch to workspace 8  |
+| `$mod+9` | Switch to workspace 9  |
+| `$mod+0` | Switch to workspace 10 |
+
+## Move Container to Workspace
+
+| Key            | Description                    |
+| -------------- | ------------------------------ |
+| `$mod+Shift+1` | Move container to workspace 1  |
+| `$mod+Shift+2` | Move container to workspace 2  |
+| `$mod+Shift+3` | Move container to workspace 3  |
+| `$mod+Shift+4` | Move container to workspace 4  |
+| `$mod+Shift+5` | Move container to workspace 5  |
+| `$mod+Shift+6` | Move container to workspace 6  |
+| `$mod+Shift+7` | Move container to workspace 7  |
+| `$mod+Shift+8` | Move container to workspace 8  |
+| `$mod+Shift+9` | Move container to workspace 9  |
+| `$mod+Shift+0` | Move container to workspace 10 |
+
+## i3 System Control
+
+| Key            | Description                 |
+| -------------- | --------------------------- |
+| `$mod+Shift+c` | Reload i3 configuration     |
+| `$mod+Shift+r` | Restart i3                  |
+| `$mod+Shift+s` | Lock screen                 |
+| `$mod+Shift+e` | Exit i3 (with confirmation) |
+
+## Window Focus
+
+| Key                     | Description            |
+| ----------------------- | ---------------------- |
+| `$mod+h` / `$mod+Left`  | Focus window left      |
+| `$mod+j` / `$mod+Down`  | Focus window down      |
+| `$mod+k` / `$mod+Up`    | Focus window up        |
+| `$mod+l` / `$mod+Right` | Focus window right     |
+| `$mod+a`                | Focus parent container |
+
+## Window Movement
+
+| Key                                 | Description       |
+| ----------------------------------- | ----------------- |
+| `$mod+Shift+h` / `$mod+Shift+Left`  | Move window left  |
+| `$mod+Shift+j` / `$mod+Shift+Down`  | Move window down  |
+| `$mod+Shift+k` / `$mod+Shift+Up`    | Move window up    |
+| `$mod+Shift+l` / `$mod+Shift+Right` | Move window right |
+
+## Window Management
+
+| Key                | Description                          |
+| ------------------ | ------------------------------------ |
+| `$mod+Shift+q`     | Kill focused window                  |
+| `$mod+f`           | Toggle fullscreen mode               |
+| `$mod+Shift+space` | Toggle floating mode                 |
+| `$mod+space`       | Toggle focus between tiling/floating |
+
+## Window Layout
+
+| Key            | Description         |
+| -------------- | ------------------- |
+| `$mod+s`       | Stacking layout     |
+| `$mod+w`       | Tabbed layout       |
+| `$mod+t`       | Toggle split layout |
+| `$mod+$ctrl+h` | Split vertical      |
+| `$mod+$ctrl+v` | Split horizontal    |
+
+## Window Resize
+
+| Key                | Description       |
+| ------------------ | ----------------- |
+| `$mod+r`           | Enter resize mode |
+| `$mod+$ctrl+Left`  | Grow width        |
+| `$mod+$ctrl+Right` | Shrink width      |
+| `$mod+$ctrl+Up`    | Grow height       |
+| `$mod+$ctrl+Down`  | Shrink height     |
+
+### Resize Mode Bindings
+
+When in resize mode (`$mod+r`):
+
+| Key                 | Description      |
+| ------------------- | ---------------- |
+| `h` / `Left`        | Grow width       |
+| `l` / `Right`       | Shrink width     |
+| `k` / `Up`          | Grow height      |
+| `j` / `Down`        | Shrink height    |
+| `Return` / `Escape` | Exit resize mode |
+
+## Audio Control
+
+| Key                    | Description            |
+| ---------------------- | ---------------------- |
+| `XF86AudioRaiseVolume` | Increase volume by 5%  |
+| `XF86AudioLowerVolume` | Decrease volume by 5%  |
+| `XF86AudioMute`        | Toggle mute            |
+| `XF86AudioMicMute`     | Toggle microphone mute |
+
+## Screenshots
+
+| Key            | Description                               |
+| -------------- | ----------------------------------------- |
+| `$mod+p`       | Take area screenshot (save to ~/Pictures) |
+| `$mod+Shift+p` | Take area screenshot (copy to clipboard)  |
+
+</div>

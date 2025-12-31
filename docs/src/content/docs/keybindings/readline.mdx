@@ -1,0 +1,53 @@
+---
+title: GNU Readline Keybindings
+description: GNU Readline Keybindings (.inputrc)
+---
+
+import { Aside } from "@astrojs/starlight/components";
+
+Custom keybindings configured in `.inputrc` for enhanced command-line navigation and history search in bash and other readline-enabled applications.
+
+<Aside>
+  GNU Readline is a library used by bash and many other CLI programs for
+  command-line editing. These keybindings work across all readline-enabled
+  applications.
+</Aside>
+
+<div class="keybindings-page">
+
+## History Navigation
+
+| Key      | Description                |
+| -------- | -------------------------- |
+| `Ctrl+p` | Search backward in history |
+| `Ctrl+n` | Search forward in history  |
+
+## Text Editing
+
+| Key      | Description                                      |
+| -------- | ------------------------------------------------ |
+| `Ctrl+w` | Delete word backwards                            |
+| `Ctrl+k` | Deletes from cursor to the end of line           |
+| `Ctrl+u` | Deletes from cursor to the beginning of line     |
+| `Ctrl+f` | Transpose characters (swap current and previous) |
+
+## Screen Control
+
+| Key      | Description  |
+| -------- | ------------ |
+| `Ctrl+l` | Clear screen |
+
+## Word Navigation
+
+| Key                 | Description            |
+| ------------------- | ---------------------- |
+| `Shift+Right Arrow` | Move forward one word  |
+| `Shift+Left Arrow`  | Move backward one word |
+
+## Directory Navigation
+
+| Key             | Description                   |
+| --------------- | ----------------------------- |
+| `Ctrl+Up Arrow` | Go up one directory (`cd ..`) |
+
+</div>

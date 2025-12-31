@@ -1,0 +1,59 @@
+---
+title: Yet another dotfiles
+description: i3wm, Neovim and common dotfiles settings
+template: splash
+hero:
+  tagline: >
+    An opinionated terminal-driven workspace.
+    Explore my i3wm, dotfiles settings and Neovim
+    setup built for speed with a modern CLI workflow.
+  image:
+    alt: Home Logo
+    dark: ../../assets/logos/home/home-dark.png
+    light: ../../assets/logos/home/home-light.png
+  actions:
+    - text: Get started
+      link: /guides/overview
+      icon: right-arrow
+---
+
+import "@splidejs/splide/css";
+import { Image } from "astro:assets";
+import { Splide, SplideSlide } from "astro-splide";
+import { Card, CardGrid, Aside } from "@astrojs/starlight/components";
+import { Logos, Screenshots } from "../../scripts/common.ts";
+
+<Card type="tip" title="Distributions supported" icon="seti:config">
+  The installation officially supports the distributions listed below. To
+  ensure reliable maintenance, I focus on these specific versions rather than
+  universal compatibility—though the configuration files remain
+  platform-independent. If you would like to help extend support to a different
+  distribution, open an issue on [Github](https://github.com/envyj020/dotfiles/issues)!
+  <div class="distro-grid">
+    {Logos.map((logo) => (
+      <div class="distro-card">
+        <img src={logo.src} alt={logo.name} />
+        <p>{logo.name}</p>
+      </div>
+    ))}
+  </div>
+</Card>
+
+<Card type="tip" title="Screenshots" icon="seti:image">
+  <Splide
+    class="not-content"
+    options={{
+      type: "loop",
+      interval: 5000,
+      pagination: false,
+      autoplay: true,
+      pauseOnHover: false,
+    }}
+  >
+    {Screenshots.map((screenshot) => (
+    <SplideSlide>
+        <img src={screenshot.src} alt={screenshot.name} />
+    </SplideSlide>
+    ))}
+  </Splide>
+</Card>
