@@ -128,6 +128,11 @@ choose_status_bar() {
         "Quit"
     )
 
+    command_exists 'bumblebee-status' 'polybar' || {
+        echo 2>&1 "There are no status bar to choose from"
+        return 1
+    }
+
     show_options() {
         for i in "${!OPTIONS[@]}"; do
             printf "${GREEN}%d)${NC} %s\n" $((i + 1)) "${OPTIONS[$i]}"
@@ -161,7 +166,7 @@ choose_status_bar() {
 }
 
 eza() {
-    ! command_exists 'eza' && {
+    command_exists 'eza' || {
         echo 2>&1 "${FUNCNAME[0]} not found in your PATH"
         return 1
     }
@@ -278,7 +283,7 @@ readcert() {
         "no_version"
     )
 
-    local -r CERT_INFO=$(echo | openssl s_client -connect "$1:443" -servername "$1" 2>/dev/null | \
+    local -r CERT_INFO=$(echo | openssl s_client -connect "$1:443" -servername "$1" 2>/dev/null |
         openssl x509 -text -certopt "$(printf "%s," "${CERT_OPTS[@]}" | sed 's/,$//')" 2>/dev/null) || {
         echo >&2 "Error: Failed to fetch certificate for $1"
         return 1
