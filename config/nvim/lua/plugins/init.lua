@@ -9,7 +9,7 @@ Plug("folke/tokyonight.nvim")
 Plug("catppuccin/nvim")
 
 --- Treesitter
-Plug("nvim-treesitter/nvim-treesitter", { ["do"] = ":TSUpdate", ["branch"] = 'master' })
+Plug("nvim-treesitter/nvim-treesitter", { ["do"] = ":TSUpdate", ["branch"] = "master" })
 Plug("nvim-treesitter/nvim-treesitter-refactor")
 Plug("nvim-treesitter/nvim-treesitter-textobjects")
 Plug("nvim-treesitter/playground")
@@ -92,7 +92,7 @@ Plug("tiagofumo/vim-nerdtree-syntax-highlight")
 Plug("nvim-lualine/lualine.nvim")
 
 --- Markdown
-Plug("iamcco/markdown-preview.nvim", { ["do"] = "call mkdp#util#install()", ["for"] = { "markdown", "vim-plug" } })
+Plug("iamcco/markdown-preview.nvim", { ["do"] = "cd app && npx --yes yarn install" })
 Plug("MeanderingProgrammer/render-markdown.nvim")
 Plug("richardbizik/nvim-toc")
 Plug("jghauser/follow-md-links.nvim")
