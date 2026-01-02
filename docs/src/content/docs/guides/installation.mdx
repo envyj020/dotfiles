@@ -34,10 +34,7 @@ you will need to provide your own preferences.
     <Aside type="tip">
       The standalone installer may be inspected before use or alternatively
       check out the source code directly on [GitHub](https://github.com/envyj020/dotfiles).
-      <Code
-        code="curl -sSfL https://envyj020.github.io/dotfiles/run | less"
-        lang="sh"
-      />
+      <Code code="curl -sSfL https://envyj020.github.io/dotfiles/run | less" lang="sh"/>
     </Aside>
   </TabItem>
   <TabItem label="Manual Installation" icon="seti:powershell">
@@ -67,8 +64,8 @@ To ensure your workspace looks and behaves correctly after a reboot, please comp
 
 ### 1. Optional - Set your wallpaper
 
-The i3 configuration is hardcoded to look for the wallpaper in a specific location.
-While a default wallpaper is provided, you can set your own by overriding the one under `~/Pictures/wallpaper.jpg`.
+By default, i3 looks for its background at `~/Pictures/wallpaper.jpg`. While a default wallpaper is provided,
+you can set your own by overriding it.
 
 ### 2. Configure your displays
 
@@ -79,6 +76,23 @@ Open your terminal and run the following command once you have your monitors arr
   `autorandr` was installed as part of the OS baseline. The command above will
   save your monitor setup so i3 will know which settings to apply upon startup.
 </Aside>
+
+### 3. Tokens
+
+API access for certain services requires storing authentication tokens files under
+your home directory.  The provided `.bashrc` exports these variables by reading them
+and keeps your sensitive keys out of your shell history and configuration files.
+
+The table below outlines the expected filenames conventions:
+
+<div class="overview-table">
+| Env var             | Required Filename    | Purpose                                      |
+| ------------------- | -------------------- | -------------------------------------------- |
+| `GITHUB_TOKEN`      | `~/.GITHUB_TOKEN`    | Github CLI                                   |
+| `TINYURL_TOKEN`     | `~/.TINYURL_TOKEN`   | Bash URL shortener alias                     |
+| `GEMINI_API_KEY`    | `~/.GEMINI_TOKEN`    | Gemini CLI and Neovim Avante Gemini provider |
+| `ANTHROPIC_API_KEY` | `~/.ANTHROPIC_TOKEN` | Neovim Avante Claude provider                |
+</div>
 
 ## Further reading
 
