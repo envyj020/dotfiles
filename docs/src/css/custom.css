@@ -105,9 +105,15 @@ a.nova-link-button {
   font-weight: 800;
 }
 
+.overview-table {
+    width: 100%;
+    overflow-x: auto;
+}
+
 .overview-table table {
   display: table;
   width: 100%;
+  table-layout: auto;
   margin: 2rem auto;
   border-collapse: separate;
   border-spacing: 0;
@@ -143,7 +149,7 @@ a.nova-link-button {
 .overview-table td:first-child {
   font-weight: 600;
   color: var(--sl-color-accent);
-  width: 40%;
+  width: 30%;
 }
 
 .overview-table td:last-child {
