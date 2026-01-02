@@ -216,6 +216,12 @@ map("n", "<leader>q", function()
     vim.fn.setpos(".", position)
 end, keymap_opts("Toggle surrounding quotes"))
 
+--- DBMS
+map("n", "<Leader>ddb", function()
+    vim.cmd("tabnew")
+    vim.cmd("DBUI")
+end)
+
 -- Undo break points
 map("i", ",", ",<c-g>u", keymap_opts("Undo break point"))
 map("i", ".", ".<c-g>u", keymap_opts("Undo break point"))

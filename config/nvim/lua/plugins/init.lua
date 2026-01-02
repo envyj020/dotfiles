@@ -40,6 +40,7 @@ Plug("karb94/neoscroll.nvim")
 Plug("romainl/vim-cool")
 Plug("gbprod/cutlass.nvim")
 Plug("tpope/vim-obsession")
+Plug("tpope/vim-dotenv")
 
 --- Git
 Plug("NeogitOrg/neogit")
@@ -111,6 +112,11 @@ Plug("cenk1cenk2/schema-companion.nvim", { commit = "71c9e53b399dc7063381c693b7f
 Plug("davidmh/mdx.nvim")
 Plug("ray-x/go.nvim")
 Plug("kcl-lang/kcl.nvim")
+
+--- BDMS
+Plug("tpope/vim-dadbod")
+Plug("kristijanhusak/vim-dadbod-ui")
+Plug("kristijanhusak/vim-dadbod-completion")
 
 --- AI
 Plug("yetone/avante.nvim", { branch = "main", ["do"] = "make" })

@@ -27,3 +27,6 @@ vim.g.closetag_xhtml_filetypes = "xhtml,jsx"
 vim.g.closetag_shortcut = ">"
 
 vim.g.neovim_session_dir = vim.fs.joinpath(vim.fn.stdpath("data"), "obsession")
+
+vim.g.db_ui_dotenv_variable_prefix = "NVIM_DB_"
+vim.g.db_ui_use_nerd_fonts = 1
