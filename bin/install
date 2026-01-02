@@ -306,6 +306,41 @@ base::alacritty() {
     common::stop_spinner
 }
 
+base::kitty() {
+
+    # https://sw.kovidgoyal.net/kitty/binary
+
+    common::start_spinner
+
+    [[ $(command -v kitty) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r KITTY_APP_DIR="$HOME/.local/kitty.app"
+
+    sh <(curl -sSfL https://sw.kovidgoyal.net/kitty/installer.sh)
+
+    ln -sf "$KITTY_APP_DIR/bin/kitty" "$KITTY_APP_DIR/bin/kitten" "$XDG_BIN_HOME"
+    cp "$KITTY_APP_DIR/share/applications/kitty.desktop" "$KITTY_APP_DIR/share/applications/kitty-open.desktop" \
+        "$XDG_DATA_HOME/applications"
+
+    sed -i "s|Icon=kitty|Icon=$KITTY_APP_DIR/share/icons/hicolor/256x256/apps/kitty.png|g" "$XDG_DATA_HOME/applications/kitty.desktop"
+    sed -i "s|Exec=kitty|Exec=$XDG_BIN_HOME/kitty|g" "$XDG_DATA_HOME/applications/kitty.desktop"
+
+    common::stop_spinner
+}
+
+base::term() {
+
+    # shellcheck disable=SC2034
+    local -rA options=(
+        ["Alacritty"]="base::alacritty"
+        ["Kitty"]="base::kitty"
+    )
+    common::choose options "Choose a Terminal"
+}
+
 base::dir_colors() {
 
     common::start_spinner
@@ -352,14 +387,14 @@ base::rofi() {
     }
 
     local -r ROFI_THEMES_REPOSITORY=https://github.com/newmanls/rofi-themes-collection.git
-    local -r ROFI_THEMES_DESTINATION_DIRECTORY="$XDG_DATA_HOME/rofi/themes"
+    local -r ROFI_THEMES_DESTINATION_DIR="$XDG_DATA_HOME/rofi/themes"
     local -r ROFI_THEMES_REPOSITORY_BASENAME=$(basename $ROFI_THEMES_REPOSITORY .git)
 
     git clone --depth 1 --quiet "$ROFI_THEMES_REPOSITORY" "$SANDBOX/$ROFI_THEMES_REPOSITORY_BASENAME" || {
         log::error "Couldn't clone Rofi themes repository: $ROFI_THEMES_REPOSITORY"
     }
 
-    cp -r $SANDBOX/$ROFI_THEMES_REPOSITORY_BASENAME/themes/* "$ROFI_THEMES_DESTINATION_DIRECTORY"
+    cp -r $SANDBOX/$ROFI_THEMES_REPOSITORY_BASENAME/themes/* "$ROFI_THEMES_DESTINATION_DIR"
 
     local -r LATEST_ROFI_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/davatorium/rofi/releases/latest" | jq -r '.tag_name')
     local -r ROFI_RELEASE_URL="https://github.com/davatorium/rofi/releases/download/$LATEST_ROFI_RELEASE_VERSION/rofi-$LATEST_ROFI_RELEASE_VERSION.tar.gz"
@@ -451,16 +486,6 @@ base::app_launcher() {
     common::choose options "Choose an Application Launcher"
 }
 
-base::wm_status_bar() {
-
-    # shellcheck disable=SC2034
-    local -rA options=(
-        ["Polybar"]="base::polybar"
-        ["Bumblebee"]="base::bumblebee"
-    )
-    common::choose options "Choose an Status Bar"
-}
-
 base::polybar() {
 
     # https://polybar.readthedocs.io
@@ -509,6 +534,16 @@ base::bumblebee() {
     ln -sfn "$I3_CONFIG_DIR/i3bar/bumblebee-status" "$I3_CURRENT_STATUS_BAR_SYMLINK"
 
     common::stop_spinner
+}
+
+base::wm_status_bar() {
+
+    # shellcheck disable=SC2034
+    local -rA options=(
+        ["Polybar"]="base::polybar"
+        ["Bumblebee"]="base::bumblebee"
+    )
+    common::choose options "Choose an Status Bar"
 }
 
 base::i3wm() {
@@ -924,7 +959,7 @@ main::base() {
     base::app_launcher
     base::neovim
     base::fonts
-    base::alacritty
+    base::term
     base::dir_colors
     base::i3wm
     base::i3lock
