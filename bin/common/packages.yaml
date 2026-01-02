@@ -143,12 +143,10 @@ dependencies:
       - network-manager-applet
       - python3-devel
       - python3-tkinter
-      - conky
     apt-get:
       - network-manager
       - python3-dev
       - python3-tk
-      - conky-all
   i3lock:
     dnf:
       - cairo-devel
