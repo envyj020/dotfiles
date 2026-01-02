@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -euo pipefail
+set -eu
 
 {
     readonly WALLPAPER_DIR="$HOME/Pictures"
@@ -150,6 +150,7 @@ set -euo pipefail
             add_wallpaper
             run_base
             run_stow
+            info "Installation complete! You may need to restart your shell or run ${GREEN}'source ~/.bashrc'.${NC}"
         )
     }
 
