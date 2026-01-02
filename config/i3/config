@@ -1,9 +1,10 @@
 # i3 config file (v4)
 # reference: https://i3wm.org/docs/userguide.html
+# https://envyj020.github.io/dotfiles/keybindings/i3
 
 set $mod Mod4
 set $ctrl Control
-set $term $HOME/.local/bin/alacritty
+set $term alacritty
 
 set $inner 5
 set $outerTop 0

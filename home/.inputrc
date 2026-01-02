@@ -1,8 +1,6 @@
 $include /etc/inputrc
 
-# \e[1;2C = Shift+Right-Arrow
-# \e[1;2D = Shift+Left-Arrow
-# \e[1;5A = Ctrl+Up-Arrow
+# https://envyj020.github.io/dotfiles/keybindings/readline
 
 "\C-p":history-search-backward
 "\C-n":history-search-forward
@@ -15,7 +13,7 @@ $include /etc/inputrc
 "\e[1;2D":backward-word
 "\e[1;5A":"cd ..\n"
 
-# Turns on Vi mode on shell instead of the default Emacs mode
+# Turns on Vi mode on instead of the default Emacs
 
 # set editing-mode vi
 # set show-mode-in-prompt on
