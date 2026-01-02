@@ -5,6 +5,8 @@ GREEN := \033[1;32m
 BLUE := \033[1;36m
 NC := \033[0m
 
+cmd_exists = command -v $(1) >/dev/null 2>&1 || (echo -e "$(RED)$(1) not found$(NC). Run $(GREEN)make base$(NC)" && exit 1)
+
 all: help
 
 help:
@@ -19,25 +21,17 @@ init:
 
 .PHONY: init
 
-base: init ## Installs base OS packages
+base: init ## Install base OS packages
 	bin/install
 
 .PHONY: base
 
-mise: x-stow ## Installs system-wide mise packages
+mise: x-stow x-mise ## Install mise packages
 	stow pkg -t $(HOME)/.config
 	mise install
 	ya pkg install
 
 .PHONY: mise
-
-x-stow:
-	command -v stow > /dev/null 2>&1 || { \
-		printf "$(RED)stow not found, run $(GREEN)make base$(NC)\n"; \
-		exit 1; \
-	}
-
-.PHONY: x-stow
 
 stow: x-stow init ## Symlinks dotfiles
 	stow home -t $(HOME)
@@ -46,9 +40,19 @@ stow: x-stow init ## Symlinks dotfiles
 
 .PHONY: stow
 
-unstow: x-stow ## Removes dotfiles symlinks
+unstow: x-stow ## Remove dotfiles symlinks
 	stow -D home -t $(HOME)
 	stow -D config -t $(HOME)/.config
 	stow -D pkg -t $(HOME)/.config
 
 .PHONY: unstow
+
+x-stow:
+	$(call cmd_exists,stow)
+
+.PHONY: x-stow
+
+x-mise:
+	$(call cmd_exists,mise)
+
+.PHONY: x-mise
