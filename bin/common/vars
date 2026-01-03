@@ -42,6 +42,7 @@ readonly -a NERD_FONTS_TO_INSTALL=(
     "FiraCode"
     "Iosevka"
     "Monaspace"
+    "IBMPlexMono"
 )
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
