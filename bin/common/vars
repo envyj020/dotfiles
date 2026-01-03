@@ -41,6 +41,7 @@ readonly -a NERD_FONTS_TO_INSTALL=(
     "RobotoMono"
     "FiraCode"
     "Iosevka"
+    "Monaspace"
 )
 
 if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
