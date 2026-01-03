@@ -5,6 +5,54 @@ set -ueo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/logging"
 
+# Checks that all the specified variables are set and non-empty
+#
+# Arguments:
+#   VAR1 VAR2 ...
+#
+# Returns:
+#   0 on success
+#   1 if any variable is unset or empty
+
+common::require() {
+    for REQUIRED_VAR in "$@"; do
+        : "${!REQUIRED_VAR:?Error: $REQUIRED_VAR is not set but required}"
+    done
+}
+
+# Checks if a given package is available to install.
+#
+# Globals:
+#   PKG_MANAGER
+#   OS_NAME
+#
+# Arguments:
+#   $1 - PACKAGE
+#
+# Returns:
+#   0 on success
+#   non-zero if PACKAGE isn't available.
+
+common::has_pkg() {
+
+    local -r PACKAGE="$1"
+
+    common::require OS_NAME PKG_MANAGER
+
+    case $OS_NAME in
+    fedora)
+        $PKG_MANAGER list --available "$PACKAGE" &>/dev/null
+        ;;
+    xUbuntu | debian)
+        $PKG_MANAGER show "$PACKAGE" &>/dev/null
+        ;;
+    *)
+        log::not_implemented
+        return 1
+        ;;
+    esac
+}
+
 # Queries an inventory file using 'yq' to retrieve dependencies for a
 # specific caller or target. It combines common packages names with
 # those specific to the current $OS and $PKG_MANAGER.
@@ -31,9 +79,7 @@ common::dependencies_from() {
 
     local -r FUNCTION_CALLEE="${1:-FUNCNAME[1]##*::}"
 
-    for GLOBAL in OS ARCH XDG_BIN_HOME PKG_MANAGER PKG_INVENTORY_FILE; do
-        : "${!GLOBAL:?Error: $GLOBAL is not set but required}"
-    done
+    common::require OS ARCH XDG_BIN_HOME PKG_MANAGER PKG_INVENTORY_FILE
 
     [[ $(command -v yq) ]] || {
         local -r YQ_LATEST_BIN_RELEASE_URL="https://github.com/mikefarah/yq/releases/latest/download/yq_${OS}_${ARCH}"
@@ -54,8 +100,6 @@ common::dependencies_from() {
 # It first attempts to find common package managers in PATH,
 # then falls back to /etc/*-release files.
 #
-# Globals:
-#   None
 # Arguments:
 #   None
 # Outputs:
@@ -68,7 +112,7 @@ common::dependencies_from() {
 common::package_manager() {
 
     local -ra PACKAGE_MANAGERS=(
-        "apt-get"
+        "apt"
         "dnf"
         "pacman"
         "zypper"
@@ -84,7 +128,7 @@ common::package_manager() {
     done
 
     local -rA OS_FILENAMES=(
-        ["/etc/debian_version"]=apt-get
+        ["/etc/debian_version"]=apt
         ["/etc/redhat-release"]=dnf
         ["/etc/arch-release"]=pacman
         ["/etc/SUSE-release"]=zypper
