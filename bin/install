@@ -36,7 +36,7 @@ main::setup() {
 
     case $OS_NAME in
     fedora | rhel | centos | XUbuntu | debian) return 0 ;;
-    *) log::error "OS: $OS_NAME is not supported by this script" ;;
+    *) log::error "OS: $OS_NAME is not supported" ;;
     esac
 }
 
@@ -278,6 +278,12 @@ base::alacritty() {
         return 0
     }
 
+    common::has_pkg "alacritty" && {
+        sudo $PKG_MANAGER install -y alacritty >/dev/null
+        common::stop_spinner
+        return 0
+    }
+
     local -r ALACRITTY_GH_REPOSITORY='https://github.com/alacritty/alacritty.git'
     local -r ALACRITTY_DOWNLOAD_DIR="$SANDBOX/$(basename $ALACRITTY_GH_REPOSITORY .git)"
     local -r ALACRITTY_RELEASE_BIN='target/release/alacritty'
@@ -313,6 +319,12 @@ base::kitty() {
     common::start_spinner
 
     [[ $(command -v kitty) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    common::has_pkg "kitty" && {
+        sudo $PKG_MANAGER install -y kitty >/dev/null
         common::stop_spinner
         return 0
     }
@@ -386,6 +398,12 @@ base::rofi() {
         return 0
     }
 
+    common::has_pkg "rofi" && {
+        sudo $PKG_MANAGER install -y rofi >/dev/null
+        common::stop_spinner
+        return 0
+    }
+
     local -r ROFI_THEMES_REPOSITORY=https://github.com/newmanls/rofi-themes-collection.git
     local -r ROFI_THEMES_DESTINATION_DIR="$XDG_DATA_HOME/rofi/themes"
     local -r ROFI_THEMES_REPOSITORY_BASENAME=$(basename $ROFI_THEMES_REPOSITORY .git)
@@ -445,7 +463,10 @@ base::albert() {
         return 1
     }
 
-    [[ $(command -v albert) ]] && return 0
+    [[ $(command -v albert) ]] && {
+        common::stop_spinner
+        return 0
+    }
 
     if ! IS_OS_RELEASE_VERSION_SUPPORTED $OS_VERSION; then
         ! IS_OS_RELEASE_VERSION_SUPPORTED $((--OS_VERSION)) && {
@@ -472,8 +493,8 @@ base::albert() {
         ;;
     esac
 
-    common::stop_spinner
     unset -f IS_OS_RELEASE_VERSION_SUPPORTED
+    common::stop_spinner
 }
 
 base::app_launcher() {
@@ -852,6 +873,12 @@ base::stow() {
         return 0
     }
 
+    common::has_pkg "stow" && {
+        sudo $PKG_MANAGER install -y stow >/dev/null
+        common::stop_spinner
+        return 0
+    }
+
     local -r STOW_VERSION=2.4.1
     local -r STOW_SOURCE_DOWNLOAD_URL="http://ftp.gnu.org/gnu/stow/stow-$STOW_VERSION.tar.gz"
     local -r STOW_SOURCE_FILENAME=$(basename $STOW_SOURCE_DOWNLOAD_URL)
@@ -924,6 +951,12 @@ cmd::tldr() {
     common::start_spinner
 
     [[ $(command -v tldr) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    common::has_pkg "tealdeer" && {
+        sudo $PKG_MANAGER install -y tealdeer >/dev/null
         common::stop_spinner
         return 0
     }
