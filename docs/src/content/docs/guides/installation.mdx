@@ -62,12 +62,12 @@ you will need to provide your own preferences.
 Congratulations! You’ve successfully installed this desktop environment.
 To ensure your workspace looks and behaves correctly after a reboot, please complete the following steps:
 
-### 1. Optional - Set your wallpaper
+### 1. Optional: Set your wallpaper
 
 By default, i3 looks for its wallpaper at `~/Pictures/wallpaper.jpg`. While a default one is provided
 with the standalone installer method, you can set your own by overriding it.
 
-### 2. Optional - API Tokens
+### 2. Optional: API Tokens
 
 API access for certain services requires storing authentication token files under
 your home directory.  The provided `.bashrc` exports these variables by reading them
@@ -86,7 +86,19 @@ The table below outlines the expected filenames conventions:
 
 </div>
 
-### 3. Configure your displays
+### 3. Optional: Change i3 terminal
+
+While Alacritty is the standard default, you can switch to another terminal such as kitty by modifying
+the `$TERMINAL` environment variable. This will automatically update the terminal launched by the i3 `mod+Enter` shortcut.
+
+```sh title="~/.bashrc.d/00-EXPORTS" del={2} ins={3}
+...
+export TERMINAL=alacritty
+export TERMINAL=kitty
+...
+```
+
+### 4. Configure your display layout
 
 Open your terminal and run the following command once you have your monitors arranged the way you like them:
 
