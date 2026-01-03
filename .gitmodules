@@ -16,3 +16,6 @@
 [submodule "modules/catppuccin-eza-themes"]
 	path = modules/catppuccin-eza-themes
 	url = https://github.com/catppuccin/eza.git
+[submodule "modules/catppuccin-xresources-themes"]
+	path = modules/catppuccin-xresources-themes
+	url = https://github.com/catppuccin/xresources.git
