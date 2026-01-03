@@ -4,7 +4,6 @@
 
 set $mod Mod4
 set $ctrl Control
-set $term alacritty
 
 set $inner 5
 set $outerTop 0
@@ -70,7 +69,7 @@ workspace $ws2 output HDMI-1-2
 workspace $ws3 output DP-1
 
 # shortcuts
-bindsym $mod+Return exec $term
+bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+d exec --no-startup-id "rofi -show combi \
     -modi combi,window,drun,ssh,:rofi-power-menu \
     -combi-modes 'window,drun,ssh,:rofi-power-menu --choices=suspend/hibernate/reboot/shutdown --confirm=' \
