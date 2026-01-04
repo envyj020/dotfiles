@@ -17,96 +17,35 @@ http_timeout = "30s"
 jobs = 8
 task_run_auto_install = true
 
-[tools.usage]
-version = "latest"
-
-[tools."aqua:direnv/direnv"]
-version = "latest"
-
-[tools."aqua:go-task/task"]
-version = "latest"
-
-[tools."aqua:casey/just"]
-version = "latest"
-
-[tools."aqua:aws/aws-cli"]
-version = "latest"
-
-[tools."aqua:turbot/steampipe"]
-version = "latest"
-postinstall = "mise run steampipe:init"
-
-[tools."aqua:cli/cli"]
-version = "latest"
-postinstall = "mise run github:init"
-
-[tools."aqua:sxyazi/yazi"]
-version = "latest"
-
-[tools."aqua:starship/starship"]
-version = "latest"
-
-[tools."aqua:chmln/sd"]
-version = "latest"
-
-[tools."aqua:sharkdp/bat"]
-version = "latest"
-
-[tools."aqua:eza-community/eza"]
-version = "latest"
-
-[tools."aqua:juliosueiras/terraform-lsp"]
-version = "latest"
-
-[tools."aqua:dandavison/delta"]
-version = "latest"
-
-[tools."aqua:BurntSushi/ripgrep"]
-version = "latest"
-
-[tools."aqua:junegunn/fzf"]
-version = "latest"
-
-[tools."npm:@google/gemini-cli"]
-version = "latest"
-
-[tools."aqua:tfutils/tfenv"]
-version = "latest"
-postinstall = "mise run tfenv:init"
-
-[tools."aqua:kubernetes/minikube"]
-version = "latest"
-
-[tools."aqua:kubernetes-sigs/kind"]
-version = "latest"
-
-[tools."aqua:derailed/k9s"]
-version = "latest"
-
-[tools."aqua:kubernetes-sigs/kustomize"]
-version = "latest"
-
-[tools."aqua:kcl-lang/cli"]
-version = "latest"
-
-[tools."aqua:kubernetes-sigs/krew"]
-version = "latest"
-postinstall = "mise run krew:init"
-
-[tools."aqua:grafana/tanka"]
-version = "latest"
-
-[tools."aqua:jsonnet-bundler/jsonnet-bundler"]
-version = "latest"
-
-[tools."aqua:stefanprodan/timoni"]
-version = "latest"
-
-[tools."aqua:helm/helm"]
-version = "latest"
-
-[tools."aqua:helmfile/helmfile"]
-version = "latest"
-
-[tools."aqua:datreeio/datree"]
-version = "latest"
+[tools]
+usage = "latest"
+"aqua:direnv/direnv" = "latest"
+"aqua:a8m/envsubst" = "latest"
+"aqua:go-task/task" = "latest"
+"aqua:casey/just" = "latest"
+"aqua:aws/aws-cli" = "latest"
+"aqua:turbot/steampipe" = { version = "latest", postinstall = "mise run steampipe:init" }
+"aqua:cli/cli" = { version = "latest", postinstall = "mise run github:init" }
+"aqua:sxyazi/yazi" = "latest"
+"aqua:starship/starship" = "latest"
+"aqua:chmln/sd" = "latest"
+"aqua:sharkdp/bat" = "latest"
+"aqua:eza-community/eza" = "latest"
+"aqua:dandavison/delta" = "latest"
+"aqua:BurntSushi/ripgrep" = "latest"
+"aqua:junegunn/fzf" = "latest"
+"aqua:juliosueiras/terraform-lsp" = "latest"
+"aqua:tfutils/tfenv" = { version = "latest", postinstall = "mise run tfenv:init" }
+"aqua:kubernetes/minikube" = "latest"
+"aqua:kubernetes-sigs/kind" = "latest"
+"aqua:derailed/k9s" = "latest"
+"aqua:kubernetes-sigs/kustomize" = "latest"
+"aqua:kcl-lang/cli" = "latest"
+"aqua:kubernetes-sigs/krew" = { version = "latest", postinstall = "mise run krew:init" }
+"aqua:grafana/tanka" = "latest"
+"aqua:jsonnet-bundler/jsonnet-bundler" = "latest"
+"aqua:stefanprodan/timoni" = "latest"
+"aqua:helm/helm" = "latest"
+"aqua:helmfile/helmfile" = "latest"
+"aqua:datreeio/datree" = "latest"
+"npm:@google/gemini-cli" = "latest"
