@@ -37,6 +37,7 @@ dependencies:
     dnf:
       - git-core
       - dnf-command(config-manager)
+      - oxygen-cursor-themes
       - pkgconf
       - poppler
       - ImageMagick
@@ -46,6 +47,7 @@ dependencies:
     apt-get:
       - git
       - git-extras
+      - oxygen-cursor-theme
       - pkg-config
       - poppler-utils
       - imagemagick
