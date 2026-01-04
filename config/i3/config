@@ -2,6 +2,9 @@
 # reference: https://i3wm.org/docs/userguide.html
 # https://envyj020.github.io/dotfiles/keybindings/i3
 
+set $FONT JetBrainsMonoNL Nerd Font
+set $LOCK_FONT JetBrains-Mono-NL-ExtraBold
+
 set $mod Mod4
 set $ctrl Control
 
@@ -45,7 +48,7 @@ client.focused_inactive $unFocusBorder          $unFocusBorder  $unFocusBorder  
 client.unfocused        $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
 client.urgent           $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
 
-font pango:JetBrainsMonoNL Nerd Font,monospace 8
+font pango:$FONT 8
 floating_modifier $mod
 focus_follows_mouse no
 smart_borders on
@@ -103,8 +106,8 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
-bindsym $mod+Shift+s exec --no-startup-id $XDG_CONFIG_HOME/i3/lock --font 'JetBrainsMono-NF-ExtraBold'
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -f 'pango:JetBrainsMonoNL Nerd Font Bold 10' \
+bindsym $mod+Shift+s exec --no-startup-id $XDG_CONFIG_HOME/i3/lock --font $LOCK_FONT
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -f 'pango:$FONT Bold 10' \
     -m 'Do you really want to exit i3? This will end your X session.' -b 'Exit' 'i3-msg exit'"
 
 # window resize
@@ -128,6 +131,7 @@ bindsym $mod+$ctrl+Right    resize shrink width 10 px or 10 ppt
 bindsym $mod+$ctrl+Down     resize shrink height 10 px or 10 ppt
 bindsym $mod+$ctrl+Up       resize grow height 10 px or 10 ppt
 bindsym $mod+$ctrl+Left     resize grow width 10 px or 10 ppt
+
 bindsym $mod+r mode "resize"
 
 # audio control

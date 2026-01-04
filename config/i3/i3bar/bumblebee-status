@@ -1,5 +1,5 @@
 bar {
-	font pango:JetBrainsMonoNL Nerd Font 10
+	font pango:$FONT 9
 	position top
     colors {
         background #00000000
