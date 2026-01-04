@@ -1,0 +1,12 @@
+Xft.dpi:       108
+Xft.antialias: true
+Xft.hinting:   true
+Xft.rgba:      rgb
+Xft.autohint:  false
+Xft.hintstyle: hintslight
+Xft.lcdfilter: lcddefault
+
+Xcursor.theme: oxy-zions
+Xcursor.size: 24
+
+#include ".Xresources.d/theme"
