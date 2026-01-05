@@ -1,6 +1,6 @@
 # vim: set ft=sh:
 
-readonly EXPORTS_FILE="$HOME/.bashrc.d/00-EXPORTS"
+readonly BASH_EXPORTS="$HOME/.bashrc.d/00-EXPORTS"
 
 # shellcheck source=/dev/null
-[ -s "$EXPORTS_FILE" ] && source "$EXPORTS_FILE"
+[ -s "$BASH_EXPORTS" ] && source "$BASH_EXPORTS"
