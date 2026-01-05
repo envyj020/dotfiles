@@ -52,6 +52,9 @@ base::packages() {
 
 base::tmux() {
 
+    # https://github.com/tmux-plugins/tpm
+    # https://github.com/eradman/entr
+
     common::start_spinner
 
     local -r TMUX_TPM_GH_REPOSITORY=https://github.com/tmux-plugins/tpm
@@ -109,55 +112,6 @@ base::ueberzugpp() {
     common::stop_spinner
 }
 
-base::nvm() {
-
-    # https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
-
-    common::start_spinner
-
-    [[ -d "$HOME/.nvm" ]] && {
-        common::stop_spinner
-        return 0
-    }
-
-    local -r LATEST_NVM_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/nvm-sh/nvm/releases/latest" | jq -r '.tag_name')
-    local -r LATEST_NODEJS_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/nodejs/node/releases/latest" | jq -r '.tag_name')
-    local -r NVM_INSTALL_SCRIPT_URL="$RAW_GITHUB_URL/nvm-sh/nvm/$LATEST_NVM_RELEASE_VERSION/install.sh"
-
-    curl -fsSL $NVM_INSTALL_SCRIPT_URL | bash &>/dev/null
-    (
-        # shellcheck source=/dev/null
-        source $HOME/.nvm/nvm.sh
-        nvm install "$LATEST_NODEJS_RELEASE_VERSION"
-    )
-
-    common::stop_spinner
-}
-
-base::gvm() {
-
-    # https://github.com/moovweb/gvm
-
-    common::start_spinner
-
-    local -r GO_VERSION=1.24.10
-    local -r GO_REMOTE_DOWNLOAD_URL="https://go.dev/dl/go${GO_VERSION}.${OS}-${ARCH}.tar.gz"
-    local -r GO_FILENAME=$(basename $GO_REMOTE_DOWNLOAD_URL)
-    local -r GVM_INSTALLER_URL="$RAW_GITHUB_URL/moovweb/gvm/master/binscripts/gvm-installer"
-
-    [[ $(command -v go) ]] || {
-        curl -fsSL $GO_REMOTE_DOWNLOAD_URL | tar -C $XDG_BIN_HOME -xzf - || {
-            log:error "Couldn't download and extract $GO_FILENAME archive"
-        }
-    }
-
-    [[ $(command -v gvm) ]] || {
-        GVM_NO_UPDATE_PROFILE=1 bash < <(curl -fsSL $GVM_INSTALLER_URL)
-    }
-
-    common::stop_spinner
-}
-
 base::app_image_launcher() {
 
     # https://github.com/TheAssassin/AppImageLauncher
@@ -201,6 +155,7 @@ base::app_image_launcher() {
 base::neovim() {
 
     # https://github.com/MordechaiHadad/bob
+    # https://gitlab.com/dwt1/shell-color-scripts
 
     common::start_spinner
 
@@ -229,6 +184,9 @@ base::neovim() {
 }
 
 base::fonts() {
+
+    # https://github.com/powerline/fonts
+    # https://github.com/ryanoasis/nerd-fonts
 
     common::start_spinner
 
@@ -355,6 +313,8 @@ base::term() {
 
 base::dir_colors() {
 
+    # https://github.com/trapd00r/LS_COLORS
+
     common::start_spinner
 
     local -r LS_COLORS_FILENAME=lscolors.sh
@@ -377,21 +337,9 @@ base::dir_colors() {
 base::rofi() {
 
     # https://github.com/davatorium/rofi/blob/next/INSTALL.md
+    # https://github.com/newmanls/rofi-themes-collection
 
     common::start_spinner
-
-    local -ra ROFI_DMENU_SCRIPTS=(
-        "$RAW_GITHUB_URL/jluttine/rofi-power-menu/master/rofi-power-menu"
-    )
-
-    for ROFI_DMENU_SCRIPT in "${ROFI_DMENU_SCRIPTS[@]}"; do
-        local MODULE_NAME=$(basename $ROFI_DMENU_SCRIPT)
-
-        [[ -f "$XDG_BIN_HOME/$MODULE_NAME" ]] && continue
-
-        curl -fsSLO --output-dir $SANDBOX $ROFI_DMENU_SCRIPT
-        install "$SANDBOX/$MODULE_NAME" "$XDG_BIN_HOME/$MODULE_NAME"
-    done
 
     [[ $(command -v rofi) ]] && {
         common::stop_spinner
@@ -612,6 +560,55 @@ base::i3lock() {
     common::stop_spinner
 }
 
+cmd::nvm() {
+
+    # https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
+
+    common::start_spinner
+
+    [[ -d "$HOME/.nvm" ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r LATEST_NVM_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/nvm-sh/nvm/releases/latest" | jq -r '.tag_name')
+    local -r LATEST_NODEJS_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/nodejs/node/releases/latest" | jq -r '.tag_name')
+    local -r NVM_INSTALL_SCRIPT_URL="$RAW_GITHUB_URL/nvm-sh/nvm/$LATEST_NVM_RELEASE_VERSION/install.sh"
+
+    curl -fsSL $NVM_INSTALL_SCRIPT_URL | bash &>/dev/null
+    (
+        # shellcheck source=/dev/null
+        source $HOME/.nvm/nvm.sh
+        nvm install "$LATEST_NODEJS_RELEASE_VERSION"
+    )
+
+    common::stop_spinner
+}
+
+cmd::gvm() {
+
+    # https://github.com/moovweb/gvm
+
+    common::start_spinner
+
+    local -r GO_VERSION=1.24.10
+    local -r GO_REMOTE_DOWNLOAD_URL="https://go.dev/dl/go${GO_VERSION}.${OS}-${ARCH}.tar.gz"
+    local -r GO_FILENAME=$(basename $GO_REMOTE_DOWNLOAD_URL)
+    local -r GVM_INSTALLER_URL="$RAW_GITHUB_URL/moovweb/gvm/master/binscripts/gvm-installer"
+
+    [[ $(command -v go) ]] || {
+        curl -fsSL $GO_REMOTE_DOWNLOAD_URL | tar -C $XDG_BIN_HOME -xzf - || {
+            log:error "Couldn't download and extract $GO_FILENAME archive"
+        }
+    }
+
+    [[ $(command -v gvm) ]] || {
+        GVM_NO_UPDATE_PROFILE=1 bash < <(curl -fsSL $GVM_INSTALLER_URL)
+    }
+
+    common::stop_spinner
+}
+
 cmd::terraform() {
 
     # https://github.com/tofuutils/tofuenv
@@ -629,38 +626,6 @@ cmd::terraform() {
     git clone --depth 1 --quiet $TOFUENV_REPOSITORY $TOFUENV_INSTALL_DIR
     ln -s $TOFUENV_INSTALL_DIR/bin/* $XDG_BIN_HOME
     tofuenv install < <(tofuenv list-remote | head -n1) &>/dev/null
-
-    common::stop_spinner
-}
-
-kube::kubectl() {
-
-    # https://github.com/flavio/kuberlr
-
-    common::start_spinner
-
-    [[ $(command -v kuberlr) ]] && {
-        common::stop_spinner
-        return 0
-    }
-
-    local -r KUBERLR_VERSION=$(curl -s https://api.github.com/repos/flavio/kuberlr/releases/latest | jq -r '.tag_name')
-    local -r KUBERLR_SHA256_DOWNLOAD_URL="https://github.com/flavio/kuberlr/releases/download/$KUBERLR_VERSION/checksums.txt"
-    local -r KUBERLR_SHA256_FILENAME=$(basename $KUBERLR_SHA256_DOWNLOAD_URL)
-    local -r KUBERLR_BIN_DOWNLOAD_URL="https://github.com/flavio/kuberlr/releases/download/$KUBERLR_VERSION/kuberlr_${KUBERLR_VERSION//v/}_${OS}_${ARCH}.tar.gz"
-    local -r KUBERLR_FILENAME=$(basename $KUBERLR_BIN_DOWNLOAD_URL)
-
-    curl -fsSLO --output-dir $SANDBOX $KUBERLR_SHA256_DOWNLOAD_URL
-    curl -fsSLO --output-dir $SANDBOX $KUBERLR_BIN_DOWNLOAD_URL
-
-    local -r KUBERLR_SHA256=$(grep $KUBERLR_FILENAME $SANDBOX/$KUBERLR_SHA256_FILENAME | cut -d' ' -f1)
-    echo $KUBERLR_SHA256 "$SANDBOX/$KUBERLR_FILENAME" | sha256sum --check || {
-        log::error "$KUBERLR_FILENAME checksum verification failed."
-    }
-
-    tar -xzf "$SANDBOX/$KUBERLR_FILENAME" -C $SANDBOX >/dev/null
-    install "$SANDBOX/$(basename $KUBERLR_FILENAME .tar.gz)/kuberlr" "$XDG_BIN_HOME/kuberlr"
-    ln -sfn $XDG_BIN_HOME/kuberlr $XDG_BIN_HOME/kubectl
 
     common::stop_spinner
 }
@@ -699,28 +664,6 @@ cmd::docker() {
     common::stop_spinner
 }
 
-kube::kube_prompt() {
-
-    # https://github.com/c-bata/kube-prompt
-
-    common::start_spinner
-
-    local -r KUBEPROMPT_LATEST_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/c-bata/kube-prompt/releases/latest" | jq -r '.tag_name')
-    local -r KUBEPROMPT_RELEASE_URL="https://github.com/c-bata/kube-prompt/releases/download/$KUBEPROMPT_LATEST_RELEASE_VERSION/kube-prompt_${KUBEPROMPT_LATEST_RELEASE_VERSION}_${OS}_${ARCH}.zip"
-    local -r KUBEPROMPT_FILENAME=$(basename $KUBEPROMPT_RELEASE_URL)
-
-    [[ $(command -v kube-prompt) ]] && {
-        common::stop_spinner
-        return 0
-    }
-
-    curl -fsSLO --output-dir $SANDBOX $KUBEPROMPT_RELEASE_URL
-    unzip -qq "$SANDBOX/$KUBEPROMPT_FILENAME" -d $SANDBOX
-    install "$SANDBOX/kube-prompt" "$XDG_BIN_HOME/kube-prompt"
-
-    common::stop_spinner
-}
-
 base::python() {
 
     # misc user-wide python packages
@@ -744,21 +687,68 @@ base::python() {
     common::stop_spinner
 }
 
-kube::rancher_desktop() {
+base::stow() {
 
-    # https://docs.rancherdesktop.io/getting-started/installation
+    # https://www.gnu.org/software/stow/manual
 
     common::start_spinner
 
-    local -r RANCHER_DESKTOP_DOWNLOAD_URL="https://download.opensuse.org/repositories/isv:/Rancher:/stable/AppImage/rancher-desktop-latest-$(uname -m).AppImage"
-    local -r RANCHER_DESKTOP_FILENAME=$(basename $RANCHER_DESKTOP_DOWNLOAD_URL)
+    [[ $(command -v stow) ]] && {
+        common::stop_spinner
+        return 0
+    }
 
-    RANCHER_PACKAGES=$(common::dependencies_from "rancher")
-    sudo $PKG_MANAGER install -y $RANCHER_PACKAGES >/dev/null
+    common::has_pkg "stow" && {
+        sudo $PKG_MANAGER install -y stow >/dev/null
+        common::stop_spinner
+        return 0
+    }
 
-    if [[ ! -f $APPIMAGE_DIR/$RANCHER_DESKTOP_FILENAME ]]; then
-        curl -fsSLO --output-dir $APPIMAGE_DIR $RANCHER_DESKTOP_DOWNLOAD_URL
-    fi
+    local -r STOW_VERSION=2.4.1
+    local -r STOW_SOURCE_DOWNLOAD_URL="http://ftp.gnu.org/gnu/stow/stow-$STOW_VERSION.tar.gz"
+    local -r STOW_SOURCE_FILENAME=$(basename $STOW_SOURCE_DOWNLOAD_URL)
+    local -r STOW_EXTRACTED_FILENAME="${STOW_SOURCE_FILENAME//.tar.gz/}"
+    local -r STOW_GPG_SIGNATURE_DOWNLOAD_URL="http://ftp.gnu.org/gnu/stow/stow-$STOW_VERSION.tar.gz.sig"
+    local -r STOW_GPG_SIGNATURE_FILENAME=$(basename $STOW_GPG_SIGNATURE_DOWNLOAD_URL)
+    local -r GNU_GPG_KEYRING_DOWNLOAD_URL="http://ftp.gnu.org/gnu/gnu-keyring.gpg"
+
+    STOW_PACKAGES=$(common::dependencies_from "stow")
+    sudo $PKG_MANAGER install -y $STOW_PACKAGES &>/dev/null
+
+    curl -fsS $GNU_GPG_KEYRING_DOWNLOAD_URL | gpg --import &>/dev/null
+    curl -fsSLO --output-dir $SANDBOX $STOW_SOURCE_DOWNLOAD_URL
+    curl -fsSLO --output-dir $SANDBOX $STOW_GPG_SIGNATURE_DOWNLOAD_URL
+
+    gpg --verify "$SANDBOX/$STOW_GPG_SIGNATURE_FILENAME" "$SANDBOX/$STOW_SOURCE_FILENAME" || {
+        log::error "Stow GPG signature couldn't be verified."
+    }
+    (
+        tar -xzf "$SANDBOX/$STOW_SOURCE_FILENAME" -C $SANDBOX && cd $SANDBOX/$STOW_EXTRACTED_FILENAME || {
+            log:error "Couldn't extract $STOW_EXTRACTED_FILENAME archive"
+        }
+
+        ./configure --prefix="$(basename $XDG_BIN_HOME)" && make install &>/dev/null || {
+            log:error "Couldn't compile and install $STOW_EXTRACTED_FILENAME"
+        }
+    )
+
+    common::stop_spinner
+}
+
+base::nix() {
+
+    # https://nixos.org/download
+
+    common::start_spinner
+
+    [[ $(command -v nix) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r NIX_INSTALLER_URL=https://nixos.org/nix/install
+    # Multi-user installation - requires to have Selinux disabled
+    sh <(curl --proto '=https' --tlsv1.2 -L $NIX_INSTALLER_URL) --daemon
 
     common::stop_spinner
 }
@@ -862,72 +852,6 @@ cmd::devbox() {
     common::stop_spinner
 }
 
-base::stow() {
-
-    # https://www.gnu.org/software/stow/manual
-
-    common::start_spinner
-
-    [[ $(command -v stow) ]] && {
-        common::stop_spinner
-        return 0
-    }
-
-    common::has_pkg "stow" && {
-        sudo $PKG_MANAGER install -y stow >/dev/null
-        common::stop_spinner
-        return 0
-    }
-
-    local -r STOW_VERSION=2.4.1
-    local -r STOW_SOURCE_DOWNLOAD_URL="http://ftp.gnu.org/gnu/stow/stow-$STOW_VERSION.tar.gz"
-    local -r STOW_SOURCE_FILENAME=$(basename $STOW_SOURCE_DOWNLOAD_URL)
-    local -r STOW_EXTRACTED_FILENAME="${STOW_SOURCE_FILENAME//.tar.gz/}"
-    local -r STOW_GPG_SIGNATURE_DOWNLOAD_URL="http://ftp.gnu.org/gnu/stow/stow-$STOW_VERSION.tar.gz.sig"
-    local -r STOW_GPG_SIGNATURE_FILENAME=$(basename $STOW_GPG_SIGNATURE_DOWNLOAD_URL)
-    local -r GNU_GPG_KEYRING_DOWNLOAD_URL="http://ftp.gnu.org/gnu/gnu-keyring.gpg"
-
-    STOW_PACKAGES=$(common::dependencies_from "stow")
-    sudo $PKG_MANAGER install -y $STOW_PACKAGES &>/dev/null
-
-    curl -fsS $GNU_GPG_KEYRING_DOWNLOAD_URL | gpg --import &>/dev/null
-    curl -fsSLO --output-dir $SANDBOX $STOW_SOURCE_DOWNLOAD_URL
-    curl -fsSLO --output-dir $SANDBOX $STOW_GPG_SIGNATURE_DOWNLOAD_URL
-
-    gpg --verify "$SANDBOX/$STOW_GPG_SIGNATURE_FILENAME" "$SANDBOX/$STOW_SOURCE_FILENAME" || {
-        log::error "Stow GPG signature couldn't be verified."
-    }
-    (
-        tar -xzf "$SANDBOX/$STOW_SOURCE_FILENAME" -C $SANDBOX && cd $SANDBOX/$STOW_EXTRACTED_FILENAME || {
-            log:error "Couldn't extract $STOW_EXTRACTED_FILENAME archive"
-        }
-
-        ./configure --prefix="$(basename $XDG_BIN_HOME)" && make install &>/dev/null || {
-            log:error "Couldn't compile and install $STOW_EXTRACTED_FILENAME"
-        }
-    )
-
-    common::stop_spinner
-}
-
-base::nix() {
-
-    # https://nixos.org/download
-
-    common::start_spinner
-
-    [[ $(command -v nix) ]] && {
-        common::stop_spinner
-        return 0
-    }
-
-    local -r NIX_INSTALLER_URL=https://nixos.org/nix/install
-    # Multi-user installation - requires to have Selinux disabled
-    sh <(curl --proto '=https' --tlsv1.2 -L $NIX_INSTALLER_URL) --daemon
-
-    common::stop_spinner
-}
-
 cmd::mise() {
     # https://mise.jdx.dev/installing-mise.html#installation-methods
 
@@ -982,13 +906,84 @@ cmd::tldr() {
     common::stop_spinner
 }
 
+kube::rancher_desktop() {
+
+    # https://docs.rancherdesktop.io/getting-started/installation
+
+    common::start_spinner
+
+    local -r RANCHER_DESKTOP_DOWNLOAD_URL="https://download.opensuse.org/repositories/isv:/Rancher:/stable/AppImage/rancher-desktop-latest-$(uname -m).AppImage"
+    local -r RANCHER_DESKTOP_FILENAME=$(basename $RANCHER_DESKTOP_DOWNLOAD_URL)
+
+    RANCHER_PACKAGES=$(common::dependencies_from "rancher")
+    sudo $PKG_MANAGER install -y $RANCHER_PACKAGES >/dev/null
+
+    if [[ ! -f $APPIMAGE_DIR/$RANCHER_DESKTOP_FILENAME ]]; then
+        curl -fsSLO --output-dir $APPIMAGE_DIR $RANCHER_DESKTOP_DOWNLOAD_URL
+    fi
+
+    common::stop_spinner
+}
+
+kube::kubectl() {
+
+    # https://github.com/flavio/kuberlr
+
+    common::start_spinner
+
+    [[ $(command -v kuberlr) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r KUBERLR_VERSION=$(curl -s https://api.github.com/repos/flavio/kuberlr/releases/latest | jq -r '.tag_name')
+    local -r KUBERLR_SHA256_DOWNLOAD_URL="https://github.com/flavio/kuberlr/releases/download/$KUBERLR_VERSION/checksums.txt"
+    local -r KUBERLR_SHA256_FILENAME=$(basename $KUBERLR_SHA256_DOWNLOAD_URL)
+    local -r KUBERLR_BIN_DOWNLOAD_URL="https://github.com/flavio/kuberlr/releases/download/$KUBERLR_VERSION/kuberlr_${KUBERLR_VERSION//v/}_${OS}_${ARCH}.tar.gz"
+    local -r KUBERLR_FILENAME=$(basename $KUBERLR_BIN_DOWNLOAD_URL)
+
+    curl -fsSLO --output-dir $SANDBOX $KUBERLR_SHA256_DOWNLOAD_URL
+    curl -fsSLO --output-dir $SANDBOX $KUBERLR_BIN_DOWNLOAD_URL
+
+    local -r KUBERLR_SHA256=$(grep $KUBERLR_FILENAME $SANDBOX/$KUBERLR_SHA256_FILENAME | cut -d' ' -f1)
+    echo $KUBERLR_SHA256 "$SANDBOX/$KUBERLR_FILENAME" | sha256sum --check || {
+        log::error "$KUBERLR_FILENAME checksum verification failed."
+    }
+
+    tar -xzf "$SANDBOX/$KUBERLR_FILENAME" -C $SANDBOX >/dev/null
+    install "$SANDBOX/$(basename $KUBERLR_FILENAME .tar.gz)/kuberlr" "$XDG_BIN_HOME/kuberlr"
+    ln -sfn $XDG_BIN_HOME/kuberlr $XDG_BIN_HOME/kubectl
+
+    common::stop_spinner
+}
+
+kube::kube_prompt() {
+
+    # https://github.com/c-bata/kube-prompt
+
+    common::start_spinner
+
+    local -r KUBEPROMPT_LATEST_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/c-bata/kube-prompt/releases/latest" | jq -r '.tag_name')
+    local -r KUBEPROMPT_RELEASE_URL="https://github.com/c-bata/kube-prompt/releases/download/$KUBEPROMPT_LATEST_RELEASE_VERSION/kube-prompt_${KUBEPROMPT_LATEST_RELEASE_VERSION}_${OS}_${ARCH}.zip"
+    local -r KUBEPROMPT_FILENAME=$(basename $KUBEPROMPT_RELEASE_URL)
+
+    [[ $(command -v kube-prompt) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    curl -fsSLO --output-dir $SANDBOX $KUBEPROMPT_RELEASE_URL
+    unzip -qq "$SANDBOX/$KUBEPROMPT_FILENAME" -d $SANDBOX
+    install "$SANDBOX/kube-prompt" "$XDG_BIN_HOME/kube-prompt"
+
+    common::stop_spinner
+}
+
 main::base() {
     base::packages
     base::ueberzugpp
     base::python
     base::tmux
-    base::nvm
-    base::gvm
     base::app_launcher
     base::neovim
     base::fonts
@@ -1002,8 +997,10 @@ main::base() {
 
 main::cmd() {
     cmd::mise
-    cmd::terraform
     cmd::asdf
+    cmd::nvm
+    cmd::gvm
+    cmd::terraform
     cmd::cloudlens
     cmd::podman
     cmd::docker
