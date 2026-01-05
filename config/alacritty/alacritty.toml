@@ -81,7 +81,7 @@ y = 0
 #: https://alacritty.org/config-alacritty.html#window
 
 [window]
-decorations = "Transparent"
+decorations = "none"
 startup_mode = "Maximized"
 dynamic_padding = true
 dynamic_title = true
