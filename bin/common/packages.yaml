@@ -11,6 +11,8 @@ dependencies:
       - binutils
       - asciidoc
       - mercurial
+      - meson
+      - ninja-build
       - ffmpeg
       - zoxide
       - p7zip
@@ -44,7 +46,7 @@ dependencies:
       - libnotify
       - pango
       - navi
-    apt-get:
+    apt:
       - git
       - git-extras
       - oxygen-cursor-theme
@@ -64,7 +66,7 @@ dependencies:
       - google-noto-cjk-fonts
       - google-noto-emoji-fonts
       - google-noto-sans-symbols-fonts
-    apt-get:
+    apt:
       - fonts-noto-core
       - fonts-noto-cjk
       - fonts-noto-color-emoji
@@ -77,7 +79,7 @@ dependencies:
       - fontconfig-devel
       - libxcb-devel
       - libxkbcommon-devel
-    apt-get:
+    apt:
       - libfreetype6-dev
       - libfontconfig1-dev
       - libxcb-xfixes0-dev
@@ -85,8 +87,6 @@ dependencies:
   rofi:
     common:
       - flex
-      - meson
-      - ninja-build
     dnf:
       - alsa-lib-devel
       - libmpdclient-devel
@@ -102,7 +102,7 @@ dependencies:
       - xcb-util-cursor-devel
       - xcb-imdkit-devel
       - xcb-util-keysyms-devel
-    apt-get:
+    apt:
       - libasound2-dev
       - libmpdclient-dev
       - libpango1.0-dev
@@ -121,7 +121,7 @@ dependencies:
     dnf:
       - python3-devel
       - python3-tkinter
-    apt-get:
+    apt:
       - python3-dev
       - python3-tk
   i3wm:
@@ -145,7 +145,7 @@ dependencies:
       - network-manager-applet
       - python3-devel
       - python3-tkinter
-    apt-get:
+    apt:
       - network-manager
       - python3-dev
       - python3-tk
@@ -161,7 +161,7 @@ dependencies:
       - pam-devel
       - xcb-util-image-devel
       - xcb-util-xrm-devel
-    apt-get:
+    apt:
       - libcairo2-dev
       - libfontconfig1-dev
       - libxcb-composite0-dev
@@ -183,7 +183,7 @@ dependencies:
       - perl-Test-Simple
       - perl-Test-Output
       - perl-File-Copy
-    apt-get:
+    apt:
       - libtest-simple-perl
       - libtest-output-perl
       - libfile-ncopy-perl
