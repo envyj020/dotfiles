@@ -50,6 +50,7 @@ client.urgent           $unFocusBorder          $unFocusBorder  $unFocusBorder  
 
 font pango:$FONT 8
 floating_modifier $mod
+floating_maximum_size -1 x -1
 focus_follows_mouse no
 smart_borders on
 
@@ -182,7 +183,7 @@ bindsym $mod+w layout tabbed
 bindsym $mod+t layout toggle split
 
 # toggle tiling and floating
-bindsym $mod+Shift+space floating toggle
+bindsym $mod+Shift+space floating toggle; [floating] resize set 50 ppt 50 ppt; move position center
 
 # change focus between tiling and floating windows
 bindsym $mod+space focus mode_toggle
@@ -191,9 +192,8 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # exec
-exec_always --no-startup-id wmctrl -c Plasma
 exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpaper.jpg
-exec_always --no-startup-id setxkbmap -layout es,us -option grp:win_space_toggle
+exec_always --no-startup-id setxkbmap -layout es,us -option -option grp:alt_shift_toggle
 
 exec --no-startup-id picom
 exec --no-startup-id nm-applet
