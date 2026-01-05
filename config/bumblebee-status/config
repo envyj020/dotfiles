@@ -1,14 +1,13 @@
 # https://bumblebee-status.readthedocs.io/en/latest/features.html#configuration-files
 
 [core]
-modules = vpn,nic,disk,cpu,memory,pasink,pasource,bluetooth,layout-xkb,dnf,github
+modules = vpn,nic,disk,cpu,memory,pasink,pasource,bluetooth,layout-xkb,dnf,github,datetime
 theme = iceberg-dark-powerline
 
 [module-parameters]
 nic.format={intf} {state} {ip}
 disk.path=/
-time.format="%H:%M"
-date.format="%a, %b %d %Y"
+datetime.format=%a, %-m/%-d/%y %H:%M
 nic.states=^down
 layout-xkb.showname=false
 github.interval=2
