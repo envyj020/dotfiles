@@ -53,9 +53,9 @@ common::has_pkg() {
     esac
 }
 
-# Queries an inventory file using 'yq' to retrieve dependencies for a
-# specific caller or target. It combines common packages names with
-# those specific to the current $OS and $PKG_MANAGER.
+# Queries an inventory YAML file using 'yq' to retrieve dependencies for a
+# specific caller or target. It merges cross-distro common packages names with
+# those specific to the current $PKG_MANAGER.
 #
 # Globals:
 #   OS
@@ -96,7 +96,7 @@ common::dependencies_from() {
     echo "$COMMON_PKGS $OS_PKGS"
 }
 
-# Detects the system's package manager by checking available commands
+# Identifies the OS package manager by checking available commands
 # and OS release files.
 #
 # It first attempts to find common package managers in PATH,
@@ -149,7 +149,7 @@ common::package_manager() {
 }
 
 # Displays an interactive menu using bash select and executes
-# the selected option mapped function.
+# the given mapped function.
 # Globals:
 #   PS3
 # Arguments:
@@ -252,7 +252,7 @@ common::start_spinner() {
     ON_SUCCESS_MSG="${2:-"${BOLD}${FUNCTION_CALLEE} ${GREEN}OK${NC}"}"
     ON_ERROR_MSG="${3:-"${BOLD}${FUNCTION_CALLEE} ${RED}KO${NC}"}"
 
-    common::__init_spinner "$PROGRESS_MSG" &
+    common::__start_spinner "$PROGRESS_MSG" &
     SPIN_PID=$!
     disown
 }
@@ -264,7 +264,7 @@ common::stop_spinner() {
     common::__stop_spinner $EXIT_CODE
 }
 
-common::__init_spinner() {
+common::__start_spinner() {
 
     local i=0
     local -r MESSAGE="$1"
