@@ -2,8 +2,8 @@
 # reference: https://i3wm.org/docs/userguide.html
 # https://envyj020.github.io/dotfiles/keybindings/i3
 
-set $FONT JetBrainsMonoNL Nerd Font
-set $LOCK_FONT JetBrains-Mono-NL-ExtraBold
+set $font JetBrainsMonoNL Nerd Font
+set $i3lock_font JetBrains-Mono-NL-ExtraBold
 
 set $mod Mod4
 set $ctrl Control
@@ -48,7 +48,7 @@ client.focused_inactive $unFocusBorder          $unFocusBorder  $unFocusBorder  
 client.unfocused        $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
 client.urgent           $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
 
-font pango:$FONT 8
+font pango:$font 8
 floating_modifier $mod
 floating_maximum_size -1 x -1
 focus_follows_mouse no
@@ -107,8 +107,8 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
-bindsym $mod+Shift+s exec --no-startup-id $XDG_CONFIG_HOME/i3/lock --font $LOCK_FONT
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -f 'pango:$FONT Bold 10' \
+bindsym $mod+Shift+s exec --no-startup-id $XDG_CONFIG_HOME/i3/lock --font $i3lock_font
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -f 'pango:$font Bold 10' \
     -m 'Do you really want to exit i3? This will end your X session.' -b 'Exit' 'i3-msg exit'"
 
 # window resize
@@ -192,13 +192,13 @@ bindsym $mod+space focus mode_toggle
 bindsym $mod+a focus parent
 
 # exec
-exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpaper.jpg
-exec_always --no-startup-id setxkbmap -layout es,us -option -option grp:alt_shift_toggle
-
 exec --no-startup-id picom
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
 exec --no-startup-id autorandr --change
+
+exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpaper.jpg
+exec_always --no-startup-id setxkbmap -layout es,us -option -option grp:alt_shift_toggle
 
 # i3 status bar
 include i3-bar

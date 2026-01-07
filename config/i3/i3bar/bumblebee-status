@@ -1,5 +1,5 @@
 bar {
-	font pango:$FONT 9
+	font pango:$font 9
 	position top
     colors {
         background #00000000
