@@ -22,9 +22,12 @@ OS_VERSION=$(awk -F'=' '/^VERSION_ID=/ {gsub(/"/, "", $2); print $2}' /etc/os-re
 
 readonly REPOSITORY_DIR OS ARCH OS_NAME OS_VERSION
 
-readonly UDEV_RULES_DIR=/etc/udev/rules.d
+readonly I3_WINDOW_MANAGER="i3wm"
+readonly SWAY_WINDOW_MANAGER="sway"
+
 readonly I3_CONFIG_DIR="$XDG_CONFIG_HOME/i3"
 readonly I3_CURRENT_STATUS_BAR_SYMLINK="$I3_CONFIG_DIR/i3-bar"
+readonly UDEV_RULES_DIR=/etc/udev/rules.d
 
 readonly DESKTOP_APP_ICONS_DIR=/usr/share/pixmaps
 readonly APPIMAGE_DIR="$HOME/Applications"
