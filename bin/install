@@ -5,6 +5,7 @@ set -ueo pipefail
 
 SCRIPT_DIR=$(realpath "$(dirname -- "${BASH_SOURCE[0]}")")
 SANDBOX=$(mktemp -d)
+SELECTED_WINDOW_MANAGER=
 
 readonly SCRIPT_DIR SANDBOX
 
@@ -141,8 +142,8 @@ base::app_image_launcher() {
             return 0
         fi
         sudo add-apt-repository -y "$APP_IMAGE_LAUNCHER_DEBIAN_REPOSITORY" >/dev/null
-        sudo apt-get update >/dev/null
-        sudo apt-get install -y appimagelauncher >/dev/null
+        sudo $PKG_MANAGER update >/dev/null
+        sudo $PKG_MANAGER install -y appimagelauncher >/dev/null
         ;;
     *)
         log::not_implemented
@@ -292,11 +293,16 @@ base::kitty() {
     sh <(curl -sSfL https://sw.kovidgoyal.net/kitty/installer.sh)
 
     ln -sf "$KITTY_APP_DIR/bin/kitty" "$KITTY_APP_DIR/bin/kitten" "$XDG_BIN_HOME"
-    cp "$KITTY_APP_DIR/share/applications/kitty.desktop" "$KITTY_APP_DIR/share/applications/kitty-open.desktop" \
+
+    cp "$KITTY_APP_DIR/share/applications/kitty.desktop" \
+        "$KITTY_APP_DIR/share/applications/kitty-open.desktop" \
         "$XDG_DATA_HOME/applications"
 
-    sed -i "s|Icon=kitty|Icon=$KITTY_APP_DIR/share/icons/hicolor/256x256/apps/kitty.png|g" "$XDG_DATA_HOME/applications/kitty.desktop"
-    sed -i "s|Exec=kitty|Exec=$XDG_BIN_HOME/kitty|g" "$XDG_DATA_HOME/applications/kitty.desktop"
+    sed -i "s|Icon=kitty|Icon=$KITTY_APP_DIR/share/icons/hicolor/256x256/apps/kitty.png|g" \
+        "$XDG_DATA_HOME/applications/kitty.desktop"
+
+    sed -i "s|Exec=kitty|Exec=$XDG_BIN_HOME/kitty|g" \
+        "$XDG_DATA_HOME/applications/kitty.desktop"
 
     common::stop_spinner
 }
@@ -332,6 +338,194 @@ base::dir_colors() {
     )
 
     common::stop_spinner
+}
+
+base::i3wm() {
+
+    # https://i3wm.org/docs
+
+    #shellcheck disable=SC2034
+    SELECTED_WINDOW_MANAGER="$I3_WINDOW_MANAGER"
+
+    common::start_spinner
+
+    [[ $(command -v i3) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    I3_PACKAGES=$(common::dependencies_from "i3wm")
+    sudo $PKG_MANAGER install -y $I3_PACKAGES &>/dev/null
+
+    common::stop_spinner
+
+    base::i3lock
+}
+
+base::swayfx() {
+
+    # https://github.com/swaywm/sway
+    # https://github.com/WillPower3309/swayfx
+
+    #shellcheck disable=SC2034
+    SELECTED_WINDOW_MANAGER="$SWAY_WINDOW_MANAGER"
+
+    common::start_spinner
+
+    [[ $(command -v sway) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r SWAYFX_REPOSITORY_TAG=0.5.3
+    local -r SWAYFX_REPOSITORY_URL=https://github.com/WillPower3309/swayfx.git
+    local -r SWAYFX_REPOSITORY_BASENAME=$(basename $SWAYFX_REPOSITORY_URL .git)
+    local -r SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION=1.23.0
+
+    local -r WLROOTS_REPOSITORY_TAG=0.19.0
+    local -r WLROOTS_REPOSITORY_URL=https://gitlab.freedesktop.org/wlroots/wlroots.git
+    local -r WLROOTS_REPOSITORY_BASENAME=$(basename $WLROOTS_REPOSITORY_URL)
+
+    local -r SCENEFX_REPOSITORY_TAG=0.4.1
+    local -r SCENEFX_REPOSITORY_URL=https://github.com/wlrfx/scenefx.git
+    local -r SCENEFX_REPOSITORY_BASENAME=$(basename $SCENEFX_STABLES_REPOSITORY_URL)
+
+    case $OS_NAME in
+    fedora)
+        sudo $PKG_MANAGER copr enable -y swayfx/swayfx >/dev/null
+        sudo $PKG_MANAGER install --setopt install_weak_deps=False -y swayfx >/dev/null
+        ;;
+    debian | xUbuntu)
+        (
+            WAYLAND_VERSION=$(wayland-scanner --version 2>&1 | cut -d' ' -f2)
+
+            if [[ $(printf '%s\n' "$SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION" "$WAYLAND_VERSION" | sort -V | head -n2) != "$SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION" ]]; then
+                log::warn "Your Wayland version is $WAYLAND_VERSION but SwayFx $SWAYFX_REPOSITORY_TAG requires Wayland >= $SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION"
+                log::info "Falling back to swaywm/sway"
+                sudo $PKG_MANAGER install -y sway
+                return 0
+            fi
+
+            SWAYFX_PACKAGES=$(common::dependencies_from "swayfx")
+            sudo $PKG_MANAGER install -y $SWAYFX_PACKAGES &>/dev/null
+
+            git clone --depth 1 --quiet --branch "$SWAYFX_REPOSITORY_TAG" "$SWAYFX_REPOSITORY_URL" "$XDG_CACHE_HOME/$SWAYFX_REPOSITORY_BASENAME" && cd $_ || {
+                log::error "Couldn't clone repository: $SWAYFX_REPOSITORY_URL"
+            }
+
+            git clone --depth 1 --quiet --branch "$SCENEFX_REPOSITORY_TAG" "$SCENEFX_REPOSITORY_URL" "subprojects/$SCENEFX_REPOSITORY_BASENAME"
+            git clone --depth 1 --quiet --branch "$WLROOTS_REPOSITORY_TAG" "$WLROOTS_REPOSITORY_URL" "subprojects/$WLROOTS_REPOSITORY_BASENAME"
+
+            meson setup build --prefix "$(dirname $XDG_BIN_HOME)" &>/dev/null
+            ninja -C build &>/dev/null && ninja -C build install &>/dev/null || {
+                log::error "Couldn't compile and install $SWAYFX_REPOSITORY_BASENAME"
+            }
+        )
+        ;;
+    *)
+        log::not_implemented
+        ;;
+    esac
+
+    common::stop_spinner
+}
+
+base::wm() {
+
+    # shellcheck disable=SC2034
+    local -rA options=(
+        ["i3wm"]="base::i3wm"
+        ["SwayFx"]="base::swayfx"
+    )
+    common::choose options "Choose a Window Manager"
+}
+
+base::i3lock() {
+
+    # https://github.com/Raymo111/i3lock-color
+
+    common::start_spinner
+
+    [[ $(command -v i3lock) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -r I3LOCK_COLOR_LATEST_TAG=$(curl -s "https://api.github.com/repos/Raymo111/i3lock-color/tags" | jq -r '.[0].name')
+    local -r I3LOCK_COLOR_REPOSITORY_URL=https://github.com/Raymo111/i3lock-color.git
+    local -r I3LOCK_COLOR_REPOSITORY_BASENAME=$(basename $I3LOCK_COLOR_REPOSITORY_URL .git)
+
+    I3LOCK_COLOR_PACKAGES=$(common::dependencies_from "i3lock")
+    sudo $PKG_MANAGER install -y $I3LOCK_COLOR_PACKAGES &>/dev/null
+
+    (
+        git clone --depth 1 --quiet --branch "$I3LOCK_COLOR_LATEST_TAG" "$I3LOCK_COLOR_REPOSITORY_URL" "$SANDBOX/$I3LOCK_COLOR_REPOSITORY_BASENAME" && cd $_ || {
+            log::error "Couldn't clone repository: $I3LOCK_COLOR_REPOSITORY_URL"
+        }
+        PREFIX=$(dirname $XDG_BIN_HOME) ./install-i3lock-color.sh &>/dev/null
+    )
+
+    common::stop_spinner
+}
+
+base::polybar() {
+
+    # https://polybar.readthedocs.io
+
+    common::start_spinner
+
+    [[ $(command -v polybar) ]] && {
+        common::stop_spinner
+        return 0
+    }
+    if [[ ! -s "$UDEV_RULES_DIR/90-backlight.rules" ]]; then
+        awk '{$1=$1};1' <<-'EOF' | sudo tee "$UDEV_RULES_DIR/90-backlight.rules" >/dev/null
+            ACTION=="add", SUBSYSTEM=="backlight", RUN+="/bin/chgrp video $sys$devpath/brightness"
+            ACTION=="add", SUBSYSTEM=="backlight", RUN+="/bin/chmod g+w $sys$devpath/brightness"
+EOF
+    fi
+
+    sudo $PKG_MANAGER install -y polybar &>/dev/null
+    ln -sfn "$I3_CONFIG_DIR/i3bar/polybar" "$I3_CURRENT_STATUS_BAR_SYMLINK"
+
+    common::stop_spinner
+}
+
+base::bumblebee() {
+
+    # https://bumblebee-status.readthedocs.io
+
+    common::start_spinner
+
+    [[ $(command -v bumblebee-status) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    local -ra PIP_PACKAGES=(
+        bumblebee-status
+        psutil
+        xkbgroup
+        netifaces
+    )
+
+    BUMBLEBEE_PACKAGES=$(common::dependencies_from "bumblebee")
+    sudo $PKG_MANAGER install -y $BUMBLEBEE_PACKAGES &>/dev/null
+
+    pip install --user "${PIP_PACKAGES[@]}" &>/dev/null
+    ln -sfn "$I3_CONFIG_DIR/i3bar/bumblebee-status" "$I3_CURRENT_STATUS_BAR_SYMLINK"
+
+    common::stop_spinner
+}
+
+base::wm_status_bar() {
+
+    # shellcheck disable=SC2034
+    local -rA options=(
+        ["Polybar"]="base::polybar"
+        ["Bumblebee"]="base::bumblebee"
+    )
+    common::choose options "Choose an Status Bar"
 }
 
 base::rofi() {
@@ -447,119 +641,17 @@ base::albert() {
 
 base::app_launcher() {
 
-    # shellcheck disable=SC2034
-    local -rA options=(
-        ["Albert"]="base::albert"
-        ["Rofi"]="base::rofi"
-    )
-    common::choose options "Choose an Application Launcher"
-}
+    local -A options
 
-base::polybar() {
-
-    # https://polybar.readthedocs.io
-
-    common::start_spinner
-
-    [[ $(command -v polybar) ]] && {
-        common::stop_spinner
-        return 0
-    }
-    if [[ ! -s "$UDEV_RULES_DIR/90-backlight.rules" ]]; then
-        awk '{$1=$1};1' <<-'EOF' | sudo tee "$UDEV_RULES_DIR/90-backlight.rules" >/dev/null
-            ACTION=="add", SUBSYSTEM=="backlight", RUN+="/bin/chgrp video $sys$devpath/brightness"
-            ACTION=="add", SUBSYSTEM=="backlight", RUN+="/bin/chmod g+w $sys$devpath/brightness"
-EOF
+    if [[ $SELECTED_WINDOW_MANAGER == "$I3_WINDOW_MANAGER" ]]; then
+        # shellcheck disable=SC2034
+        options=(
+            ["Albert"]="base::albert"
+            ["Rofi"]="base::rofi"
+        )
+        common::choose options "Choose an Application Launcher"
     fi
-
-    sudo $PKG_MANAGER install -y polybar &>/dev/null
-    ln -sfn "$I3_CONFIG_DIR/i3bar/polybar" "$I3_CURRENT_STATUS_BAR_SYMLINK"
-
-    common::stop_spinner
 }
-
-base::bumblebee() {
-
-    # https://bumblebee-status.readthedocs.io
-
-    common::start_spinner
-
-    [[ $(command -v bumblebee-status) ]] && {
-        common::stop_spinner
-        return 0
-    }
-
-    local -ra PIP_PACKAGES=(
-        bumblebee-status
-        psutil
-        xkbgroup
-        netifaces
-    )
-
-    BUMBLEBEE_PACKAGES=$(common::dependencies_from "bumblebee")
-    sudo $PKG_MANAGER install -y $BUMBLEBEE_PACKAGES &>/dev/null
-
-    pip install --user "${PIP_PACKAGES[@]}" &>/dev/null
-    ln -sfn "$I3_CONFIG_DIR/i3bar/bumblebee-status" "$I3_CURRENT_STATUS_BAR_SYMLINK"
-
-    common::stop_spinner
-}
-
-base::wm_status_bar() {
-
-    # shellcheck disable=SC2034
-    local -rA options=(
-        ["Polybar"]="base::polybar"
-        ["Bumblebee"]="base::bumblebee"
-    )
-    common::choose options "Choose an Status Bar"
-}
-
-base::i3wm() {
-
-    # https://i3wm.org/docs
-
-    common::start_spinner
-
-    [[ $(command -v i3) ]] && {
-        common::stop_spinner
-        return 0
-    }
-
-    I3_PACKAGES=$(common::dependencies_from "i3wm")
-    sudo $PKG_MANAGER install -y $I3_PACKAGES &>/dev/null
-
-    common::stop_spinner
-}
-
-base::i3lock() {
-
-    # https://github.com/Raymo111/i3lock-color
-
-    common::start_spinner
-
-    [[ $(command -v i3lock) ]] && {
-        common::stop_spinner
-        return 0
-    }
-
-    local -r I3LOCK_COLOR_LATEST_TAG=$(curl -s "https://api.github.com/repos/Raymo111/i3lock-color/tags" | jq -r '.[0].name')
-    local -r I3LOCK_COLOR_REPOSITORY_URL=https://github.com/Raymo111/i3lock-color.git
-    local -r I3LOCK_COLOR_REPOSITORY_BASENAME=$(basename $I3LOCK_COLOR_REPOSITORY_URL .git)
-
-    I3LOCK_COLOR_PACKAGES=$(common::dependencies_from "i3lock")
-    sudo $PKG_MANAGER install -y $I3LOCK_COLOR_PACKAGES &>/dev/null
-
-    (
-        git clone --depth 1 --quiet --branch "$I3LOCK_COLOR_LATEST_TAG" "$I3LOCK_COLOR_REPOSITORY_URL" "$SANDBOX/$I3LOCK_COLOR_REPOSITORY_BASENAME" && cd $_ || {
-            log::error "Couldn't clone repository: $I3LOCK_COLOR_REPOSITORY_URL"
-        }
-        PREFIX=$(dirname $XDG_BIN_HOME) ./install-i3lock-color.sh &>/dev/null
-    )
-
-    common::stop_spinner
-}
-
 cmd::nvm() {
 
     # https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating
@@ -984,14 +1076,13 @@ main::base() {
     base::ueberzugpp
     base::python
     base::tmux
-    base::app_launcher
     base::neovim
     base::fonts
     base::term
     base::dir_colors
-    base::i3wm
-    base::i3lock
+    base::wm
     base::wm_status_bar
+    base::app_launcher
     base::stow
 }
 
