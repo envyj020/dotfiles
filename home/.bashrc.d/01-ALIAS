@@ -213,7 +213,11 @@ copycat() {
         echo >&2 "Usage: ${FUNCNAME[0]} FILE"
         return 1
     }
-    command cat "$1" | xclip -selection clipboard
+    command cat "$1" | if [[ $XDG_SESSION_TYPE == "x11" ]]; then
+        xclip -selection clipboard
+    else
+        wl-copy
+    fi
 }
 
 datauri() {
