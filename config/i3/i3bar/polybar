@@ -1,7 +1,1 @@
-bar {
-	position top
-    mode invisible
-	tray_output none
-}
-
 exec_always --no-startup-id $XDG_CONFIG_HOME/polybar/run

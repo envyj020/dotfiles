@@ -8,10 +8,6 @@ set $xss_font JetBrains-Mono-NL-ExtraBold
 set $mod Mod4
 set $ctrl Control
 
-set $inner 5
-set $outerTop 0
-set $outerBottom 0
-
 set $up k
 set $down j
 set $left h
@@ -28,9 +24,9 @@ set $ws8 "8"
 set $ws9 "9"
 set $ws10 "10"
 
-gaps inner $inner
-gaps top $outerTop
-gaps bottom $outerBottom
+gaps inner 5
+gaps top 0
+gaps bottom 0
 
 set $borderSize 0
 set $focusBorder #EF9F76
