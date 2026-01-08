@@ -20,7 +20,6 @@ task_run_auto_install = true
 [tools]
 usage = "latest"
 "aqua:direnv/direnv" = "latest"
-"aqua:a8m/envsubst" = "latest"
 "aqua:go-task/task" = "latest"
 "aqua:casey/just" = "latest"
 "aqua:aws/aws-cli" = "latest"
