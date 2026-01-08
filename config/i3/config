@@ -3,7 +3,7 @@
 # https://envyj020.github.io/dotfiles/keybindings/i3
 
 set $font JetBrainsMonoNL Nerd Font
-set $i3lock_font JetBrains-Mono-NL-ExtraBold
+set $xss_font JetBrains-Mono-NL-ExtraBold
 
 set $mod Mod4
 set $ctrl Control
@@ -54,7 +54,7 @@ floating_maximum_size -1 x -1
 focus_follows_mouse no
 smart_borders on
 
-# Reference: https://userbase.kde.org/Tutorials/Using_Other_Window_Managers_with_Plasma
+# Plasma Reference: https://userbase.kde.org/Tutorials/Using_Other_Window_Managers_with_Plasma
 
 # window rules
 for_window [class="(?i)blueman-manager"] floating enable
@@ -75,9 +75,7 @@ workspace $ws3 output DP-1
 # shortcuts
 bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+d exec --no-startup-id "rofi -show combi \
-    -modi combi,window,drun,ssh,:rofi-power-menu \
-    -combi-modes 'window,drun,ssh,:rofi-power-menu --choices=suspend/hibernate/reboot/shutdown --confirm=' \
-    -modes combi"
+    -modi combi,window,drun,ssh -combi-modes 'window,drun,ssh' -modes combi"
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
@@ -107,7 +105,7 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
-bindsym $mod+Shift+s exec --no-startup-id $XDG_CONFIG_HOME/i3/lock --font $i3lock_font
+bindsym $mod+Shift+s exec --no-startup-id loginctl lock-session
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -f 'pango:$font Bold 10' \
     -m 'Do you really want to exit i3? This will end your X session.' -b 'Exit' 'i3-msg exit'"
 
@@ -196,6 +194,7 @@ exec --no-startup-id picom
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
 exec --no-startup-id autorandr --change
+exec --no-startup-id xss-lock -- $XDG_CONFIG_HOME/i3/lock --font $xss_font
 
 exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpaper.jpg
 exec_always --no-startup-id setxkbmap -layout es,us -option -option grp:alt_shift_toggle
