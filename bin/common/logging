@@ -7,13 +7,12 @@ set -ueo pipefail
 
 LOGGING_IS_LOADED=1
 
-readonly \
-    REWIND='\r\033[K' \
-    BOLD='\033[1m' \
-    RED='\033[1;31m' \
-    YELLOW='\033[0;33m' \
-    GREEN='\033[1;32m' \
-    NC='\033[0m'
+REWIND='\r\033[K'
+BOLD='\033[1m'
+RED='\033[1;31m'
+YELLOW='\033[0;33m'
+GREEN='\033[1;32m'
+NC='\033[0m'
 
 log::error() {
     echo -e "${REWIND}${RED}ERROR: ${0}:${FUNCNAME[1]}:${NC}" "$@" >&2
