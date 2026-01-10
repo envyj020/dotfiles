@@ -1,4 +1,4 @@
-# reference: https://github.com/swaywm/sway/blob/master/config.in
+# reference: man 5 sway
 # https://envyj020.github.io/dotfiles/keybindings/i3
 
 set $font JetBrainsMonoNL Nerd Font
@@ -26,40 +26,48 @@ gaps inner 5
 gaps top 0
 gaps bottom 0
 
-set $borderSize 0
-set $focusBorder #EF9F76
-set $unFocusBorder #4D3D69
-set $bg #181825
-set $fg #FFFFFF
+set $border_size 0
+set $focused #ef9f76
+set $unfocused #4d3d69
+set $background #1e1e2e
+set $foreground #cdd6f4
+set $indicator #f5e0dc
 
 # remove window borders and title bars
-for_window [app_id=".*"] border pixel $borderSize
-for_window [class=".*"] border pixel $borderSize
+for_window [app_id=".*"] border pixel $border_size
+for_window [class=".*"] border pixel $border_size
 
 # borders
-# CLASS                 BORDER                  BACK            TEXT            INDICATOR
-client.focused          $focusBorder            $focusBorder    $focusBorder    $bg
-client.focused_inactive $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
-client.unfocused        $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
-client.urgent           $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
+# CLASS                 BORDER                  BACKGROUND      TEXT            INDICATOR       CHILD_BORDER
+client.focused          $focused                $focused        $foreground     $indicator      $unfocused
+client.focused_inactive $unfocused              $unfocused      $background     $indicator      $unfocused
+client.unfocused        $unfocused              $unfocused      $background     $indicator      $unfocused
+client.urgent           $unfocused              $unfocused      $background     $indicator      $unfocused
+client.background       $background
 
-font pango:$font 8
+font pango:$font Medium 12
 floating_modifier $mod
 floating_maximum_size -1 x -1
 focus_follows_mouse no
+
 smart_borders on
+smart_gaps off
 
-# window rules
-for_window [class="(?i)blueman-manager"] floating enable
-for_window [class="(?i)gimp"] floating enable
-for_window [class="(?i)wireshark"] floating enable
-for_window [class="(?i)albert"] border none
-for_window [class="(?i)zoom"] floating enable; border none
-for_window [class="(?i)polybar"] floating enable, sticky enable
+default_dim_inactive 0.25
+blur enable
+# blur_xray disable
+# blur_passes 4
+# blur_radius 4
 
-# workspace app assignment - case sensitive: check: xprop | grep CLASS
-assign [class="(?i)firefox"] $ws2
-assign [class="(?i)zoom"] $ws3
+# window rules - swaymsg -t get_tree | jq '.. | select(.type? == "con") | {name, app_id, class}'
+for_window [app_id="(?i)blueman-manager"] floating enable
+for_window [app_id="(?i)gimp"] floating enable
+for_window [app_id="(?i)wireshark"] floating enable
+for_window [app_id="(?i)zoom"] floating enable; border none
+
+# workspace app assignment
+assign [app_id="(?i)firefox"] $ws2
+assign [app_id="(?i)zoom"] $ws3
 
 # workspace screen assignment
 workspace $ws1 output eDP-1
@@ -99,7 +107,7 @@ bindsym $mod+Shift+0 move container to workspace number $ws10
 bindsym $mod+Shift+c reload
 
 bindsym $mod+Shift+s exec loginctl lock-session
-bindsym $mod+Shift+e exec "swaynag -t warning -f 'pango:$font Bold 10' \
+bindsym $mod+Shift+e exec "swaynag -t warning -f 'pango:$font Bold 12' \
     -m 'Do you really want to exit sway? This will end your wayland session.' -b 'Exit' 'swaymsg exit'"
 
 # window resize
@@ -161,8 +169,8 @@ bindsym $mod+Shift+Right move right
 bindsym $mod+Shift+q kill
 
 # orientantion
-bindsym $mod+$ctrl+h split v
-bindsym $mod+$ctrl+v split h
+bindsym $mod+$ctrl+v split v
+bindsym $mod+$ctrl+h split h
 
 # fullscreen mode in focused window
 bindsym $mod+f fullscreen toggle
@@ -185,17 +193,21 @@ bindsym $mod+a focus parent
 exec blueman-applet
 exec nm-applet --indicator
 exec dunst
-exec kanshi
 
+# inputs
 input type:keyboard {
-    xkb_layout "es,us"
-    xkb_options "grp:alt_shift_toggle"
+    xkb_layout es,us
+    xkb_options grp:alt_shift_toggle
 }
 
+# outputs
 output "*" bg ~/Pictures/wallpaper.jpg fill
 
+output "HDMI-A-2" mode 1920x1080@120Hz position 0,0
+output "eDP-1" mode 1920x1080@120.003Hz position 1920,0
+output "DP-1" mode 1920x1080@120Hz position 3840,0
+
+# waybar
 bar {
     swaybar_command waybar
-    tray_output none
-    workspace_buttons yes
 }
