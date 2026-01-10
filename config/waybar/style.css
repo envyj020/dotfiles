@@ -1,0 +1,182 @@
+@import "mocha.css";
+
+* {
+  font-family: JetBrainsMonoNL Nerd Font;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+#waybar {
+  background: transparent;
+  color: @text;
+}
+
+#workspaces,
+#network,
+#mode,
+#clock,
+#custom-github,
+#temperature,
+#memory,
+#cpu,
+#disk,
+#backlight,
+#pulseaudio,
+#language,
+#bluetooth,
+#pulseaudio,
+#battery {
+  background: @base;
+  padding: 0 1.5rem;
+  margin: 0.25rem 0;
+}
+
+#custom-powermenu {
+  color: @base;
+  font-size: 25px;
+  margin-left: 0.5rem;
+  transition: color 500ms ease;
+}
+
+#custom-powermenu:hover {
+  color: @peach;
+}
+
+menu {
+  color: @rosewater;
+  background: @base;
+}
+
+menuitem {
+    transition: background 200ms ease;
+}
+
+menuitem:hover {
+  background: @surface1;
+}
+
+#workspaces {
+  border-radius: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+#workspaces button {
+  color: @lavender;
+  padding: 0.25rem 0.5rem;
+}
+
+#workspaces button.focused {
+  color: @peach;
+  border-bottom: 4px solid @peach;
+  padding-bottom: 0;
+  transition: border-bottom 250ms ease;
+}
+
+#workspaces button:hover {
+  color: @rosewater;
+}
+
+#network {
+  color: @yellow;
+  border-radius: 1.5rem;
+}
+
+#mode {
+  border-radius: 1.5rem;
+  color: @green;
+  margin-left: 0.5rem;
+}
+
+#clock {
+  color: @peach;
+  border-top-left-radius: 1.5rem;
+  border-bottom-left-radius: 1.5rem;
+  padding-right: 0;
+}
+
+#custom-github {
+  border-top-right-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+  padding-left: 1rem;
+}
+
+#temperature {
+  border-top-left-radius: 1.5rem;
+  border-bottom-left-radius: 1.5rem;
+  padding: 0 0.5rem 0 1.5rem;
+}
+
+#temperature.warning {
+  color: @yellow;
+}
+
+#temperature.critical {
+  color: @red;
+}
+
+#memory {
+  color: @mauve;
+  padding: 0 0.75rem;
+}
+
+#cpu {
+  color: @maroon;
+  padding: 0 0.75rem;
+}
+
+#disk {
+  color: @sky;
+  padding: 0 1.5rem 0 0.5rem;
+  border-top-right-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+}
+
+#backlight {
+  color: @rosewater;
+  margin-left: 0.5rem;
+  padding: 0 0.5rem 0 1.5rem;
+  border-top-left-radius: 1.5rem;
+  border-bottom-left-radius: 1.5rem;
+}
+
+#pulseaudio {
+  color: @sapphire;
+  padding: 0 0.5rem;
+}
+
+#pulseaudio.source-muted {
+  color: @red;
+}
+
+#pulseaudio.muted {
+  color: @red;
+}
+
+#language {
+  padding: 0 0.5rem;
+}
+
+#bluetooth {
+  color: @blue;
+  padding: 0 0.5rem;
+}
+
+#battery {
+  color: @green;
+  margin-right: 0.5rem;
+  padding: 0 1.5rem 0 0.5rem;
+  border-top-right-radius: 1.5rem;
+  border-bottom-right-radius: 1.5rem;
+}
+
+#battery.charging {
+  color: @green;
+}
+
+#battery.warning:not(.charging) {
+  color: @yellow;
+}
+
+#battery.critical:not(.charging) {
+  color: @red;
+}
