@@ -28,38 +28,41 @@ gaps inner 5
 gaps top 0
 gaps bottom 0
 
-set $borderSize 0
-set $focusBorder #EF9F76
-set $unFocusBorder #4D3D69
-set $bg #181825
-set $fg #FFFFFF
+set $border_size 0
+set $focused #ef9f76
+set $unfocused #4d3d69
+set $background #1e1e2e
+set $foreground #cdd6f4
+set $indicator #f5e0dc
 
 # remove window borders and title bars
-for_window [class=".*"] border pixel $borderSize
+for_window [class=".*"] border pixel $border_size
 
 # borders
-# CLASS                 BORDER                  BACK            TEXT            INDICATOR
-client.focused          $focusBorder            $focusBorder    $focusBorder    $bg
-client.focused_inactive $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
-client.unfocused        $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
-client.urgent           $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
+# CLASS                 BORDER                  BACKGROUND      TEXT            INDICATOR       CHILD_BORDER
+client.focused          $focused                $focused        $foreground     $indicator      $unfocused
+client.focused_inactive $unfocused              $unfocused      $background     $indicator      $unfocused
+client.unfocused        $unfocused              $unfocused      $background     $indicator      $unfocused
+client.urgent           $unfocused              $unfocused      $background     $indicator      $unfocused
+client.background       $background
 
-font pango:$font 8
+font pango:$font Medium 12
 floating_modifier $mod
 floating_maximum_size -1 x -1
 focus_follows_mouse no
+
 smart_borders on
 
 # Plasma Reference: https://userbase.kde.org/Tutorials/Using_Other_Window_Managers_with_Plasma
 
-# window rules
+# window rules - xprop | grep CLASS
 for_window [class="(?i)blueman-manager"] floating enable
 for_window [class="(?i)gimp"] floating enable
 for_window [class="(?i)wireshark"] floating enable
 for_window [class="(?i)albert"] border none
 for_window [class="(?i)zoom"] floating enable; border none
 
-# Workspace app assignment - case sensitive: check: xprop | grep CLASS
+# Workspace app assignment
 assign [class="(?i)firefox"] $ws2
 assign [class="(?i)zoom"] $ws3
 
@@ -102,7 +105,7 @@ bindsym $mod+Shift+c reload
 bindsym $mod+Shift+r restart
 
 bindsym $mod+Shift+s exec --no-startup-id loginctl lock-session
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -f 'pango:$font Bold 10' \
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -f 'pango:$font Bold 12' \
     -m 'Do you really want to exit i3? This will end your X session.' -b 'Exit' 'i3-msg exit'"
 
 # window resize
@@ -165,8 +168,8 @@ bindsym $mod+Shift+Right move right
 bindsym $mod+Shift+q kill
 
 # orientantion
-bindsym $mod+$ctrl+h split v
-bindsym $mod+$ctrl+v split h
+bindsym $mod+$ctrl+v split v
+bindsym $mod+$ctrl+h split h
 
 # fullscreen mode in focused window
 bindsym $mod+f fullscreen toggle
