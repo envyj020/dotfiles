@@ -392,8 +392,13 @@ base::swayfx() {
 
     case $OS_NAME in
     fedora)
-        sudo $PKG_MANAGER copr enable -y swayfx/swayfx >/dev/null
-        sudo $PKG_MANAGER install --setopt install_weak_deps=False -y swayfx >/dev/null
+        (
+            SWAYFX_PACKAGES=$(common::dependencies_from "swayfx")
+            sudo $PKG_MANAGER install -y $SWAYFX_PACKAGES &>/dev/null
+
+            sudo $PKG_MANAGER copr enable -y swayfx/swayfx >/dev/null
+            sudo $PKG_MANAGER install --setopt install_weak_deps=False -y swayfx >/dev/null
+        )
         ;;
     debian | xUbuntu)
         (
@@ -424,8 +429,13 @@ base::swayfx() {
         ;;
     *)
         log::not_implemented
+        return 0
         ;;
     esac
+
+    if [[ -f "$WAYLAND_SESSIONS_DIR/sway.desktop" ]]; then
+        sudo sed -i 's|Exec=.*|Exec=bash -lc "sway"|' "$WAYLAND_SESSIONS_DIR/sway.desktop"
+    fi
 
     common::stop_spinner
 }
@@ -570,7 +580,7 @@ base::rofi() {
 
         cd "$SANDBOX/$(basename $ROFI_PACKAGE_FILENAME .tar.gz)"
 
-        meson setup build --prefix "$(dirname $XDG_BIN_HOME)" -Dwayland=disabled &>/dev/null
+        meson setup build --prefix "$(dirname $XDG_BIN_HOME)" &>/dev/null
         ninja -C build &>/dev/null && ninja -C build install &>/dev/null || {
             log::error "Couldn't compile and install Rofi"
         }
