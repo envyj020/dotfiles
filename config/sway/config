@@ -1,0 +1,201 @@
+# reference: https://github.com/swaywm/sway/blob/master/config.in
+# https://envyj020.github.io/dotfiles/keybindings/i3
+
+set $font JetBrainsMonoNL Nerd Font
+
+set $mod Mod4
+set $ctrl Control
+
+set $up k
+set $down j
+set $left h
+set $right l
+
+set $ws1 "1"
+set $ws2 "2"
+set $ws3 "3"
+set $ws4 "4"
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10"
+
+gaps inner 5
+gaps top 0
+gaps bottom 0
+
+set $borderSize 0
+set $focusBorder #EF9F76
+set $unFocusBorder #4D3D69
+set $bg #181825
+set $fg #FFFFFF
+
+# remove window borders and title bars
+for_window [app_id=".*"] border pixel $borderSize
+for_window [class=".*"] border pixel $borderSize
+
+# borders
+# CLASS                 BORDER                  BACK            TEXT            INDICATOR
+client.focused          $focusBorder            $focusBorder    $focusBorder    $bg
+client.focused_inactive $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
+client.unfocused        $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
+client.urgent           $unFocusBorder          $unFocusBorder  $unFocusBorder  $unFocusBorder
+
+font pango:$font 8
+floating_modifier $mod
+floating_maximum_size -1 x -1
+focus_follows_mouse no
+smart_borders on
+
+# window rules
+for_window [class="(?i)blueman-manager"] floating enable
+for_window [class="(?i)gimp"] floating enable
+for_window [class="(?i)wireshark"] floating enable
+for_window [class="(?i)albert"] border none
+for_window [class="(?i)zoom"] floating enable; border none
+for_window [class="(?i)polybar"] floating enable, sticky enable
+
+# workspace app assignment - case sensitive: check: xprop | grep CLASS
+assign [class="(?i)firefox"] $ws2
+assign [class="(?i)zoom"] $ws3
+
+# workspace screen assignment
+workspace $ws1 output eDP-1
+workspace $ws2 output HDMI-A-2
+workspace $ws3 output DP-1
+
+# shortcuts
+bindsym $mod+Return exec $TERMINAL
+bindsym $mod+d exec "rofi -show combi \
+    -modi combi,window,drun,ssh -combi-modes 'window,drun,ssh' -modes combi"
+
+# switch to workspace
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# reload sway
+bindsym $mod+Shift+c reload
+
+bindsym $mod+Shift+s exec loginctl lock-session
+bindsym $mod+Shift+e exec "swaynag -t warning -f 'pango:$font Bold 10' \
+    -m 'Do you really want to exit sway? This will end your wayland session.' -b 'Exit' 'swaymsg exit'"
+
+# window resize
+mode "resize" {
+    bindsym $right resize shrink width 10 px or 10 ppt
+    bindsym $up resize grow height 10 px or 10 ppt
+    bindsym $down resize shrink height 10 px or 10 ppt
+    bindsym $left resize grow width 10 px or 10 ppt
+
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+$ctrl+Right    resize shrink width 10 px or 10 ppt
+bindsym $mod+$ctrl+Down     resize shrink height 10 px or 10 ppt
+bindsym $mod+$ctrl+Up       resize grow height 10 px or 10 ppt
+bindsym $mod+$ctrl+Left     resize grow width 10 px or 10 ppt
+
+bindsym $mod+r mode "resize"
+
+# audio control
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
+
+# screenshots
+bindsym $mod+p exec grimshot save area ~/Pictures/$(date +%H-%M-%S).png
+bindsym $mod+Shift+p exec grimshot copy area
+
+# change focus
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# kill focused window
+bindsym $mod+Shift+q kill
+
+# orientantion
+bindsym $mod+$ctrl+h split v
+bindsym $mod+$ctrl+v split h
+
+# fullscreen mode in focused window
+bindsym $mod+f fullscreen toggle
+
+# change container layout - stacked, tabbed, split
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+t layout toggle split
+
+# toggle tiling and floating
+bindsym $mod+Shift+space floating toggle; [floating] resize set 50 ppt 50 ppt; move position center
+
+# change focus between tiling and floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# exec
+exec blueman-applet
+exec nm-applet --indicator
+exec dunst
+exec kanshi
+
+input type:keyboard {
+    xkb_layout "es,us"
+    xkb_options "grp:alt_shift_toggle"
+}
+
+output "*" bg ~/Pictures/wallpaper.jpg fill
+
+bar {
+    swaybar_command waybar
+    tray_output none
+    workspace_buttons yes
+}
