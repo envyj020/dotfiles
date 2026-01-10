@@ -34,7 +34,7 @@
             "hibernate": "systemctl hibernate",
             "suspend": "systemctl suspend",
             "reboot": "systemctl reboot",
-            "logout": "systemctl logout",
+            "logout": "swaymsg exit",
         },
     },
     "sway/mode": {
