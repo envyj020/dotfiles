@@ -8,6 +8,7 @@ set -eu
     readonly GITHUB_BASE_URL=https://github.com
     readonly GITHUB_OWNER=envyj020
     readonly GITHUB_REPOSITORY=dotfiles
+    readonly GITHUB_BRANCH=main
 
     readonly BOLD='\033[1m'
     readonly RED='\033[1;31m'
@@ -39,7 +40,7 @@ set -eu
     checkout() {
         [ -d "$2" ] || {
             info "Cloning $1 into: $2"
-            git -c advice.detachedHead=0 \
+            GIT_LFS_SKIP_SMUDGE=1 git -c advice.detachedHead=0 \
                 -c core.autocrlf=false clone \
                 --branch "$3" --depth 1 --recursive \
                 --quiet "$1" "$2" || error "Couldn't clone $1 repository into $2"
@@ -49,7 +50,7 @@ set -eu
     require_os() {
         OS_NAME=$(awk -F'=' '/^ID=/ {print $2}' /etc/os-release)
         case $OS_NAME in
-        fedora | rhel | centos | ubuntu | debian) return 0 ;;
+        fedora | ubuntu | debian) return 0 ;;
         *) return 1 ;;
         esac
     }
@@ -142,9 +143,7 @@ set -eu
 
     main() {
         mkdir -p "$XDG_CACHE_HOME"
-        checkout "$GITHUB_BASE_URL/$GITHUB_OWNER/$GITHUB_REPOSITORY.git" \
-            "$XDG_CACHE_HOME/$GITHUB_REPOSITORY" \
-            "main"
+        checkout "$GITHUB_BASE_URL/$GITHUB_OWNER/$GITHUB_REPOSITORY.git" "$XDG_CACHE_HOME/$GITHUB_REPOSITORY" "$GITHUB_BRANCH"
         (
             cd "$XDG_CACHE_HOME/$GITHUB_REPOSITORY" || error "Failed to change directory to: $XDG_CACHE_HOME/$GITHUB_REPOSITORY"
             add_wallpaper
