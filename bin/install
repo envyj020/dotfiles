@@ -746,7 +746,7 @@ cmd::terraform() {
 
     common::start_spinner
 
-    local -r TOFUENV_REPOSITORY=https://github.com/tofuutils/tofuenv.gi
+    local -r TOFUENV_REPOSITORY=https://github.com/tofuutils/tofuenv.git
     local -r TOFUENV_INSTALL_DIR=$HOME/.tofuenv
 
     [[ -d $TOFUENV_INSTALL_DIR ]] && {
