@@ -56,7 +56,7 @@ dependencies:
       - poppler-utils
       - imagemagick
       - libnotify-bin
-      - libpango-1.0.0
+      - libpango-1.0-0
       - python-is-python3
       - build-essential
       - gping
