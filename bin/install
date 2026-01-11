@@ -37,7 +37,7 @@ main::setup() {
     done
 
     case $OS_NAME in
-    fedora | rhel | centos | xUbuntu | debian) return 0 ;;
+    fedora | xUbuntu | debian) return 0 ;;
     *) log::error "OS: $OS_NAME is not supported" ;;
     esac
 }
@@ -94,8 +94,24 @@ base::ueberzugpp() {
     local -r UEBERZUGPP_REPOSITORY_BASE_URL="https://download.opensuse.org/repositories/$UEBERZUGPP_REPOSITORY_NAME"
     local -r VERSION_IDENTIFIER="${OS_NAME}_${OS_VERSION}"
 
+    local -ra SUPPORTED_FEDORA_VERSIONS=("40" "41" "42")
+    local -ra SUPPORTED_DEBIAN_VERSIONS=("12" "13")
+    local -ra SUPPORTED_UBUNTU_VERSIONS=("22.04" "23.04" "24.04" "24.10" "25.04")
+
+    local -ra SUPPORTED_OS_VERSIONS=(
+        "${SUPPORTED_FEDORA_VERSIONS[@]}"
+        "${SUPPORTED_DEBIAN_VERSIONS[@]}"
+        "${SUPPORTED_UBUNTU_VERSIONS[@]}"
+    )
+
+    if ! common::has_item "$OS_VERSION" "${SUPPORTED_OS_VERSIONS[@]}"; then
+        log::not_implemented
+        common::stop_spinner
+        return 0
+    fi
+
     case $OS_NAME in
-    fedora | rhel | centos)
+    fedora)
         local -r RHEL_UEBERZUGPP_REPOSITORY_URL="$UEBERZUGPP_REPOSITORY_BASE_URL/$VERSION_IDENTIFIER/$UEBERZUGPP_REPOSITORY_NAME.repo"
         sudo $PKG_MANAGER config-manager addrepo --from-repofile $RHEL_UEBERZUGPP_REPOSITORY_URL &>/dev/null
         sudo $PKG_MANAGER install -y ueberzugpp >/dev/null
@@ -133,10 +149,10 @@ base::app_image_launcher() {
     [[ -d $APPIMAGE_DIR ]] || mkdir -p $APPIMAGE_DIR
 
     case $OS_NAME in
-    fedora | rhel | centos)
+    fedora)
         sudo rpm -i "${APP_IMAGE_LAUNCHER_RPM_DOWNLOAD_URL// /}"
         ;;
-    xUbuntu)
+    xUbuntu | debian)
         # PPA is broken on Ubuntu >= 24.04:
         if [[ "${OS_VERSION%.*}" -ge 24 ]]; then
             log::info "Ubuntu PPA is broken on >=24.04, see: https://github.com/TheAssassin/AppImageLauncher/issues/634"
@@ -634,7 +650,7 @@ base::albert() {
     fi
 
     case $OS_NAME in
-    fedora | rhel | centos)
+    fedora)
         local -r RHEL_ALBERT_REPOSITORY_URL="$ALBERT_REPOSITORY_BASE_URL/$VERSION_IDENTIFIER/$ALBERT_REPOSITORY_NAME.repo"
         sudo $PKG_MANAGER config-manager addrepo --from-repofile $RHEL_ALBERT_REPOSITORY_URL &>/dev/null
         sudo $PKG_MANAGER install -y albert >/dev/null
