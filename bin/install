@@ -23,6 +23,8 @@ main::tear_down() {
 
 main::setup() {
 
+    mkdir -p "$XDG_BIN_HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_STATE_HOME"
+
     local -r PATHS_TO_PREPEND=(
         "$XDG_BIN_HOME"
         "$XDG_BIN_HOME/go/bin"
