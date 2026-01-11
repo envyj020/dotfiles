@@ -55,7 +55,7 @@ set -eu
         esac
     }
 
-    add_wallpaper() {
+    ask_wallpaper() {
         separator "=" 80
         info "Do you want to include the default wallpaper from ${YELLOW}$GITHUB_OWNER/$GITHUB_REPOSITORY${NC}"
         warning "If not, you must save yours under \$HOME/Pictures/wallpaper.jpg"
@@ -82,7 +82,8 @@ set -eu
             esac
         done
     }
-    run_base() {
+
+    ask_base() {
         require_os || error "OS: $OS_NAME is not supported"
 
         separator "=" 80
@@ -114,7 +115,7 @@ set -eu
         done
     }
 
-    run_stow() {
+    ask_stow() {
         separator "=" 80
         info "Do you want to include symbolic links from ${YELLOW}$GITHUB_OWNER/$GITHUB_REPOSITORY${NC}"
         info "to your ${YELLOW}\$HOME${NC} and ${YELLOW}\$HOME/.config${NC}${BOLD} directories."
@@ -145,15 +146,18 @@ set -eu
         mkdir -p "$XDG_CACHE_HOME"
         checkout "$GITHUB_BASE_URL/$GITHUB_OWNER/$GITHUB_REPOSITORY.git" "$XDG_CACHE_HOME/$GITHUB_REPOSITORY" "$GITHUB_BRANCH"
         (
-            cd "$XDG_CACHE_HOME/$GITHUB_REPOSITORY" || error "Failed to change directory to: $XDG_CACHE_HOME/$GITHUB_REPOSITORY"
-            add_wallpaper
-            run_base
-            run_stow
-            info "Installation complete! You may need to restart your shell or run ${GREEN}'source ~/.bashrc'.${NC}"
+            cd "$XDG_CACHE_HOME/$GITHUB_REPOSITORY" || {
+                error "Failed to change directory to: $XDG_CACHE_HOME/$GITHUB_REPOSITORY"
+            }
+            ask_wallpaper
+            ask_base
+            ask_stow
+            info "Installation complete! You may need to restart your shell or run ${BLUE}'source ~/.bashrc'.${NC}"
         )
     }
 
-    command -v git >/dev/null 2>&1 || error "Git is not installed."
-    [ -t 0 ] || error "Interactive terminal required."
+    command -v git >/dev/null 2>&1 || error "Git is required but not installed."
+    git lfs version >/dev/null 2>&1 || error "Git LFS is required but not installed."
+    [ -t 0 ] || error "Interactive tty required."
     main
 }
