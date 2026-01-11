@@ -81,7 +81,8 @@ common::dependencies_from() {
 
     common::require OS ARCH XDG_BIN_HOME PKG_MANAGER PKG_INVENTORY_FILE
 
-    [[ $(command -v yq) ]] || {
+    command -v yq &>/dev/null || {
+        #shellcheck disable=SC2015
         common::has_pkg "yq" && $PKG_MANAGER install -y yq >/dev/null || {
             local -r YQ_LATEST_BIN_RELEASE_URL="https://github.com/mikefarah/yq/releases/latest/download/yq_${OS}_${ARCH}"
             curl -sSfLo "$XDG_BIN_HOME/yq" "$YQ_LATEST_BIN_RELEASE_URL" && chmod +x "$XDG_BIN_HOME/yq"
