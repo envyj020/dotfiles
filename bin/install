@@ -789,7 +789,7 @@ cmd::docker() {
     }
 
     curl -fsSL https://get.docker.com | sudo sh &>/dev/null
-    sudo systemctl enable --now docker
+    sudo systemctl enable --now docker &>/dev/null
     sudo usermod -aG docker $USER
 
     common::stop_spinner
@@ -1077,7 +1077,7 @@ kube::kubectl() {
     curl -fsSLO --output-dir $SANDBOX $KUBERLR_BIN_DOWNLOAD_URL
 
     local -r KUBERLR_SHA256=$(grep $KUBERLR_FILENAME $SANDBOX/$KUBERLR_SHA256_FILENAME | cut -d' ' -f1)
-    echo $KUBERLR_SHA256 "$SANDBOX/$KUBERLR_FILENAME" | sha256sum --check || {
+    echo $KUBERLR_SHA256 "$SANDBOX/$KUBERLR_FILENAME" | sha256sum --check --quiet || {
         log::error "$KUBERLR_FILENAME checksum verification failed."
     }
 
