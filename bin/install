@@ -35,7 +35,7 @@ main::setup() {
     done
 
     case $OS_NAME in
-    fedora | rhel | centos | XUbuntu | debian) return 0 ;;
+    fedora | rhel | centos | xUbuntu | debian) return 0 ;;
     *) log::error "OS: $OS_NAME is not supported" ;;
     esac
 }
