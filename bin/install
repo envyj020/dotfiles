@@ -17,6 +17,7 @@ trap main::tear_down EXIT INT QUIT TERM
 main::tear_down() {
     local EXIT_CODE=$?
     common::__stop_spinner $EXIT_CODE true
+    common::__stop_sudo_keepalive
     rm -rf "$SANDBOX"
     exit $EXIT_CODE
 }
@@ -37,7 +38,10 @@ main::setup() {
     done
 
     case $OS_NAME in
-    fedora | xUbuntu | debian) return 0 ;;
+    fedora | xUbuntu | debian)
+        common::start_sudo_keepalive
+        return 0
+        ;;
     *) log::error "OS: $OS_NAME is not supported" ;;
     esac
 }
