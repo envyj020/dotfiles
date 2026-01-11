@@ -131,6 +131,8 @@ dependencies:
       - blueman
       - pavucontrol
       - grimshot
+      - swayidle
+      - swaylock
       - waybar
     dnf:
       - xorg-x11-server-Xwayland
