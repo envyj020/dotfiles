@@ -29,7 +29,7 @@ readonly SWAY_WINDOW_MANAGER="sway"
 
 readonly WAYLAND_SESSIONS_DIR=/usr/share/wayland-sessions
 
-readonly I3_CONFIG_DIR="$XDG_CONFIG_HOME/i3"
+readonly I3_CONFIG_DIR="$REPOSITORY_DIR/config/i3"
 readonly I3_CURRENT_STATUS_BAR_SYMLINK="$I3_CONFIG_DIR/i3-bar"
 
 readonly UDEV_RULES_DIR=/etc/udev/rules.d
