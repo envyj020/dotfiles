@@ -5,7 +5,24 @@ set -ueo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/logging"
 
-# Checks that all the specified variables are set and non-empty
+# Checks if a value exists in an array
+#
+# Arguments:
+#   $1 - NEEDLE
+#   $2 - HAYSTACK
+#
+# Returns:
+#   0 if needle is found
+#   1 otherwise
+
+common::has_item() {
+    local HAYSTACK NEEDLE="$1"
+    shift
+    for HAYSTACK; do [[ "$HAYSTACK" == "$NEEDLE" ]] && return 0; done
+    return 1
+}
+
+# Checks the specified variables are set and non-empty
 #
 # Arguments:
 #   VAR1 VAR2 ...
