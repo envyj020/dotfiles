@@ -17,7 +17,7 @@ help:
 
 init:
 	git submodule update --init --recursive
-	git lfs pull
+	git lfs pull -I 'static/*'
 
 .PHONY: init
 
