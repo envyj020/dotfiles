@@ -5,16 +5,27 @@ set -ueo pipefail
 REPOSITORY_ROOTDIR=$(realpath "$(dirname -- "${BASH_SOURCE[0]}")/../..")
 readonly REPOSITORY_ROOTDIR
 
-source "${REPOSITORY_ROOTDIR}/bin/common/logging"
+source "$REPOSITORY_ROOTDIR/bin/common/logging"
+
+SCREENSHOT=$(mktemp --suffix=.png)
+
+trap 'rm -f "$SCREENSHOT"' EXIT INT QUIT TERM
 
 TEXT_OVERLAY="Type password to unlock"
-TEXT_OVERLAY_FONT="Adwaita-Mono-Bold"
+TEXT_OVERLAY_FONT="JetBrains-Mono-NL-ExtraBold"
 TEXT_OVERLAY_FONT_SIZE=42
 TEXT_OVERLAY_XY_POSITION="+0+160"
 I3LOCK_BAR_ENABLED=0
 
-function show_options() {
-    awk '{$1=$1};1' <<- EOF
+readonly BLACK='000000' WHITE='ffffff' GREY='242121' RED='f38ba8' YELLOW='f9e2af'
+readonly ALPHA_0='00' ALPHA_10='1A' ALPHA_20='33' ALPHA_30='4D' ALPHA_40='66' ALPHA_60='99' ALPHA_70='B3'
+readonly BRIGHTNESS_THRESHOLD=60
+
+readonly WAYLAND_SESSION_TYPE="wayland"
+readonly X11_SESSION_TYPE="x11"
+
+show_options() {
+    awk '{$1=$1};1' <<-EOF
         Usage: $(basename "$0") [OPTION]...
 
         -f, --font       The text font to use. default: $TEXT_OVERLAY_FONT
@@ -26,12 +37,38 @@ function show_options() {
 EOF
 }
 
+require_cmd() {
+    if ! command -v "$1" &>/dev/null; then
+        log::error "command: $1 not found"
+    fi
+}
+
+: "${XDG_SESSION_TYPE:=}"
+
+case $XDG_SESSION_TYPE in
+"$WAYLAND_SESSION_TYPE")
+    require_cmd "grim"
+    SESSION_TYPE="$WAYLAND_SESSION_TYPE"
+    SCREENSHOT_CMD=(grim "$SCREENSHOT")
+    ;;
+"$X11_SESSION_TYPE")
+    require_cmd "import"
+    SESSION_TYPE="$X11_SESSION_TYPE"
+    SCREENSHOT_CMD=(import -silent -window root "$SCREENSHOT")
+    ;;
+*)
+    log::error "Unknown XDG_SESSION_TYPE"
+    ;;
+esac
+
+readonly SESSION_TYPE
+
 while [[ $# -gt 0 ]]; do
     case $1 in
     -f | --font)
         FONT_LIST=$(magick -list font | awk -F': ' '/Font:/ { print $2 }')
         if ! echo "$FONT_LIST" | grep -qx "$2"; then
-            log::error "'$2' is not a recognized font. Please list valid fonts using: ${GREEN}magick -list font${NC}"
+            log::error "'$2' is not a recognized font. Check your supported fonts with: ${GREEN}magick -list font${NC}"
         fi
         TEXT_OVERLAY_FONT="$2"
         shift 2
@@ -49,6 +86,7 @@ while [[ $# -gt 0 ]]; do
         shift 2
         ;;
     -b | --bar)
+        [[ $SESSION_TYPE == "$X11_SESSION_TYPE" ]] || log::error "${GREEN}-b|--bar${NC} is an ${RED}x11${NC} exclusive option"
         I3LOCK_BAR_ENABLED=1
         shift
         ;;
@@ -64,24 +102,10 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-readonly \
-    TEXT_OVERLAY_FONT \
-    TEXT_OVERLAY_FONT_SIZE \
-    TEXT_OVERLAY TEXT_OVERLAY_XY_POSITION \
-    I3LOCK_BAR_ENABLED
 
-SCREENSHOT=$(mktemp --suffix=.png)
+"${SCREENSHOT_CMD[@]}"
 readonly SCREENSHOT
 
-trap 'rm -f "$SCREENSHOT"' EXIT INT QUIT TERM
-
-import -silent -window root "$SCREENSHOT"
-
-readonly BLACK='000000' WHITE='ffffff' GREY='242121' RED='f38ba8' YELLOW='f9e2af'
-readonly ALPHA_0='00' ALPHA_10='1A' ALPHA_20='33' ALPHA_30='4D' ALPHA_40='66' ALPHA_60='99' ALPHA_70='B3'
-readonly BRIGHTNESS_THRESHOLD=60
-
-# 100x100-pixel center crop and measure the resulting area's average brightness expressed as a percentage.
 SCREENSHOT_AVG_BRIGHTNESS_PERCENTAGE=$(magick "$SCREENSHOT" -gravity center -crop 100x100+0+0 +repage \
     -colorspace HSB -channel B -format "%[fx:int(mean*100)]" info:)
 readonly SCREENSHOT_AVG_BRIGHTNESS_PERCENTAGE
@@ -104,12 +128,19 @@ declare -A PADLOCK_ICONS_MAPPING=(
 readonly PADLOCK_ICON="${PADLOCK_ICONS_MAPPING[$PRIMARY_COLOR]}"
 readonly TEXT_OVERLAY_COLOR="#${PRIMARY_COLOR}"
 
-declare -a I3LOCK_COLOR_OPTS=(
+PADLOCK_ICON_WIDTH=$(identify -format "%w" "$PADLOCK_ICON")
+read -r SCREENSHOT_WIDTH SCREENSHOT_HEIGHT <<<"$(identify -format "%w %h" "$SCREENSHOT")"
+readonly SCREENSHOT_WIDTH SCREENSHOT_HEIGHT PADLOCK_ICON_WIDTH
+
+declare -a LOCK_OPTS=(
     "--inside-color=${PRIMARY_COLOR}${ALPHA_20}"
     "--ring-color=${PRIMARY_COLOR}${ALPHA_40}"
     "--line-color=${PRIMARY_COLOR}${ALPHA_10}"
-    "--keyhl-color=${SECONDARY_COLOR}${ALPHA_60}"
     "--separator-color=${GREY}${ALPHA_20}"
+)
+
+declare -a I3LOCK_OPTS=(
+    "--keyhl-color=${SECONDARY_COLOR}${ALPHA_60}"
     "--ringver-color=${YELLOW}${ALPHA_70}"
     "--ringwrong-color=${RED}${ALPHA_70}"
     "--insidever-color=${YELLOW}${ALPHA_30}"
@@ -118,9 +149,19 @@ declare -a I3LOCK_COLOR_OPTS=(
     "--wrong-color=${SECONDARY_COLOR}${ALPHA_0}"
     "--bshl-color=${SECONDARY_COLOR}${ALPHA_60}"
 )
-
-IFS='x' read -r SCREENSHOT_WIDTH SCREENSHOT_HEIGHT <<<"$(identify -format "%wx%h" "$SCREENSHOT")"
-readonly SCREENSHOT_WIDTH SCREENSHOT_HEIGHT
+declare -a SWAYLOCK_OPTS=(
+    "--key-hl-color=${SECONDARY_COLOR}${ALPHA_60}"
+    "--ring-ver-color=${YELLOW}${ALPHA_70}"
+    "--ring-wrong-color=${RED}${ALPHA_70}"
+    "--inside-ver-color=${YELLOW}${ALPHA_30}"
+    "--inside-wrong-color=${RED}${ALPHA_30}"
+    "--bs-hl-color=${SECONDARY_COLOR}${ALPHA_60}"
+    "--text-ver-color=${SECONDARY_COLOR}${ALPHA_0}"
+    "--text-wrong-color=${SECONDARY_COLOR}${ALPHA_0}"
+    "--indicator-radius=${PADLOCK_ICON_WIDTH}"
+    "--hide-keyboard-layout"
+    "--disable-caps-lock-text"
+)
 
 readonly I3LOCK_BAR_WIDTH=200
 I3LOCK_X_POSITION=$(((SCREENSHOT_WIDTH / 2) - (I3LOCK_BAR_WIDTH / 2)))
@@ -139,7 +180,15 @@ readonly -a I3LOCK_BAR_OPTS=(
 )
 
 if [[ "$I3LOCK_BAR_ENABLED" -eq 1 ]]; then
-    I3LOCK_COLOR_OPTS+=("${I3LOCK_BAR_OPTS[@]}")
+    I3LOCK_OPTS+=("${I3LOCK_BAR_OPTS[@]}")
+fi
+
+if [[ $SESSION_TYPE == "$WAYLAND_SESSION_TYPE" ]]; then
+    LOCK_CMD="swaylock"
+    LOCK_OPTS+=("${SWAYLOCK_OPTS[@]}")
+else
+    LOCK_CMD="i3lock"
+    LOCK_OPTS+=("${I3LOCK_OPTS[@]}")
 fi
 
 declare -ra LOCK_SCREEN_GAMMA_ADJUSTMENT_ARGS=(-level "0%,100%,0.6")
@@ -154,4 +203,4 @@ magick "$SCREENSHOT" \
     "${LOCK_SCREEN_OVERLAY_ICON_ARGS[@]}" \
     "$SCREENSHOT"
 
-i3lock -i "$SCREENSHOT" "${I3LOCK_COLOR_OPTS[@]}" &>/dev/null
+require_cmd $LOCK_CMD && "$LOCK_CMD" -i "$SCREENSHOT" "${LOCK_OPTS[@]}"

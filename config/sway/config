@@ -194,6 +194,12 @@ exec blueman-applet
 exec nm-applet --indicator
 exec dunst
 
+exec swayidle -w \
+    timeout 600 "$XDG_CONFIG_HOME/xscreen/lock" \
+    timeout 900 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
+    before-sleep "$XDG_CONFIG_HOME/xscreen/lock" \
+    lock "$XDG_CONFIG_HOME/xscreen/lock"
+
 # inputs
 input type:keyboard {
     xkb_layout es,us
@@ -201,7 +207,7 @@ input type:keyboard {
 }
 
 # outputs
-output "*" bg ~/Pictures/wallpaper.jpg fill
+output * bg $HOME/Pictures/wallpaper.jpg fill
 
 output "HDMI-A-2" mode 1920x1080@120Hz position 0,0
 output "eDP-1" mode 1920x1080@120.003Hz position 1920,0

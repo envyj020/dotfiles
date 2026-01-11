@@ -3,7 +3,6 @@
 # https://envyj020.github.io/dotfiles/keybindings/i3
 
 set $font JetBrainsMonoNL Nerd Font
-set $xss_font JetBrains-Mono-NL-ExtraBold
 
 set $mod Mod4
 set $ctrl Control
@@ -193,7 +192,7 @@ exec --no-startup-id picom
 exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
 exec --no-startup-id autorandr --change
-exec --no-startup-id xss-lock -- $XDG_CONFIG_HOME/i3/lock --font $xss_font
+exec --no-startup-id xss-lock -- $XDG_CONFIG_HOME/xscreen/lock
 
 exec_always --no-startup-id feh --bg-fill ~/Pictures/wallpaper.jpg
 exec_always --no-startup-id setxkbmap -layout es,us -option -option grp:alt_shift_toggle
