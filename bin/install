@@ -710,7 +710,7 @@ cmd::nvm() {
     (
         # shellcheck source=/dev/null
         source $HOME/.nvm/nvm.sh
-        nvm install "$LATEST_NODEJS_RELEASE_VERSION"
+        nvm install "$LATEST_NODEJS_RELEASE_VERSION" >/dev/null
     )
 
     common::stop_spinner
@@ -734,7 +734,7 @@ cmd::gvm() {
     }
 
     [[ $(command -v gvm) ]] || {
-        GVM_NO_UPDATE_PROFILE=1 bash < <(curl -fsSL $GVM_INSTALLER_URL)
+        GVM_NO_UPDATE_PROFILE=1 bash >/dev/null < <(curl -fsSL $GVM_INSTALLER_URL)
     }
 
     common::stop_spinner
