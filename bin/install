@@ -5,7 +5,6 @@ set -ueo pipefail
 
 SCRIPT_DIR=$(realpath "$(dirname -- "${BASH_SOURCE[0]}")")
 SANDBOX=$(mktemp -d)
-SELECTED_WINDOW_MANAGER=
 
 readonly SCRIPT_DIR SANDBOX
 
@@ -530,12 +529,17 @@ base::bumblebee() {
 
 base::wm_status_bar() {
 
-    # shellcheck disable=SC2034
-    local -rA options=(
-        ["Polybar"]="base::polybar"
-        ["Bumblebee"]="base::bumblebee"
-    )
-    common::choose options "Choose an Status Bar"
+    case $SELECTED_WINDOW_MANAGER in
+    "$I3_WINDOW_MANAGER")
+        # shellcheck disable=SC2034
+        local -rA options=(
+            ["Polybar"]="base::polybar"
+            ["Bumblebee"]="base::bumblebee"
+        )
+        common::choose options "Choose an Status Bar"
+        ;;
+    "$SWAY_WINDOW_MANAGER") ;;
+    esac
 }
 
 base::rofi() {
@@ -651,16 +655,19 @@ base::albert() {
 
 base::app_launcher() {
 
-    local -A options
-
-    if [[ $SELECTED_WINDOW_MANAGER == "$I3_WINDOW_MANAGER" ]]; then
+    case $SELECTED_WINDOW_MANAGER in
+    "$I3_WINDOW_MANAGER")
         # shellcheck disable=SC2034
-        options=(
+        local -rA options=(
             ["Albert"]="base::albert"
             ["Rofi"]="base::rofi"
         )
         common::choose options "Choose an Application Launcher"
-    fi
+        ;;
+    "$SWAY_WINDOW_MANAGER")
+        base::rofi
+        ;;
+    esac
 }
 cmd::nvm() {
 
