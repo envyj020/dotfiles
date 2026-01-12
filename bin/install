@@ -428,7 +428,9 @@ base::swayfx() {
             if [[ $(printf '%s\n' "$SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION" "$WAYLAND_VERSION" | sort -V | head -n1) != "$SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION" ]]; then
                 log::warn "Your Wayland version is $WAYLAND_VERSION but SwayFx $SWAYFX_REPOSITORY_TAG requires Wayland >= $SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION"
                 log::info "Falling back to swaywm/sway"
-                sudo $PKG_MANAGER install -y sway >/dev/null
+
+                SWAY_PACKAGES=$(common::dependencies_from "sway")
+                sudo $PKG_MANAGER install -y $SWAY_PACKAGES &>/dev/null
                 return 0
             fi
 
