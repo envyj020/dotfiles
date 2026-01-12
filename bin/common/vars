@@ -27,7 +27,10 @@ readonly REPOSITORY_DIR OS ARCH OS_NAME OS_VERSION
 readonly I3_WINDOW_MANAGER="i3wm"
 readonly SWAY_WINDOW_MANAGER="sway"
 
-readonly WAYLAND_SESSIONS_DIR=/usr/share/wayland-sessions
+readonly WAYLAND_SESSIONS_DIRS=(
+    /usr/share/wayland-sessions
+    /usr/local/share/wayland-sessions
+)
 
 readonly I3_CONFIG_DIR="$REPOSITORY_DIR/config/i3"
 readonly I3_CURRENT_STATUS_BAR_SYMLINK="$I3_CONFIG_DIR/i3-bar"

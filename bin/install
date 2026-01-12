@@ -456,9 +456,11 @@ base::swayfx() {
         ;;
     esac
 
-    if [[ -f "$WAYLAND_SESSIONS_DIR/sway.desktop" ]]; then
-        sudo sed -i 's|Exec=.*|Exec=bash -lc "sway"|' "$WAYLAND_SESSIONS_DIR/sway.desktop"
-    fi
+    for WAYLAND_SESSIONS_DIR in "${WAYLAND_SESSIONS_DIRS[@]}"; do
+        if [[ -f "$WAYLAND_SESSIONS_DIR/sway.desktop" ]]; then
+            sudo sed -i 's|Exec=.*|Exec=bash -lc "sway"|' "$WAYLAND_SESSIONS_DIR/sway.desktop"
+        fi
+    done
 
     common::stop_spinner
 }
