@@ -32,7 +32,7 @@ help:
 
 init:
 	git submodule update --init --recursive
-	git lfs pull -I 'static/*' >/dev/null
+	git lfs pull -I static/* >/dev/null
 
 .PHONY: init
 
