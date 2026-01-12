@@ -71,7 +71,7 @@ set -eu
                 ;;
             [yY])
                 mkdir -p "$WALLPAPER_DIR"
-                cp -f static/wallpaper.jpg "$WALLPAPER_DIR"
+                make init && cp -f static/wallpaper.jpg "$WALLPAPER_DIR"
                 info "Saved successfully! If you want to set your own, remember"
                 info "to replace: \$HOME/Pictures/wallpaper.jpg"
                 return 0
