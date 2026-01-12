@@ -409,7 +409,7 @@ base::swayfx() {
 
     local -r SCENEFX_REPOSITORY_TAG=0.4.1
     local -r SCENEFX_REPOSITORY_URL=https://github.com/wlrfx/scenefx.git
-    local -r SCENEFX_REPOSITORY_BASENAME=$(basename $SCENEFX_STABLES_REPOSITORY_URL)
+    local -r SCENEFX_REPOSITORY_BASENAME=$(basename $SCENEFX_REPOSITORY_URL)
 
     case $OS_NAME in
     fedora)
@@ -425,10 +425,10 @@ base::swayfx() {
         (
             WAYLAND_VERSION=$(wayland-scanner --version 2>&1 | cut -d' ' -f2)
 
-            if [[ $(printf '%s\n' "$SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION" "$WAYLAND_VERSION" | sort -V | head -n2) != "$SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION" ]]; then
+            if [[ $(printf '%s\n' "$SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION" "$WAYLAND_VERSION" | sort -V | head -n1) != "$SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION" ]]; then
                 log::warn "Your Wayland version is $WAYLAND_VERSION but SwayFx $SWAYFX_REPOSITORY_TAG requires Wayland >= $SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION"
                 log::info "Falling back to swaywm/sway"
-                sudo $PKG_MANAGER install -y sway
+                sudo $PKG_MANAGER install -y sway >/dev/null
                 return 0
             fi
 
