@@ -129,6 +129,20 @@ dependencies:
     apt:
       - python3-dev
       - python3-tk
+  sway:
+    common:
+      - blueman
+      - pavucontrol
+      - grimshot
+      - sway
+      - swayidle
+      - swaylock
+      - waybar
+    dnf:
+      - xorg-x11-server-Xwayland
+    apt:
+      - xwayland
+      - wayland-protocols
   swayfx:
     common:
       - blueman
