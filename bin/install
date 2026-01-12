@@ -573,6 +573,19 @@ base::rofi() {
 
     common::start_spinner
 
+    local -r ROFI_THEMES_REPOSITORY=https://github.com/newmanls/rofi-themes-collection.git
+    local -r ROFI_THEMES_DESTINATION_DIR="$XDG_DATA_HOME/rofi/themes"
+    local -r ROFI_THEMES_REPOSITORY_BASENAME=$(basename $ROFI_THEMES_REPOSITORY .git)
+
+    if [[ ! -d "$ROFI_THEMES_DESTINATION_DIR" ]]; then
+
+        git clone --depth 1 --quiet "$ROFI_THEMES_REPOSITORY" "$SANDBOX/$ROFI_THEMES_REPOSITORY_BASENAME" || {
+            log::error "Couldn't clone Rofi themes repository: $ROFI_THEMES_REPOSITORY"
+        }
+        mkdir -p "$ROFI_THEMES_DESTINATION_DIR"
+        cp -r $SANDBOX/$ROFI_THEMES_REPOSITORY_BASENAME/themes/* "$ROFI_THEMES_DESTINATION_DIR"
+    fi
+
     [[ $(command -v rofi) ]] && {
         common::stop_spinner
         return 0
@@ -583,16 +596,6 @@ base::rofi() {
         common::stop_spinner
         return 0
     }
-
-    local -r ROFI_THEMES_REPOSITORY=https://github.com/newmanls/rofi-themes-collection.git
-    local -r ROFI_THEMES_DESTINATION_DIR="$XDG_DATA_HOME/rofi/themes"
-    local -r ROFI_THEMES_REPOSITORY_BASENAME=$(basename $ROFI_THEMES_REPOSITORY .git)
-
-    git clone --depth 1 --quiet "$ROFI_THEMES_REPOSITORY" "$SANDBOX/$ROFI_THEMES_REPOSITORY_BASENAME" || {
-        log::error "Couldn't clone Rofi themes repository: $ROFI_THEMES_REPOSITORY"
-    }
-
-    cp -r $SANDBOX/$ROFI_THEMES_REPOSITORY_BASENAME/themes/* "$ROFI_THEMES_DESTINATION_DIR"
 
     local -r LATEST_ROFI_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/davatorium/rofi/releases/latest" | jq -r '.tag_name')
     local -r ROFI_RELEASE_URL="https://github.com/davatorium/rofi/releases/download/$LATEST_ROFI_RELEASE_VERSION/rofi-$LATEST_ROFI_RELEASE_VERSION.tar.gz"
