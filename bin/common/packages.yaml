@@ -13,6 +13,7 @@ dependencies:
       - mercurial
       - meson
       - ninja-build
+      - pulseaudio-utils
       - ffmpeg
       - zoxide
       - p7zip
@@ -40,6 +41,7 @@ dependencies:
       - git-core
       - dnf-command(config-manager)
       - oxygen-cursor-themes
+      - python3-virtualenv
       - wayland-devel
       - pkgconf
       - poppler
@@ -51,6 +53,7 @@ dependencies:
       - git
       - git-extras
       - oxygen-cursor-theme
+      - python3-venv
       - libwayland-bin
       - pkg-config
       - poppler-utils
@@ -183,10 +186,16 @@ dependencies:
       - dunst
       - papirus-icon-theme
     dnf:
+      - xorg-x11-server-Xorg
+      - xorg-x11-xinit
+      - xorg-x11-xauth
       - network-manager-applet
       - python3-devel
       - python3-tkinter
     apt:
+      - xorg
+      - xinit
+      - xauth
       - network-manager
       - python3-dev
       - python3-tk
