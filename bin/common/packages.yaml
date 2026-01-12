@@ -131,6 +131,7 @@ dependencies:
       - python3-tk
   sway:
     common:
+      - network-manager-applet
       - blueman
       - pavucontrol
       - grimshot
@@ -138,6 +139,7 @@ dependencies:
       - swayidle
       - swaylock
       - waybar
+      - dunst
     dnf:
       - xorg-x11-server-Xwayland
     apt:
@@ -145,12 +147,14 @@ dependencies:
       - wayland-protocols
   swayfx:
     common:
+      - network-manager-applet
       - blueman
       - pavucontrol
       - grimshot
       - swayidle
       - swaylock
       - waybar
+      - dunst
     dnf:
       - xorg-x11-server-Xwayland
     apt:
@@ -184,6 +188,7 @@ dependencies:
       - libxcb-icccm4-dev
   i3wm:
     common:
+      - network-manager-applet
       - blueman
       - xss-lock
       - picom
@@ -203,14 +208,12 @@ dependencies:
       - xorg-x11-server-Xorg
       - xorg-x11-xinit
       - xorg-x11-xauth
-      - network-manager-applet
       - python3-devel
       - python3-tkinter
     apt:
       - xorg
       - xinit
       - xauth
-      - network-manager
       - python3-dev
       - python3-tk
   i3lock:
