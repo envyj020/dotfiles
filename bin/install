@@ -411,10 +411,11 @@ base::swayfx() {
     local -r SCENEFX_REPOSITORY_URL=https://github.com/wlrfx/scenefx.git
     local -r SCENEFX_REPOSITORY_BASENAME=$(basename $SCENEFX_REPOSITORY_URL .git)
 
+    local -r SWAYFX_PACKAGES=$(common::dependencies_from "swayfx")
+
     case $OS_NAME in
     fedora)
         (
-            SWAYFX_PACKAGES=$(common::dependencies_from "swayfx")
             sudo $PKG_MANAGER install -y $SWAYFX_PACKAGES &>/dev/null
 
             sudo $PKG_MANAGER copr enable -y swayfx/swayfx >/dev/null
@@ -434,7 +435,6 @@ base::swayfx() {
                 return 0
             fi
 
-            SWAYFX_PACKAGES=$(common::dependencies_from "swayfx")
             sudo $PKG_MANAGER install -y $SWAYFX_PACKAGES &>/dev/null
 
             git clone --depth 1 --branch "$SWAYFX_REPOSITORY_TAG" "$SWAYFX_REPOSITORY_URL" "$XDG_CACHE_HOME/$SWAYFX_REPOSITORY_BASENAME" &>/dev/null && cd $_ || {
@@ -444,8 +444,8 @@ base::swayfx() {
             git clone --depth 1 --branch "$SCENEFX_REPOSITORY_TAG" "$SCENEFX_REPOSITORY_URL" "subprojects/$SCENEFX_REPOSITORY_BASENAME" &>/dev/null
             git clone --depth 1 --branch "$WLROOTS_REPOSITORY_TAG" "$WLROOTS_REPOSITORY_URL" "subprojects/$WLROOTS_REPOSITORY_BASENAME" &>/dev/null
 
-            meson setup build --prefix "$(dirname $XDG_BIN_HOME)" &>/dev/null
-            ninja -C build &>/dev/null && ninja -C build install &>/dev/null || {
+            meson setup build &>/dev/null
+            ninja -C build &>/dev/null && sudo ninja -C build install &>/dev/null || {
                 log::error "Couldn't compile and install $SWAYFX_REPOSITORY_BASENAME"
             }
         )
