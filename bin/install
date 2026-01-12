@@ -405,11 +405,11 @@ base::swayfx() {
 
     local -r WLROOTS_REPOSITORY_TAG=0.19.0
     local -r WLROOTS_REPOSITORY_URL=https://gitlab.freedesktop.org/wlroots/wlroots.git
-    local -r WLROOTS_REPOSITORY_BASENAME=$(basename $WLROOTS_REPOSITORY_URL)
+    local -r WLROOTS_REPOSITORY_BASENAME=$(basename $WLROOTS_REPOSITORY_URL .git)
 
     local -r SCENEFX_REPOSITORY_TAG=0.4.1
     local -r SCENEFX_REPOSITORY_URL=https://github.com/wlrfx/scenefx.git
-    local -r SCENEFX_REPOSITORY_BASENAME=$(basename $SCENEFX_REPOSITORY_URL)
+    local -r SCENEFX_REPOSITORY_BASENAME=$(basename $SCENEFX_REPOSITORY_URL .git)
 
     case $OS_NAME in
     fedora)
