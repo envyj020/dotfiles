@@ -76,7 +76,7 @@ base::tmux() {
         git clone --depth 1 --branch "$ENTR_LATEST_TAG" "$ENTR_REPOSITORY_URL" "$SANDBOX/$ENTR_REPOSITORY_BASENAME" &>/dev/null && cd $_ || {
             log::error "Couldn't clone repository: $ENTR_REPOSITORY_URL"
         }
-        ./configure && PREFIX=$(dirname $XDG_BIN_HOME) make install &>/dev/null || {
+        ./configure >/dev/null && PREFIX=$(dirname $XDG_BIN_HOME) make install &>/dev/null || {
             log::error "Couldn't compile and install $ENTR_REPOSITORY_BASENAME"
         }
     )
@@ -189,7 +189,7 @@ base::neovim() {
         curl -fsSLO --output-dir "$SANDBOX" "$BOB_RELEASE_URL"
         unzip -qq "$SANDBOX/$BOB_PACKAGE_FILENAME" -d "$SANDBOX"
         install "$SANDBOX/${BOB_PACKAGE_FILENAME%.*}/bob" "$XDG_BIN_HOME/bob"
-        bob use stable >/dev/null
+        bob use stable &>/dev/null
     }
 
     local -r COLORSCRIPT_REPOSITORY_URL=https://gitlab.com/dwt1/shell-color-scripts.git
@@ -199,7 +199,7 @@ base::neovim() {
         git clone --quiet "$COLORSCRIPT_REPOSITORY_URL" "$SANDBOX/$COLORSCRIPT_REPOSITORY_BASENAME" && cd $_ || {
             log::error "Couldn't clone repository $COLORSCRIPT_REPOSITORY_URL"
         }
-        sudo make install
+        sudo make install >/dev/null
     )
 
     common::stop_spinner
@@ -717,7 +717,7 @@ cmd::nvm() {
     (
         # shellcheck source=/dev/null
         source $HOME/.nvm/nvm.sh
-        nvm install "$LATEST_NODEJS_RELEASE_VERSION" >/dev/null
+        nvm install "$LATEST_NODEJS_RELEASE_VERSION" &>/dev/null
     )
 
     common::stop_spinner
