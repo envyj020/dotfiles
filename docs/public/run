@@ -57,7 +57,7 @@ set -eu
 
     ask_wallpaper() {
         separator "=" 80
-        info "Do you want to include the default wallpaper from ${YELLOW}$GITHUB_OWNER/$GITHUB_REPOSITORY${NC}"
+        info "Do you want to include the default wallpaper from ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC}"
         warning "If not, you must save yours under \$HOME/Pictures/wallpaper.jpg"
         separator "=" 80
 
@@ -87,7 +87,7 @@ set -eu
         require_os || error "OS: $OS_NAME is not supported"
 
         separator "=" 80
-        info "You are about to install ${YELLOW}$GITHUB_OWNER/$GITHUB_REPOSITORY${NC}${BOLD} package baseline."
+        info "You are about to install ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC}${BOLD} package baseline."
         info "This process requires temporary ${RED}sudo${NC}${BOLD} privileges and will prompt"
         info "for manual configuration preferences."
         separator "=" 80
@@ -117,7 +117,7 @@ set -eu
 
     ask_stow() {
         separator "=" 80
-        info "Do you want to include symbolic links from ${YELLOW}$GITHUB_OWNER/$GITHUB_REPOSITORY${NC}"
+        info "Do you want to include symbolic links from ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC}"
         info "to your ${YELLOW}\$HOME${NC} and ${YELLOW}\$HOME/.config${NC}${BOLD} directories."
         warning "Existing files at these locations may cause conflicts and"
         warning "will require to manually move them prior to rerun this task"
