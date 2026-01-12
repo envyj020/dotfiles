@@ -32,7 +32,7 @@ help:
 
 init:
 	git submodule update --init --recursive
-	git lfs pull -I static/* >/dev/null
+	git lfs pull -I 'static/*' >/dev/null
 
 .PHONY: init
 
@@ -46,8 +46,8 @@ mise: f-nvm x-stow x-mise ## Install mise packages
 	set -e
 	stow pkg -t $(HOME)/.config
 	source $(NVM_DIR)
-	mise install
 	eval "$$(mise activate bash)"
+	mise install
 	ya pkg install
 
 .PHONY: mise
