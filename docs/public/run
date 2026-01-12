@@ -3,6 +3,8 @@
 set -eu
 
 {
+    : "${XDG_CACHE_HOME:=$HOME/.cache}"
+
     readonly WALLPAPER_DIR="$HOME/Pictures"
 
     readonly GITHUB_BASE_URL=https://github.com
@@ -15,8 +17,6 @@ set -eu
     readonly BLUE='\033[1;36m'
     readonly YELLOW='\033[0;33m'
     readonly NC='\033[0m'
-
-    : "${XDG_CACHE_HOME:=$HOME/.cache}"
 
     info() {
         printf "${BLUE}INFO:${NC} ${BOLD}%b${NC}\n" "$*"
@@ -40,7 +40,8 @@ set -eu
     checkout() {
         [ -d "$2" ] || {
             info "Cloning $1 into: $2"
-            GIT_LFS_SKIP_SMUDGE=1 git -c advice.detachedHead=0 \
+            GIT_LFS_SKIP_SMUDGE=1 git \
+                -c advice.detachedHead=0 \
                 -c core.autocrlf=false clone \
                 --branch "$3" --depth 1 --recursive \
                 --quiet "$1" "$2" || error "Couldn't clone $1 repository into $2"
@@ -55,7 +56,13 @@ set -eu
         esac
     }
 
-    ask_wallpaper() {
+    require_dependencies() {
+        [ -t 0 ] || error "Interactive tty required."
+        command -v git >/dev/null 2>&1 || error "Git is required but not installed."
+        git lfs version >/dev/null 2>&1 || error "Git LFS is required but not installed."
+    }
+
+    ask_background() {
         separator "=" 80
         info "Do you want to include the default wallpaper from ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC}"
         warning "If not, you must save yours under \$HOME/Pictures/wallpaper.jpg"
@@ -84,8 +91,6 @@ set -eu
     }
 
     ask_base() {
-        require_os || error "OS: $OS_NAME is not supported"
-
         separator "=" 80
         info "You are about to install ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC}${BOLD} package baseline."
         info "This process requires temporary ${RED}sudo${NC}${BOLD} privileges and will prompt"
@@ -149,15 +154,14 @@ set -eu
             cd "$XDG_CACHE_HOME/$GITHUB_REPOSITORY" || {
                 error "Failed to change directory to: $XDG_CACHE_HOME/$GITHUB_REPOSITORY"
             }
-            ask_wallpaper
+            ask_background
             ask_base
             ask_stow
-            info "Installation complete! You may need to restart your shell or run ${BLUE}'source ~/.bashrc'.${NC}"
+            info "Installation complete! You may need to restart your shell or run: ${BLUE}source ~/.bashrc${NC}"
         )
     }
 
-    command -v git >/dev/null 2>&1 || error "Git is required but not installed."
-    git lfs version >/dev/null 2>&1 || error "Git LFS is required but not installed."
-    [ -t 0 ] || error "Interactive tty required."
+    require_os
+    require_dependencies
     main
 }
