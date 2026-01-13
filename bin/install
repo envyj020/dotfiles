@@ -104,9 +104,22 @@ base::ueberzugpp() {
     local -r UEBERZUGPP_REPOSITORY_BASE_URL="https://download.opensuse.org/repositories/$UEBERZUGPP_REPOSITORY_NAME"
     local -r VERSION_IDENTIFIER="${OS_NAME}_${OS_VERSION}"
 
-    local -ra SUPPORTED_FEDORA_VERSIONS=("40" "41" "42")
-    local -ra SUPPORTED_DEBIAN_VERSIONS=("12" "13")
-    local -ra SUPPORTED_UBUNTU_VERSIONS=("22.04" "23.04" "24.04" "24.10" "25.04")
+    local -ra SUPPORTED_FEDORA_VERSIONS=(
+        "40"
+        "41"
+        "42"
+    )
+    local -ra SUPPORTED_DEBIAN_VERSIONS=(
+        "12"
+        "13"
+    )
+    local -ra SUPPORTED_UBUNTU_VERSIONS=(
+        "22.04"
+        "23.04"
+        "24.04"
+        "24.10"
+        "25.04"
+    )
 
     local -ra SUPPORTED_OS_VERSIONS=(
         "${SUPPORTED_FEDORA_VERSIONS[@]}"
@@ -417,7 +430,7 @@ base::swayfx() {
     local -r SCENEFX_REPOSITORY_URL=https://github.com/wlrfx/scenefx.git
     local -r SCENEFX_REPOSITORY_BASENAME=$(basename $SCENEFX_REPOSITORY_URL .git)
 
-    local -r SWAYFX_PACKAGES=$(common::dependencies_from "swayfx")
+    SWAYFX_PACKAGES=$(common::dependencies_from "swayfx")
 
     case $OS_NAME in
     fedora)
@@ -431,8 +444,9 @@ base::swayfx() {
     debian | xUbuntu)
         (
             WAYLAND_VERSION=$(wayland-scanner --version 2>&1 | cut -d' ' -f2)
+            SORTED_ASC_WAYLAND_VERSIONS=$(printf '%s\n' "$SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION" "$WAYLAND_VERSION" | sort -V | head -n1)
 
-            if [[ $(printf '%s\n' "$SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION" "$WAYLAND_VERSION" | sort -V | head -n1) != "$SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION" ]]; then
+            if [[ $SORTED_ASC_WAYLAND_VERSIONS != "$SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION" ]]; then
                 log::warn "Your Wayland version is $WAYLAND_VERSION but SwayFx $SWAYFX_REPOSITORY_TAG requires Wayland >= $SWAYFX_WAYLAND_MIN_SUPPORTED_VERSION"
                 log::info "Falling back to swaywm/sway"
 
@@ -784,8 +798,9 @@ cmd::podman() {
         common::stop_spinner
         return 0
     }
-
-    sudo $PKG_MANAGER install -y podman >/dev/null
+    common::has_pkg "podman" && {
+        sudo $PKG_MANAGER install -y podman >/dev/null
+    }
 
     common::stop_spinner
 }
@@ -796,14 +811,11 @@ cmd::docker() {
 
     common::start_spinner
 
-    [[ $(command -v docker) ]] && {
-        common::stop_spinner
-        return 0
+    [[ $(command -v docker) ]] || {
+        curl -fsSL https://get.docker.com | sudo sh &>/dev/null
+        sudo systemctl enable --now docker &>/dev/null
+        sudo usermod -aG docker $USER
     }
-
-    curl -fsSL https://get.docker.com | sudo sh &>/dev/null
-    sudo systemctl enable --now docker &>/dev/null
-    sudo usermod -aG docker $USER
 
     common::stop_spinner
 }
@@ -825,8 +837,8 @@ base::python() {
 
     pip install --user "${PIP_TOOLCHAIN[@]}" --break-system-packages &>/dev/null
 
-    [[ $(command -v pyenv) ]] || curl -fsSL $PYENV_INSTALLER_URL | bash &>/dev/null
-    [[ $(command -v uv) ]] || curl -fsSL $ASTRAL_UV_INSTALLER_URL | sh &>/dev/null
+    [[ $(command -v pyenv) ]] || bash <(curl -fsSL $PYENV_INSTALLER_URL) &>/dev/null
+    [[ $(command -v uv) ]] || sh <(curl -fsSL $ASTRAL_UV_INSTALLER_URL) &>/dev/null
 
     common::stop_spinner
 }
@@ -885,14 +897,10 @@ base::nix() {
 
     common::start_spinner
 
-    [[ $(command -v nix) ]] && {
-        common::stop_spinner
-        return 0
+    [[ $(command -v nix) ]] || {
+        local -r NIX_INSTALLER_URL=https://nixos.org/nix/install
+        sh <(curl --proto '=https' --tlsv1.2 -L $NIX_INSTALLER_URL) --daemon
     }
-
-    local -r NIX_INSTALLER_URL=https://nixos.org/nix/install
-    # Multi-user installation - requires to have Selinux disabled
-    sh <(curl --proto '=https' --tlsv1.2 -L $NIX_INSTALLER_URL) --daemon
 
     common::stop_spinner
 }
