@@ -158,7 +158,7 @@ declare -a SWAYLOCK_OPTS=(
     "--bs-hl-color=${SECONDARY_COLOR}${ALPHA_60}"
     "--text-ver-color=${SECONDARY_COLOR}${ALPHA_0}"
     "--text-wrong-color=${SECONDARY_COLOR}${ALPHA_0}"
-    "--indicator-radius=${PADLOCK_ICON_WIDTH}"
+    "--indicator-radius=$((PADLOCK_ICON_WIDTH - 20))"
     "--hide-keyboard-layout"
     "--disable-caps-lock-text"
 )
