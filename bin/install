@@ -189,7 +189,7 @@ base::neovim() {
         curl -fsSLO --output-dir "$SANDBOX" "$BOB_RELEASE_URL"
         unzip -qq "$SANDBOX/$BOB_PACKAGE_FILENAME" -d "$SANDBOX"
         install "$SANDBOX/${BOB_PACKAGE_FILENAME%.*}/bob" "$XDG_BIN_HOME/bob"
-        bob use stable &>/dev/null
+        bob use stable &>/dev/null && rm -rf "$XDG_CONFIG_HOME/bob/config.json"
     }
 
     local -r COLORSCRIPT_REPOSITORY_URL=https://gitlab.com/dwt1/shell-color-scripts.git
