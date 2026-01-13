@@ -56,10 +56,17 @@ set -eu
         esac
     }
 
+    require_cmd() {
+        for cmd in "$@"; do
+            if ! command -v "$cmd" >/dev/null 2>&1; then
+                error "$cmd is required but not installed."
+            fi
+        done
+    }
+
     require_dependencies() {
         [ -t 0 ] || error "Interactive tty required."
-        command -v git >/dev/null 2>&1 || error "Git is required but not installed."
-        git lfs version >/dev/null 2>&1 || error "Git LFS is required but not installed."
+        require_cmd "git" "git-lfs" "make"
     }
 
     ask_background() {
