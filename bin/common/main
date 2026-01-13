@@ -72,11 +72,12 @@ common::has_pkg() {
 
 # Queries an inventory YAML file using 'yq' to retrieve dependencies for a
 # specific caller or target. It merges cross-distro common packages names with
-# those specific to the current $PKG_MANAGER.
+# those specific to the current $PKG_MANAGER and $OS_NAME.
 #
 # Globals:
 #   OS
 #   ARCH
+#   OS_NAME
 #   XDG_BIN_HOME
 #   PKG_MANAGER
 #   PKG_INVENTORY
@@ -96,7 +97,7 @@ common::dependencies_from() {
 
     local -r FUNCTION_CALLEE="${1:-FUNCNAME[1]##*::}"
 
-    common::require OS ARCH XDG_BIN_HOME PKG_MANAGER PKG_INVENTORY_FILE
+    common::require OS OS_NAME ARCH XDG_BIN_HOME PKG_MANAGER PKG_INVENTORY_FILE
 
     command -v yq &>/dev/null || {
         #shellcheck disable=SC2015
@@ -106,12 +107,13 @@ common::dependencies_from() {
         }
     }
 
-    local COMMON_PKGS OS_PKGS
+    local COMMON_PKGS PKG_MANAGER_PKGS OS_PKGS
 
     COMMON_PKGS=$(yq -r ".dependencies.${FUNCTION_CALLEE}.common // [] | join(\" \")" "$PKG_INVENTORY_FILE")
-    OS_PKGS=$(yq -r ".dependencies.${FUNCTION_CALLEE}.${PKG_MANAGER} // [] | join(\" \")" "$PKG_INVENTORY_FILE")
+    PKG_MANAGER_PKGS=$(yq -r ".dependencies.${FUNCTION_CALLEE}.${PKG_MANAGER} // [] | join(\" \")" "$PKG_INVENTORY_FILE")
+    OS_PKGS=$(yq -r ".dependencies.${FUNCTION_CALLEE}.${OS_NAME} // [] | join(\" \")" "$PKG_INVENTORY_FILE")
 
-    echo "$COMMON_PKGS $OS_PKGS"
+    echo "$COMMON_PKGS $PKG_MANAGER_PKGS $OS_PKGS"
 }
 
 # Identifies the OS package manager by checking available commands
