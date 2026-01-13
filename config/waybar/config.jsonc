@@ -3,9 +3,12 @@
     "position": "top",
     "output": "eDP-1",
     "modules-left": [
+        "custom/separator",
         "custom/powermenu",
         "sway/workspaces",
+        "custom/separator",
         "network",
+        "custom/separator",
         "sway/mode",
     ],
     "modules-center": [
@@ -17,12 +20,17 @@
         "memory",
         "cpu",
         "disk",
+        "custom/separator",
         "backlight",
         "pulseaudio",
         "sway/language",
         "bluetooth",
         "battery",
+        "custom/separator",
     ],
+    "custom/separator" : {
+        "format": " ",
+    },
     "custom/powermenu": {
         "format" : "⏻ ",
         "tooltip": false,
