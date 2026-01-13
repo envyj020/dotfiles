@@ -194,6 +194,9 @@ exec blueman-applet
 exec nm-applet --indicator
 exec dunst
 
+exec hash dbus-update-activation-environment 2>/dev/null && \
+     dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
+
 exec swayidle -w \
     timeout 600 "$XDG_CONFIG_HOME/xscreen/lock" \
     timeout 900 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' \
