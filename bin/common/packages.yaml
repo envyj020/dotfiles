@@ -63,6 +63,25 @@ dependencies:
       - python-is-python3
       - build-essential
       - gping
+  appimage:
+    apt:
+      - qt5-gtk-platformtheme
+      - libdouble-conversion3
+      - libqt5gui5t64
+      - libqt5quick5
+      - libqt5widgets5t64
+      - libmd4c0
+      - libqt5network5t64
+      - libqt5svg5
+      - libxcb-keysyms1
+      - libqt5core5t64
+      - libqt5qml5
+      - libqt5waylandclient5
+      - libqt5waylandcompositor5
+      - libqt5dbus5t64
+      - libqt5qmlmodels5
+      - qttranslations5-l10n
+      - qtwayland5
   fonts:
     common:
       - fontconfig
