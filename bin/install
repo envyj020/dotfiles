@@ -68,11 +68,16 @@ base::tmux() {
 
     [[ -d $TMUX_TPM_PATH ]] || git clone --depth 1 --quiet $TMUX_TPM_GH_REPOSITORY $TMUX_TPM_PATH
 
+    [[ $(command -v entr) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
     local -r ENTR_LATEST_TAG=$(curl -s "https://api.github.com/repos/eradman/entr/tags" | jq -r '.[0].name')
     local -r ENTR_REPOSITORY_URL="https://github.com/eradman/entr.git"
     local -r ENTR_REPOSITORY_BASENAME=$(basename $ENTR_REPOSITORY_URL .git)
 
-    [[ $(command -v entr) ]] || (
+    (
         git clone --depth 1 --branch "$ENTR_LATEST_TAG" "$ENTR_REPOSITORY_URL" "$SANDBOX/$ENTR_REPOSITORY_BASENAME" &>/dev/null && cd $_ || {
             log::error "Couldn't clone repository: $ENTR_REPOSITORY_URL"
         }
@@ -80,6 +85,7 @@ base::tmux() {
             log::error "Couldn't compile and install $ENTR_REPOSITORY_BASENAME"
         }
     )
+
     common::stop_spinner
 }
 
