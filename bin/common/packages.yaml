@@ -49,7 +49,7 @@ dependencies:
       - libnotify
       - pango
       - navi
-    apt:
+    apt-get:
       - git
       - git-extras
       - oxygen-cursor-theme
@@ -64,7 +64,7 @@ dependencies:
       - build-essential
       - gping
   appimage:
-    apt:
+    apt-get:
       - qt5-gtk-platformtheme
       - libdouble-conversion3
       - libqt5gui5t64
@@ -90,7 +90,7 @@ dependencies:
       - google-noto-cjk-fonts
       - google-noto-emoji-fonts
       - google-noto-sans-symbols-fonts
-    apt:
+    apt-get:
       - fonts-noto-core
       - fonts-noto-cjk
       - fonts-noto-color-emoji
@@ -103,7 +103,7 @@ dependencies:
       - fontconfig-devel
       - libxcb-devel
       - libxkbcommon-devel
-    apt:
+    apt-get:
       - libfreetype6-dev
       - libfontconfig1-dev
       - libxcb-xfixes0-dev
@@ -126,7 +126,7 @@ dependencies:
       - xcb-util-cursor-devel
       - xcb-imdkit-devel
       - xcb-util-keysyms-devel
-    apt:
+    apt-get:
       - libasound2-dev
       - libmpdclient-dev
       - libpango1.0-dev
@@ -145,7 +145,7 @@ dependencies:
     dnf:
       - python3-devel
       - python3-tkinter
-    apt:
+    apt-get:
       - python3-dev
       - python3-tk
   sway:
@@ -161,7 +161,7 @@ dependencies:
       - dunst
     dnf:
       - xorg-x11-server-Xwayland
-    apt:
+    apt-get:
       - xwayland
       - wayland-protocols
   swayfx:
@@ -176,7 +176,7 @@ dependencies:
       - dunst
     dnf:
       - xorg-x11-server-Xwayland
-    apt:
+    apt-get:
       - scdoc
       - xwayland
       - wayland-protocols
@@ -229,7 +229,7 @@ dependencies:
       - xorg-x11-xauth
       - python3-devel
       - python3-tkinter
-    apt:
+    apt-get:
       - xorg
       - xinit
       - xauth
@@ -247,7 +247,7 @@ dependencies:
       - pam-devel
       - xcb-util-image-devel
       - xcb-util-xrm-devel
-    apt:
+    apt-get:
       - libcairo2-dev
       - libfontconfig1-dev
       - libxcb-composite0-dev
@@ -269,7 +269,7 @@ dependencies:
       - perl-Test-Simple
       - perl-Test-Output
       - perl-File-Copy
-    apt:
+    apt-get:
       - libtest-simple-perl
       - libtest-output-perl
       - libfile-ncopy-perl

@@ -61,7 +61,7 @@ common::has_pkg() {
         $PKG_MANAGER list --available "$PACKAGE" &>/dev/null
         ;;
     xUbuntu | debian)
-        $PKG_MANAGER show "$PACKAGE" &>/dev/null
+        apt-cache show "$PACKAGE" &>/dev/null
         ;;
     *)
         log::not_implemented
@@ -132,7 +132,7 @@ common::dependencies_from() {
 common::package_manager() {
 
     local -ra PACKAGE_MANAGERS=(
-        "apt"
+        "apt-get"
         "dnf"
         "pacman"
         "zypper"
@@ -148,7 +148,7 @@ common::package_manager() {
     done
 
     local -rA OS_FILENAMES=(
-        ["/etc/debian_version"]=apt
+        ["/etc/debian_version"]=apt-get
         ["/etc/redhat-release"]=dnf
         ["/etc/arch-release"]=pacman
         ["/etc/SUSE-release"]=zypper
