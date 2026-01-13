@@ -46,8 +46,8 @@ mise: f-nvm x-stow x-mise ## Install mise packages
 	set -e
 	stow pkg -t $(HOME)/.config
 	source $(NVM_DIR)
-	eval "$$(mise activate bash)"
 	mise install
+	eval "$$(mise activate bash)"
 	ya pkg install
 
 .PHONY: mise
