@@ -159,31 +159,30 @@ base::app_image_launcher() {
 
     common::start_spinner
 
-    [[ $(command -v appimagelauncherd) ]] && {
+    [[ $(command -v AppImageLauncher) ]] && {
         common::stop_spinner
         return 0
     }
 
     local -r APP_IMAGE_LAUNCHER_VERSION=2.2.0
-    local -r APP_IMAGE_LAUNCHER_DEBIAN_REPOSITORY="ppa:appimagelauncher-team/stable"
+    local -r APP_IMAGE_LAUNCHER_CI_ID=travis995.0f91801
     local -r APP_IMAGE_LAUNCHER_GITHUB_RELEASE_BASE_URL="https://github.com/TheAssassin/AppImageLauncher/releases/download"
-    local -r APP_IMAGE_LAUNCHER_RPM_DOWNLOAD_URL="$APP_IMAGE_LAUNCHER_GITHUB_RELEASE_BASE_URL/v${APP_IMAGE_LAUNCHER_VERSION}/appimagelauncher-$APP_IMAGE_LAUNCHER_VERSION-travis995.0f91801.$(uname -m).rpm"
+    local -r APP_IMAGE_LAUNCHER_RPM_DOWNLOAD_URL="$APP_IMAGE_LAUNCHER_GITHUB_RELEASE_BASE_URL/v${APP_IMAGE_LAUNCHER_VERSION}/appimagelauncher-$APP_IMAGE_LAUNCHER_VERSION-${APP_IMAGE_LAUNCHER_CI_ID}.$(uname -m).rpm"
+    local -r APP_IMAGE_LAUNCHER_DEB_DOWNLOAD_URL="$APP_IMAGE_LAUNCHER_GITHUB_RELEASE_BASE_URL/v${APP_IMAGE_LAUNCHER_VERSION}/appimagelauncher_$APP_IMAGE_LAUNCHER_VERSION-${APP_IMAGE_LAUNCHER_CI_ID}.bionic_${ARCH}.deb"
+    local -r APP_IMAGE_LAUNCHER_DEB_BASENAME=$(basename $APP_IMAGE_LAUNCHER_DEB_DOWNLOAD_URL)
 
     [[ -d $APPIMAGE_DIR ]] || mkdir -p $APPIMAGE_DIR
 
     case $OS_NAME in
     fedora)
-        sudo rpm -i "${APP_IMAGE_LAUNCHER_RPM_DOWNLOAD_URL// /}"
+        sudo rpm -i "$APP_IMAGE_LAUNCHER_RPM_DOWNLOAD_URL" &>/dev/null
         ;;
     xUbuntu | debian)
-        # PPA is broken on Ubuntu >= 24.04:
-        if [[ "${OS_VERSION%.*}" -ge 24 ]]; then
-            log::info "Ubuntu PPA is broken on >=24.04, see: https://github.com/TheAssassin/AppImageLauncher/issues/634"
-            return 0
-        fi
-        sudo add-apt-repository -y "$APP_IMAGE_LAUNCHER_DEBIAN_REPOSITORY" >/dev/null
+        APP_IMAGE_LAUNCHER_PACKAGES=$(common::dependencies_from "appimage")
         sudo $PKG_MANAGER update >/dev/null
-        sudo $PKG_MANAGER install -y appimagelauncher >/dev/null
+        sudo $PKG_MANAGER install -y $APP_IMAGE_LAUNCHER_PACKAGES >/dev/null
+        curl -fsSLO --output-dir "$SANDBOX" "$APP_IMAGE_LAUNCHER_DEB_DOWNLOAD_URL"
+        sudo dpkg -i "$SANDBOX/$APP_IMAGE_LAUNCHER_DEB_BASENAME" &>/dev/null
         ;;
     *)
         log::not_implemented
@@ -330,7 +329,7 @@ base::kitty() {
 
     local -r KITTY_APP_DIR="$HOME/.local/kitty.app"
 
-    sh <(curl -sSfL https://sw.kovidgoyal.net/kitty/installer.sh)
+    sh <(curl -sSfL https://sw.kovidgoyal.net/kitty/installer.sh) &>/dev/null
 
     ln -sf "$KITTY_APP_DIR/bin/kitty" "$KITTY_APP_DIR/bin/kitten" "$XDG_BIN_HOME"
 
@@ -761,7 +760,7 @@ cmd::gvm() {
     }
 
     [[ $(command -v gvm) ]] || {
-        GVM_NO_UPDATE_PROFILE=1 bash >/dev/null < <(curl -fsSL $GVM_INSTALLER_URL)
+        GVM_NO_UPDATE_PROFILE=1 bash < <(curl -fsSL $GVM_INSTALLER_URL) &>/dev/null
     }
 
     common::stop_spinner
@@ -798,6 +797,7 @@ cmd::podman() {
         common::stop_spinner
         return 0
     }
+
     common::has_pkg "podman" && {
         sudo $PKG_MANAGER install -y podman >/dev/null
     }
