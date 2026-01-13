@@ -52,7 +52,6 @@ dependencies:
     apt-get:
       - git
       - git-extras
-      - oxygen-cursor-theme
       - python3-venv
       - libwayland-bin
       - pkg-config
@@ -63,6 +62,10 @@ dependencies:
       - python-is-python3
       - build-essential
       - gping
+    xUbuntu:
+      - oxygen-cursor-theme
+    debian:
+      - oxygencursors
   appimage:
     apt-get:
       - qt5-gtk-platformtheme
