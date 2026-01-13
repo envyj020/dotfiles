@@ -24,7 +24,12 @@ main::tear_down() {
 
 main::setup() {
 
-    mkdir -p "$XDG_BIN_HOME" "$XDG_CONFIG_HOME" "$XDG_DATA_HOME" "$XDG_CACHE_HOME" "$XDG_STATE_HOME"
+    mkdir -p \
+        "$XDG_BIN_HOME" \
+        "$XDG_CONFIG_HOME" \
+        "$XDG_DATA_HOME" \
+        "$XDG_CACHE_HOME" \
+        "$XDG_STATE_HOME"
 
     local -r PATHS_TO_PREPEND=(
         "$XDG_BIN_HOME"
@@ -69,6 +74,12 @@ base::tmux() {
     [[ -d $TMUX_TPM_PATH ]] || git clone --depth 1 --quiet $TMUX_TPM_GH_REPOSITORY $TMUX_TPM_PATH
 
     [[ $(command -v entr) ]] && {
+        common::stop_spinner
+        return 0
+    }
+
+    common::has_pkg "entr" && {
+        sudo $PKG_MANAGER install -y entr >/dev/null
         common::stop_spinner
         return 0
     }
@@ -249,8 +260,8 @@ base::fonts() {
         curl -fsSL "$NERD_FONTS_RELEASE_BASE_URL/$NERD_FONTS_LATEST_TAG/$NERD_FONT.tar.xz" | tar -C "$NERD_FONTS_DESTINATION/$NERD_FONT" -xJf - || {
             log:error "Couldn't download and extract $NERD_FONT archive into $NERD_FONTS_DESTINATION"
         }
-        fc-cache -f "$NERD_FONTS_DESTINATION/$NERD_FONT"
 
+        fc-cache -f "$NERD_FONTS_DESTINATION/$NERD_FONT"
     done
 
     if [[ ! -d $POWERLINE_FONTS_DESTINATION ]]; then
