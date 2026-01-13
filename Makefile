@@ -1,6 +1,8 @@
 MAKEFLAGS += --silent
 SHELL := /bin/bash
 
+export PATH := $(HOME)/.local/bin:$(PATH)
+
 NVM_DIR = $(HOME)/.nvm/nvm.sh
 
 RED := \033[1;31m
