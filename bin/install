@@ -245,11 +245,11 @@ base::fonts() {
     for NERD_FONT in "${NERD_FONTS_TO_INSTALL[@]}"; do
         [[ -d "$NERD_FONTS_DESTINATION/$NERD_FONT" ]] && continue
 
-        mkdir -p "$NERD_FONTS_DESTINATION/$NERD_FONT" "$SANDBOX/$NERD_FONT"
-        curl -fsSL "$NERD_FONTS_RELEASE_BASE_URL/$NERD_FONTS_LATEST_TAG/$NERD_FONT.tar.xz" | tar -C "$SANDBOX/$NERD_FONT" -xJf - || {
-            log:error "Couldn't download and extract $NERD_FONT archive"
+        mkdir -p "$NERD_FONTS_DESTINATION/$NERD_FONT"
+
+        curl -fsSL "$NERD_FONTS_RELEASE_BASE_URL/$NERD_FONTS_LATEST_TAG/$NERD_FONT.tar.xz" | tar -C "$NERD_FONTS_DESTINATION/$NERD_FONT" -xJf - || {
+            log:error "Couldn't download and extract $NERD_FONT archive into $NERD_FONTS_DESTINATION"
         }
-        mv "$SANDBOX/$NERD_FONT"/* "$NERD_FONTS_DESTINATION/$NERD_FONT" && rm -rf "$SANDBOX/${NERD_FONT:?}"
         fc-cache -f "$NERD_FONTS_DESTINATION/$NERD_FONT"
 
     done
