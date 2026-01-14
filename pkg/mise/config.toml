@@ -28,7 +28,7 @@ usage = "latest"
 "aqua:sxyazi/yazi" = "latest"
 "aqua:starship/starship" = "latest"
 "aqua:chmln/sd" = "latest"
-"aqua:sharkdp/bat" = "latest"
+"aqua:sharkdp/bat" = { version = "latest", postinstall = "bat cache --build" }
 "aqua:eza-community/eza" = "latest"
 "aqua:dandavison/delta" = "latest"
 "aqua:BurntSushi/ripgrep" = "latest"
