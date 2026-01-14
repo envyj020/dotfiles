@@ -71,8 +71,8 @@ export default defineConfig({
               },
               {
                 icon: "i-catppuccin:taskfile",
-                label: "i3wm",
-                link: "keybindings/i3",
+                label: "i3wm/Sway",
+                link: "keybindings/wm",
               },
               {
                 icon: "i-catppuccin:bash",

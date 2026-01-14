@@ -1,11 +1,15 @@
 ---
-title: i3wm
-description: i3wm Keybindings Reference
+title: Window Manager
+description: i3/sway Keybindings Reference
+tableOfContents:
+  minHeadingLevel: 1
+  maxHeadingLevel: 3
 ---
 
 import { Aside } from "@astrojs/starlight/components";
 
-A comprehensive reference of all custom keybindings configured in i3wm.
+Regardless of whether you are running i3 or its successor Sway, the keybindings
+listed below remain consistent across both environments.
 
 <Aside icon="laptop" title="i3 Modifier Keys">
     - `$mod` is mapped to `Super` - Windows key
@@ -13,14 +17,9 @@ A comprehensive reference of all custom keybindings configured in i3wm.
 </Aside>
 <div class="keybindings-page">
 
-## Core Applications
+## Workspaces
 
-| Key           | Description               |
-| ------------- | ------------------------- |
-| `$mod+Return` | Open terminal             |
-| `$mod+d`      | Open application launcher |
-
-## Workspace Navigation
+### Navigation
 
 | Key      | Description            |
 | -------- | ---------------------- |
@@ -35,31 +34,35 @@ A comprehensive reference of all custom keybindings configured in i3wm.
 | `$mod+9` | Switch to workspace 9  |
 | `$mod+0` | Switch to workspace 10 |
 
-## Move Container to Workspace
-
-| Key            | Description                    |
-| -------------- | ------------------------------ |
-| `$mod+Shift+1` | Move container to workspace 1  |
-| `$mod+Shift+2` | Move container to workspace 2  |
-| `$mod+Shift+3` | Move container to workspace 3  |
-| `$mod+Shift+4` | Move container to workspace 4  |
-| `$mod+Shift+5` | Move container to workspace 5  |
-| `$mod+Shift+6` | Move container to workspace 6  |
-| `$mod+Shift+7` | Move container to workspace 7  |
-| `$mod+Shift+8` | Move container to workspace 8  |
-| `$mod+Shift+9` | Move container to workspace 9  |
-| `$mod+Shift+0` | Move container to workspace 10 |
-
-## i3 System Control
+### Window to Workspace
 
 | Key            | Description                 |
 | -------------- | --------------------------- |
-| `$mod+Shift+c` | Reload i3 configuration     |
-| `$mod+Shift+r` | Restart i3                  |
-| `$mod+Shift+s` | Lock screen                 |
-| `$mod+Shift+e` | Exit i3 (with confirmation) |
+| `$mod+Shift+1` | Move window to workspace 1  |
+| `$mod+Shift+2` | Move window to workspace 2  |
+| `$mod+Shift+3` | Move window to workspace 3  |
+| `$mod+Shift+4` | Move window to workspace 4  |
+| `$mod+Shift+5` | Move window to workspace 5  |
+| `$mod+Shift+6` | Move window to workspace 6  |
+| `$mod+Shift+7` | Move window to workspace 7  |
+| `$mod+Shift+8` | Move window to workspace 8  |
+| `$mod+Shift+9` | Move window to workspace 9  |
+| `$mod+Shift+0` | Move window to workspace 10 |
 
-## Window Focus
+## Window Manager
+
+### Lifecycle
+
+| Key            | Description                             |
+| -------------- | --------------------------------------- |
+| `$mod+Shift+c` | Reload configuration                    |
+| `$mod+Shift+r` | Restart WM - Exclusive to i3            |
+| `$mod+Shift+s` | Lock screen                             |
+| `$mod+Shift+e` | Exit Window Manager - with confirmation |
+
+## Windows
+
+### Navigation
 
 | Key                     | Description            |
 | ----------------------- | ---------------------- |
@@ -69,7 +72,7 @@ A comprehensive reference of all custom keybindings configured in i3wm.
 | `$mod+l` / `$mod+Right` | Focus window right     |
 | `$mod+a`                | Focus parent container |
 
-## Window Management
+### Management
 
 | Key                | Description                          |
 | ------------------ | ------------------------------------ |
@@ -78,7 +81,7 @@ A comprehensive reference of all custom keybindings configured in i3wm.
 | `$mod+Shift+space` | Toggle floating mode                 |
 | `$mod+space`       | Toggle focus between tiling/floating |
 
-## Window Movement
+### Movement
 
 | Key                                 | Description       |
 | ----------------------------------- | ----------------- |
@@ -87,17 +90,17 @@ A comprehensive reference of all custom keybindings configured in i3wm.
 | `$mod+Shift+k` / `$mod+Shift+Up`    | Move window up    |
 | `$mod+Shift+l` / `$mod+Shift+Right` | Move window right |
 
-## Window Layout
+### Layout
 
 | Key            | Description         |
 | -------------- | ------------------- |
 | `$mod+s`       | Stacking layout     |
 | `$mod+w`       | Tabbed layout       |
 | `$mod+t`       | Toggle split layout |
-| `$mod+$ctrl+h` | Split vertical      |
-| `$mod+$ctrl+v` | Split horizontal    |
+| `$mod+$ctrl+v` | Split vertical      |
+| `$mod+$ctrl+h` | Split horizontal    |
 
-## Window Resize
+### Resize
 
 | Key                | Description       |
 | ------------------ | ----------------- |
@@ -107,7 +110,7 @@ A comprehensive reference of all custom keybindings configured in i3wm.
 | `$mod+$ctrl+Up`    | Grow height       |
 | `$mod+$ctrl+Down`  | Shrink height     |
 
-### Resize Mode Bindings
+#### Resize Mode Bindings
 
 While in resize mode `$mod+r`:
 
@@ -119,20 +122,29 @@ While in resize mode `$mod+r`:
 | `j` / `Down`        | Shrink height    |
 | `Return` / `Escape` | Exit resize mode |
 
-## Audio Control
+## Media/System
+
+### Audio
 
 | Key                    | Description            |
 | ---------------------- | ---------------------- |
 | `XF86AudioRaiseVolume` | Increase volume by 5%  |
 | `XF86AudioLowerVolume` | Decrease volume by 5%  |
-| `XF86AudioMute`        | Toggle mute            |
+| `XF86AudioMute`        | Toggle Audio mute      |
 | `XF86AudioMicMute`     | Toggle microphone mute |
 
-## Screenshots
+### Applications
+
+| Key           | Description               |
+| ------------- | ------------------------- |
+| `$mod+Return` | Open $TERMINAL            |
+| `$mod+d`      | Open application launcher |
+
+### Screenshots
 
 | Key            | Description                               |
 | -------------- | ----------------------------------------- |
-| `$mod+p`       | Take area screenshot (save to ~/Pictures) |
-| `$mod+Shift+p` | Take area screenshot (copy to clipboard)  |
+| `$mod+p`       | Take area screenshot - save to ~/Pictures |
+| `$mod+Shift+p` | Take area screenshot - copy to clipboard  |
 
 </div>

@@ -19,11 +19,28 @@ you will need to provide your own preferences.
 
 <Aside icon="magnifier">
   [GNU Stow](https://www.gnu.org/software/stow) is used to manage symlinks and
-  it might fail to do so if it finds an existing file (like a default .bashrc)
-  where it's trying to create a symlink. You may skip this step; otherwise,
-  ensure any conflicting files are backed up to a non-standard location before
-  re-running any of the outlined methods below.
+  it might fail to do so if it finds an existing file such as a default .bashrc
+  and .profile where it's trying to create a symlink. You may skip this step;
+  otherwise, ensure any conflicting files are backed up to a non-standard
+  location before re-running any of the outlined methods below.
 </Aside>
+
+## Prerequisites
+
+<Aside type="caution" title="Watch out!" icon="github">
+  The installation relies on the GitHub API. Because unauthenticated requests
+  are rate limited at 60 requests/hour, the setup will likely fail without a
+  token. To ensure a smooth installation, please generate a [Github
+  PAT](https://github.com/settings/tokens/new?description=DOTFILES_TOKEN),
+  no scopes required and export it as `GITHUB_TOKEN` before running any of the methods outlined below:
+  ```sh
+  export GITHUB_TOKEN=$(<"$HOME/.GITHUB_TOKEN")
+
+  ```
+</Aside>
+
+## Installation
+
 
 <Tabs>
   <TabItem label="Standalone Installer" icon="rocket">
@@ -70,7 +87,7 @@ with the standalone installer method, you can set your own by overriding it.
 ### 2. Optional: API Tokens
 
 API access for certain services requires storing authentication token files under
-your home directory.  The provided `.bashrc` exports these variables by reading them
+your home directory. The provided `.bashrc` exports these variables by reading them
 if they exists and keeps your sensitive keys out of your shell history and configuration files.
 
 The table below outlines the expected filenames conventions:
@@ -86,10 +103,11 @@ The table below outlines the expected filenames conventions:
 
 </div>
 
-### 3. Optional: Change i3 terminal
+### 3. Optional: Change i3/Sway terminal
 
-While Alacritty is the standard default, you can switch to another terminal such as kitty by modifying
-the `$TERMINAL` environment variable. This will automatically update the terminal launched by the i3 `mod+Enter` shortcut.
+While Alacritty is the standard default, you can switch to your preferred terminal by modifying
+the `$TERMINAL` environment variable. This will automatically update the terminal launched by
+the window manager `mod+Enter` shortcut.
 
 ```sh title="~/.bashrc.d/00-EXPORTS" del={2} ins={3}
 ...
@@ -100,13 +118,36 @@ export TERMINAL=kitty
 
 ### 4. Configure your display layout
 
-Open your terminal and run the following command once you have your monitors arranged the way you like them:
 
-<Code code="autorandr --save default" lang="sh" />
-<Aside title="autorandr">
-  `autorandr` was installed as part of the OS baseline. The command above will
-  save your monitor setup so i3 will know which settings to apply upon startup.
-</Aside>
+<Tabs>
+  <TabItem label="i3" icon="external">
+    Open your terminal and run the following command once you have your
+    monitors arranged the way you like them:
+    <Code code="autorandr --save default" lang="sh" />
+    <Aside type="tip" title="autorandr">
+      `autorandr` was installed as part of the OS baseline. The command above will
+      save your monitor setup so i3 will know which settings to apply upon startup.
+    </Aside>
+  </TabItem>
+  <TabItem label="Sway" icon="pen">
+    Yet to spot a Wayland-native alternative that effectively replicates
+    the display management workflow provided by arandr and autorandr on x11. For now
+    outputs must be identified and applied right into Sway's configuration:
+    <Steps>
+      1. Identify your output/s:
+          ```sh
+          swaymsg -t get_outputs | jq -r '.[] | {name} + .rect | "\(.x),\(.y) \(.width)x\(.height) \(.name)"'
+          ```
+      2. Open Sway's config and adjust your output/s to fit your needs:
+          ```sh title="~/.config/sway/config" 'eDP-1' '1920x1080@120Hz' '0,0'
+            ...
+            output "eDP-1" mode 1920x1080@120Hz position 0,0
+            ...
+          ```
+      3. Reload Sway config with `$mod+Shift+c`
+    </Steps>
+  </TabItem>
+</Tabs>
 
 ## Further reading
 
@@ -114,5 +155,8 @@ Open your terminal and run the following command once you have your monitors arr
   <LinkCard title="Neovim keybindings" href="/dotfiles/keybindings/neovim" />
   <LinkCard title="Tmux keybindings" href="/dotfiles/keybindings/tmux" />
   <LinkCard title="i3wm keybindings" href="/dotfiles/keybindings/i3" />
-  <LinkCard title="GNU Readline keybindings" href="/dotfiles/keybindings/readline" />
+  <LinkCard
+    title="GNU Readline keybindings"
+    href="/dotfiles/keybindings/readline"
+  />
 </CardGrid>
