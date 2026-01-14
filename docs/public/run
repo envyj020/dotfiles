@@ -156,11 +156,12 @@ set -eu
 
     main() {
         mkdir -p "$XDG_CACHE_HOME"
-        checkout "$GITHUB_BASE_URL/$GITHUB_OWNER/$GITHUB_REPOSITORY.git" "$XDG_CACHE_HOME/$GITHUB_REPOSITORY" "$GITHUB_BRANCH"
+        checkout \
+            "$GITHUB_BASE_URL/$GITHUB_OWNER/$GITHUB_REPOSITORY.git" \
+            "$XDG_CACHE_HOME/$GITHUB_REPOSITORY" \
+            "$GITHUB_BRANCH"
         (
-            cd "$XDG_CACHE_HOME/$GITHUB_REPOSITORY" || {
-                error "Failed to change directory to: $XDG_CACHE_HOME/$GITHUB_REPOSITORY"
-            }
+            cd "$XDG_CACHE_HOME/$GITHUB_REPOSITORY"
             ask_background
             ask_base
             ask_stow
