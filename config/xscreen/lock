@@ -12,7 +12,7 @@ SCREENSHOT=$(mktemp --suffix=.png)
 trap 'rm -f "$SCREENSHOT"' EXIT INT QUIT TERM
 
 TEXT_OVERLAY="Type password to unlock"
-TEXT_OVERLAY_FONT="JetBrains-Mono-NL-ExtraBold"
+TEXT_OVERLAY_FONT="JetBrainsMono-NF-ExtraBold"
 TEXT_OVERLAY_FONT_SIZE=42
 TEXT_OVERLAY_XY_POSITION="+0+160"
 I3LOCK_BAR_ENABLED=0
