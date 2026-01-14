@@ -13,7 +13,7 @@
     overlay2: #9399b2;
     subtext0: #a6adc8;
     subtext1: #bac2de;
-    font: "JetBrainsMonoNL Nerd Font 14";
+    font: "JetBrainsMono NF 14";
 }
 
 window {
