@@ -113,7 +113,6 @@ base::ueberzugpp() {
 
     local -r UEBERZUGPP_REPOSITORY_NAME="home:justkidding"
     local -r UEBERZUGPP_REPOSITORY_BASE_URL="https://download.opensuse.org/repositories/$UEBERZUGPP_REPOSITORY_NAME"
-    local -r VERSION_IDENTIFIER="${OS_NAME}_${OS_VERSION}"
 
     local -ra SUPPORTED_FEDORA_VERSIONS=(
         "40"
@@ -144,6 +143,12 @@ base::ueberzugpp() {
         return 0
     fi
 
+    local VERSION_IDENTIFIER="${OS_NAME}_${OS_VERSION}"
+
+    if common::has_item "$OS_NAME" "fedora" "debian"; then
+        VERSION_IDENTIFIER="${VERSION_IDENTIFIER^}"
+    fi
+
     case $OS_NAME in
     fedora)
         local -r RHEL_UEBERZUGPP_REPOSITORY_URL="$UEBERZUGPP_REPOSITORY_BASE_URL/$VERSION_IDENTIFIER/$UEBERZUGPP_REPOSITORY_NAME.repo"
@@ -153,7 +158,7 @@ base::ueberzugpp() {
     xUbuntu | debian)
         echo "deb ${UEBERZUGPP_REPOSITORY_BASE_URL/:j/:\/j}/$VERSION_IDENTIFIER/ /" | sudo tee "$APT_DATA_SOURCES_DIR/$UEBERZUGPP_REPOSITORY_NAME.list" >/dev/null
         curl -fsSL "$UEBERZUGPP_REPOSITORY_BASE_URL/$VERSION_IDENTIFIER/Release.key" | gpg --dearmor | sudo tee "$APT_GPG_KEYS_DIR/${UEBERZUGPP_REPOSITORY_NAME/:/_}.gpg" >/dev/null
-        sudo $PKG_MANAGER update
+        sudo $PKG_MANAGER update >/dev/null
         sudo $PKG_MANAGER install -y ueberzugpp >/dev/null
         ;;
     *)
@@ -848,8 +853,8 @@ base::python() {
 
     pip install --user "${PIP_TOOLCHAIN[@]}" --break-system-packages &>/dev/null
 
-    [[ $(command -v pyenv) ]] || bash <(curl -fsSL $PYENV_INSTALLER_URL) &>/dev/null
-    [[ $(command -v uv) ]] || sh <(curl -fsSL $ASTRAL_UV_INSTALLER_URL) &>/dev/null
+    [[ $(command -v pyenv) ]] || curl -fsSL $PYENV_INSTALLER_URL | bash &>/dev/null
+    [[ $(command -v uv) ]] || curl -fsSL $ASTRAL_UV_INSTALLER_URL | sh &>/dev/null
 
     common::stop_spinner
 }
