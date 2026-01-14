@@ -52,19 +52,19 @@ indexed_colors = [
 size = 10
 
 [font.normal]
-family = "JetBrainsMonoNL Nerd Font"
+family = "JetBrainsMono NF"
 style = "Regular"
 
 [font.bold]
-family = "JetBrainsMonoNL Nerd Font"
+family = "JetBrainsMono NF"
 style = "Bold"
 
 [font.italic]
-family = "JetBrainsMonoNL Nerd Font"
+family = "JetBrainsMono NF"
 style = "Italic"
 
 [font.bold_italic]
-family = "JetBrainsMonoNL Nerd Font"
+family = "JetBrainsMono NF"
 style = "Bold Italic"
 
 [font.glyph_offset]
