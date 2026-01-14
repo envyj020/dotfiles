@@ -402,6 +402,8 @@ base::i3wm() {
     #shellcheck disable=SC2034
     SELECTED_WINDOW_MANAGER="$I3_WINDOW_MANAGER"
 
+    base::i3lock
+
     common::start_spinner
 
     [[ $(command -v i3) ]] && {
@@ -413,8 +415,6 @@ base::i3wm() {
     sudo $PKG_MANAGER install -y $I3_PACKAGES &>/dev/null
 
     common::stop_spinner
-
-    base::i3lock
 }
 
 base::swayfx() {
