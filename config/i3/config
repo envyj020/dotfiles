@@ -2,7 +2,7 @@
 # reference: https://i3wm.org/docs/userguide.html
 # https://envyj020.github.io/dotfiles/keybindings/i3
 
-set $font JetBrainsMonoNL Nerd Font
+set $font JetBrainsMono NF
 
 set $mod Mod4
 set $ctrl Control
