@@ -26,6 +26,7 @@ gaps inner 5
 gaps top 0
 gaps bottom 0
 
+set $opacity 0.95
 set $border_size 0
 set $focused #ef9f76
 set $unfocused #4d3d69
@@ -34,8 +35,8 @@ set $foreground #cdd6f4
 set $indicator #f5e0dc
 
 # remove window borders and title bars
-for_window [app_id=".*"] border pixel $border_size
-for_window [class=".*"] border pixel $border_size
+for_window [app_id=".*"] border pixel $border_size; opacity $opacity
+for_window [class=".*"] border pixel $border_size; opacity $opacity
 
 # borders
 # CLASS                 BORDER                  BACKGROUND      TEXT            INDICATOR       CHILD_BORDER
