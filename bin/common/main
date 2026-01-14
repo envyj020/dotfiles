@@ -40,7 +40,6 @@ common::require() {
 # Checks if a given package is available to install.
 #
 # Globals:
-#   PKG_MANAGER
 #   OS_NAME
 #
 # Arguments:
@@ -54,11 +53,11 @@ common::has_pkg() {
 
     local -r PACKAGE="$1"
 
-    common::require OS_NAME PKG_MANAGER
+    common::require OS_NAME
 
     case $OS_NAME in
     fedora)
-        $PKG_MANAGER list --available "$PACKAGE" &>/dev/null
+        dnf list --available "$PACKAGE" &>/dev/null
         ;;
     xUbuntu | debian)
         apt-cache show "$PACKAGE" &>/dev/null
