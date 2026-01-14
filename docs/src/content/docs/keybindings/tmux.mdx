@@ -1,6 +1,9 @@
 ---
 title: Tmux
 description: Tmux Keybindings Reference
+tableOfContents:
+  minHeadingLevel: 1
+  maxHeadingLevel: 3
 ---
 
 import { Aside } from "@astrojs/starlight/components";
@@ -14,62 +17,16 @@ A comprehensive reference of all custom keybindings configured in Tmux.
 
 <div class="keybindings-page">
 
-## Mouse Mode
+## Modes
+
+### Mouse mode
 
 | Key          | Description        |
 | ------------ | ------------------ |
 | `prefix + h` | Enable mouse mode  |
 | `prefix + H` | Disable mouse mode |
 
-## Pane Synchronization
-
-| Key          | Description                  |
-| ------------ | ---------------------------- |
-| `prefix + e` | Enable pane synchronization  |
-| `prefix + E` | Disable pane synchronization |
-
-## Window Management
-
-| Key               | Description                   |
-| ----------------- | ----------------------------- |
-| `prefix + Ctrl+w` | Create new window with prompt |
-| `prefix + Ctrl+,` | Rename current window         |
-| `prefix + &`      | Kill window with prompt       |
-
-## Window Navigation
-
-| Key          | Description     |
-| ------------ | --------------- |
-| `Ctrl+Left`  | Previous window |
-| `Ctrl+Right` | Next window     |
-
-## Pane Management
-
-| Key           | Description             |
-| ------------- | ----------------------- |
-| `prefix + \|` | Split pane horizontally |
-| `prefix + -`  | Split pane vertically   |
-| `prefix + x`  | Kill pane with prompt   |
-
-## Pane Navigation
-
-| Key         | Description              |
-| ----------- | ------------------------ |
-| `Alt+Left`  | Select pane to the left  |
-| `Alt+Right` | Select pane to the right |
-| `Alt+Up`    | Select pane above        |
-| `Alt+Down`  | Select pane below        |
-
-## Pane Resizing
-
-| Key              | Description       |
-| ---------------- | ----------------- |
-| `prefix + Up`    | Resize pane up    |
-| `prefix + Down`  | Resize pane down  |
-| `prefix + Left`  | Resize pane left  |
-| `prefix + Right` | Resize pane right |
-
-## Copy Mode
+### Copy mode
 
 | Key            | Description       |
 | -------------- | ----------------- |
@@ -78,14 +35,68 @@ A comprehensive reference of all custom keybindings configured in Tmux.
 | `Enter` or `y` | Yank selection    |
 | `prefix + ]`   | Paste yanked text |
 
-## Plugin: Resurrect
+### Pane Synchronization
+
+| Key          | Description                  |
+| ------------ | ---------------------------- |
+| `prefix + e` | Enable pane synchronization  |
+| `prefix + E` | Disable pane synchronization |
+
+## Windows
+
+### Navigation
+
+| Key          | Description     |
+| ------------ | --------------- |
+| `Ctrl+Left`  | Previous window |
+| `Ctrl+Right` | Next window     |
+
+### Management
+
+| Key               | Description                   |
+| ----------------- | ----------------------------- |
+| `prefix + Ctrl+w` | Create new window with prompt |
+| `prefix + Ctrl+,` | Rename current window         |
+| `prefix + &`      | Kill window with prompt       |
+
+## Panes
+
+### Navigation
+
+| Key         | Description              |
+| ----------- | ------------------------ |
+| `Alt+Left`  | Select pane to the left  |
+| `Alt+Right` | Select pane to the right |
+| `Alt+Up`    | Select pane above        |
+| `Alt+Down`  | Select pane below        |
+
+### Management
+
+| Key           | Description             |
+| ------------- | ----------------------- |
+| `prefix + \|` | Split pane horizontally |
+| `prefix + -`  | Split pane vertically   |
+| `prefix + x`  | Kill pane with prompt   |
+
+### Resize
+
+| Key              | Description       |
+| ---------------- | ----------------- |
+| `prefix + Up`    | Resize pane up    |
+| `prefix + Down`  | Resize pane down  |
+| `prefix + Left`  | Resize pane left  |
+| `prefix + Right` | Resize pane right |
+
+## Plugins
+
+### Resurrect
 
 | Key               | Description          |
 | ----------------- | -------------------- |
 | `prefix + Ctrl+s` | Save tmux session    |
 | `prefix + Ctrl+r` | Restore tmux session |
 
-## Plugin: Open
+### Open
 
 | Key      | Description                  |
 | -------- | ---------------------------- |
@@ -93,20 +104,20 @@ A comprehensive reference of all custom keybindings configured in Tmux.
 | `o`      | Open selection with xdg-open |
 | `S`      | Search selection on Google   |
 
-## Plugin: Gentrify
+### Gentrify
 
 | Key              | Description |
 | ---------------- | ----------- |
 | `prefix + Alt+x` | Cut pane    |
 | `prefix + Alt+v` | Paste pane  |
 
-## Plugin: Session Wizard
+### Session Wizard
 
 | Key          | Description         |
 | ------------ | ------------------- |
 | `prefix + T` | Open session wizard |
 
-## Plugin: Extrakto
+### Extrakto
 
 | Key            | Description                           |
 | -------------- | ------------------------------------- |
@@ -114,7 +125,7 @@ A comprehensive reference of all custom keybindings configured in Tmux.
 | `Enter`        | Copy selected text (in extrakto)      |
 | `Tab`          | Insert selected text (in extrakto)    |
 
-## Plugin: Notify
+### Notify
 
 | Key              | Description                                                    |
 | ---------------- | -------------------------------------------------------------- |

@@ -106,8 +106,8 @@ a.nova-link-button {
 }
 
 .overview-table {
-    width: 100%;
-    overflow-x: auto;
+  width: 100%;
+  overflow-x: auto;
 }
 
 .overview-table table {
@@ -152,7 +152,7 @@ a.nova-link-button {
   width: 30%;
 }
 
-.overview-table td:last-child {
+.overview-table td:not(:first-child) {
   color: var(--sl-color-white);
 }
 

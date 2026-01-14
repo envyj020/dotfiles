@@ -19,20 +19,20 @@ you will need to provide your own preferences.
 
 <Aside icon="magnifier">
   [GNU Stow](https://www.gnu.org/software/stow) is used to manage symlinks and
-  it might fail to do so if it finds an existing file such as a default .bashrc
-  and .profile where it's trying to create a symlink. You may skip this step;
-  otherwise, ensure any conflicting files are backed up to a non-standard
-  location before re-running any of the outlined methods below.
+  it might fail to do so if it finds an existing file such as a default `~/.bashrc`
+  and `~/.profile` where it's trying to create a symlink. Ensure any conflicting files
+  are backed up to a non-standard location before retrying.
 </Aside>
 
 ## Prerequisites
 
 <Aside type="caution" title="Watch out!" icon="github">
-  The installation relies on the GitHub API. Because unauthenticated requests
+  The installation relies on the GitHub API and because unauthenticated requests
   are rate limited at 60 requests/hour, the setup will likely fail without a
   token. To ensure a smooth installation, please generate a [Github
-  PAT](https://github.com/settings/tokens/new?description=DOTFILES_TOKEN),
-  no scopes required and export it as `GITHUB_TOKEN` before running any of the methods outlined below:
+  PAT](https://github.com/settings/tokens/new?description=DOTFILES_TOKEN), with
+  no scopes required and export it as `GITHUB_TOKEN` before
+  running any of the methods outlined below:
   ```sh
   export GITHUB_TOKEN=$(<"$HOME/.GITHUB_TOKEN")
 
@@ -50,7 +50,7 @@ you will need to provide your own preferences.
     />
     <Aside type="tip">
       The standalone installer may be inspected before use or alternatively
-      check out the source code directly on [GitHub](https://github.com/envyj020/dotfiles).
+      check out the source code directly on [GitHub](https://github.com/envyj020/dotfiles/blob/main/docs/public/run).
       <Code code="curl -sSfL https://envyj020.github.io/dotfiles/run | less" lang="sh"/>
     </Aside>
   </TabItem>
@@ -90,7 +90,7 @@ API access for certain services requires storing authentication token files unde
 your home directory. The provided `.bashrc` exports these variables by reading them
 if they exists and keeps your sensitive keys out of your shell history and configuration files.
 
-The table below outlines the expected filenames conventions:
+The table below outlines the expected filenames:
 
 <div class="overview-table">
 
@@ -117,7 +117,6 @@ export TERMINAL=kitty
 ```
 
 ### 4. Configure your display layout
-
 
 <Tabs>
   <TabItem label="i3" icon="external">
@@ -154,7 +153,7 @@ export TERMINAL=kitty
 <CardGrid stagger>
   <LinkCard title="Neovim keybindings" href="/dotfiles/keybindings/neovim" />
   <LinkCard title="Tmux keybindings" href="/dotfiles/keybindings/tmux" />
-  <LinkCard title="i3wm keybindings" href="/dotfiles/keybindings/i3" />
+  <LinkCard title="Window manager keybindings" href="/dotfiles/keybindings/wm" />
   <LinkCard
     title="GNU Readline keybindings"
     href="/dotfiles/keybindings/readline"
