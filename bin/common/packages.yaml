@@ -13,7 +13,6 @@ dependencies:
       - mercurial
       - meson
       - ninja-build
-      - pulseaudio-utils
       - ffmpeg
       - zoxide
       - p7zip
@@ -25,8 +24,6 @@ dependencies:
       - curl
       - pass
       - gnupg2
-      - arandr
-      - autorandr
       - btop
       - fastfetch
       - duf
@@ -153,6 +150,8 @@ dependencies:
       - python3-tk
   sway:
     common:
+      - pulseaudio-utils
+      - brightnessctl
       - network-manager-applet
       - blueman
       - pavucontrol
@@ -169,6 +168,8 @@ dependencies:
       - wayland-protocols
   swayfx:
     common:
+      - pulseaudio-utils
+      - brightnessctl
       - network-manager-applet
       - blueman
       - pavucontrol
@@ -211,18 +212,20 @@ dependencies:
   i3wm:
     common:
       - network-manager-applet
+      - pulseaudio-utils
+      - brightnessctl
       - blueman
       - xss-lock
       - picom
       - pavucontrol
       - automake
       - autoconf
-      - light
+      - arandr
+      - autorandr
       - maim
       - dunst
       - feh
       - i3
-      - xbacklight
       - wmctrl
       - dunst
       - papirus-icon-theme
