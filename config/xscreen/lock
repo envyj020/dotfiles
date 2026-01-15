@@ -102,7 +102,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-
 "${SCREENSHOT_CMD[@]}"
 readonly SCREENSHOT
 
@@ -126,7 +125,6 @@ declare -A PADLOCK_ICONS_MAPPING=(
 )
 
 readonly PADLOCK_ICON="${PADLOCK_ICONS_MAPPING[$PRIMARY_COLOR]}"
-readonly TEXT_OVERLAY_COLOR="#${PRIMARY_COLOR}"
 
 PADLOCK_ICON_WIDTH=$(identify -format "%w" "$PADLOCK_ICON")
 read -r SCREENSHOT_WIDTH SCREENSHOT_HEIGHT <<<"$(identify -format "%w %h" "$SCREENSHOT")"
@@ -203,13 +201,13 @@ else
 fi
 
 declare -ra LOCK_SCREEN_GAMMA_ADJUSTMENT_ARGS=(-level "0%,100%,0.6")
-declare -ra LOCK_SCREEN_BLUR_EFFECT_ARGS=(-filter Gaussian -resize 20% -define "filter:sigma=1.5" -resize 500%)
-declare -ra LOCK_SCREEN_OVERLAY_TEXT_ARGS=(-font "$TEXT_OVERLAY_FONT" -pointsize "$TEXT_OVERLAY_FONT_SIZE" -fill "$TEXT_OVERLAY_COLOR" -gravity center -annotate "$TEXT_OVERLAY_XY_POSITION" "$TEXT_OVERLAY")
+declare -ra LOCK_SCREEN_IMAGE_EFFECT_ARGS=(-scale 20% +noise Uniform -attenuate 0.7 -scale 500%)
+declare -ra LOCK_SCREEN_OVERLAY_TEXT_ARGS=(-font "$TEXT_OVERLAY_FONT" -pointsize "$TEXT_OVERLAY_FONT_SIZE" -fill "#${PRIMARY_COLOR}" -gravity center -annotate "$TEXT_OVERLAY_XY_POSITION" "$TEXT_OVERLAY")
 declare -ra LOCK_SCREEN_OVERLAY_ICON_ARGS=("$PADLOCK_ICON" -gravity center -composite)
 
 magick "$SCREENSHOT" \
     "${LOCK_SCREEN_GAMMA_ADJUSTMENT_ARGS[@]}" \
-    "${LOCK_SCREEN_BLUR_EFFECT_ARGS[@]}" \
+    "${LOCK_SCREEN_IMAGE_EFFECT_ARGS[@]}" \
     "${LOCK_SCREEN_OVERLAY_TEXT_ARGS[@]}" \
     "${LOCK_SCREEN_OVERLAY_ICON_ARGS[@]}" \
     "$SCREENSHOT"
