@@ -116,55 +116,6 @@ asciinema_to_gif() {
         ghcr.io/asciinema/agg "$1" "$2"
 }
 
-choose_status_bar() {
-    local PS3="Choose a status bar:" CHOICE REPLY
-
-    local -r I3_CONFIG_DIR="$XDG_CONFIG_HOME/i3"
-    local -r I3_CURRENT_STATUS_BAR_SYMLINK="$I3_CONFIG_DIR/i3-bar"
-
-    local -ra OPTIONS=(
-        "Polybar"
-        "Bumblebee"
-        "Quit"
-    )
-
-    command_exists 'bumblebee-status' 'polybar' || {
-        echo 2>&1 "There are no status bar to choose from"
-        return 1
-    }
-
-    show_options() {
-        for i in "${!OPTIONS[@]}"; do
-            printf "${GREEN}%d)${NC} %s\n" $((i + 1)) "${OPTIONS[$i]}"
-        done
-    }
-    select CHOICE in "${OPTIONS[@]}"; do
-        case $CHOICE in
-        Polybar)
-            ln -sfn "$I3_CONFIG_DIR/i3bar/polybar" "$I3_CURRENT_STATUS_BAR_SYMLINK"
-            i3-msg restart &>/dev/null
-            echo -e "${GREEN}$CHOICE activated${NC}"
-            break
-            ;;
-        Bumblebee)
-            polybar-msg cmd quit &>/dev/null
-            ln -sfn "$I3_CONFIG_DIR/i3bar/bumblebee-status" "$I3_CURRENT_STATUS_BAR_SYMLINK"
-            i3-msg restart &>/dev/null
-            echo -e "${GREEN}$CHOICE activated${NC}"
-            break
-            ;;
-        Quit)
-            break
-            ;;
-        *)
-            echo -e "${RED} Invalid option: ${REPLY}${NC}"
-            show_options
-            ;;
-        esac
-    done
-    unset -f show_options
-}
-
 eza() {
     command_exists 'eza' || {
         echo 2>&1 "${FUNCNAME[0]} not found in your PATH"
