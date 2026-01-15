@@ -5,6 +5,7 @@ $include /etc/inputrc
 "\C-p":history-search-backward
 "\C-n":history-search-forward
 "\C-w":backward-kill-word
+"\C-e":kill-word
 "\C-u":unix-line-discard
 "\C-k":kill-line
 "\C-l":clear-screen
