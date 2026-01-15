@@ -9,7 +9,7 @@ alias fd='find . -type d -iname'
 alias ff='find . -type f -iname'
 
 alias vim='nvim'
-alias bashrc='exec ${SHELL} -l'
+alias bashrc='exec ${SHELL} -i'
 alias hgrep='history | grep'
 alias mkdir='mkdir -p'
 alias open='xdg-open'
