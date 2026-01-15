@@ -4,6 +4,7 @@ set -eu
 
 {
     : "${XDG_CACHE_HOME:=$HOME/.cache}"
+    : "${GITHUB_TOKEN:=}"
 
     readonly WALLPAPER_DIR="$HOME/Pictures"
 
@@ -22,7 +23,7 @@ set -eu
         printf "${BLUE}INFO:${NC} ${BOLD}%b${NC}\n" "$*"
     }
 
-    warning() {
+    warn() {
         printf "${YELLOW}WARNING:${NC} ${BOLD}%b${NC}\n" "$*"
     }
 
@@ -67,12 +68,42 @@ set -eu
     require_dependencies() {
         [ -t 0 ] || error "Interactive tty required."
         require_cmd "git" "git-lfs" "make"
+        require_token
+    }
+
+    require_token() {
+        [ -n "$GITHUB_TOKEN" ] && return 0
+        separator "=" 80
+        warn "${YELLOW}⚠${NC} ${BOLD}MISSING ${RED}GITHUB_TOKEN${NC}"
+        info "It looks like you have not exported GITHUB_TOKEN, please note"
+        info "github rate limits will likely cause the bootstrap process to crash."
+        info "Please run ${BLUE}export GITHUB_TOKEN=\$(<\"\$HOME/.GITHUB_TOKEN\")${NC}${BOLD} and execute again this script"
+        info "More info can be found here: https://envyj020.github.io/dotfiles/guides/installation/#prerequisites"
+        separator "=" 80
+
+        info "Press [c] to continue anyway or [e] to exit:"
+        while true; do
+            read -r choice
+            case $choice in
+            [cC])
+                info "Skipping $GITHUB_OWNER/$GITHUB_REPOSITORY default wallpaper"
+                return 0
+                ;;
+            [eE])
+                error "Bootstrap aborted."
+                ;;
+            *)
+                echo "Please press [y] to save it or [s] to skip."
+                ;;
+            esac
+        done
+
     }
 
     ask_background() {
         separator "=" 80
         info "Do you want to include the default wallpaper from ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC}"
-        warning "If not, you must save yours under \$HOME/Pictures/wallpaper.jpg"
+        warn "If not, you must save yours under \$HOME/Pictures/wallpaper.jpg"
         separator "=" 80
 
         info "Press [y] to add or [s] to skip: "
@@ -131,8 +162,8 @@ set -eu
         separator "=" 80
         info "Do you want to include symbolic links from ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC}"
         info "to your ${YELLOW}\$HOME${NC} and ${YELLOW}\$HOME/.config${NC}${BOLD} directories."
-        warning "Existing files at these locations may cause conflicts and"
-        warning "will require to manually move them prior to rerun this task"
+        warn "Existing files at these locations may cause conflicts and"
+        warn "will require to rename or move them prior to rerun this task"
         separator "=" 80
 
         info "Press [c] to continue or [s] to skip: "
