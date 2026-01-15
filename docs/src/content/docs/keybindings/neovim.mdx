@@ -1,6 +1,9 @@
 ---
 title: Neovim
 description: Neovim Keybindings Reference
+tableOfContents:
+  minHeadingLevel: 1
+  maxHeadingLevel: 3
 ---
 
 import { Aside } from "@astrojs/starlight/components";
@@ -16,13 +19,13 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 
 <div class="keybindings-page">
 
-## Neovim Configuration
+## Neovim
 
 | Key          | Mode   | Description                 |
 | ------------ | ------ | --------------------------- |
 | `<Leader>cr` | Normal | Reload Neovim configuration |
 
-## Session Management
+## Session Manager
 
 | Key          | Mode   | Description          |
 | ------------ | ------ | -------------------- |
@@ -30,37 +33,74 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | `<Leader>od` | Normal | Delete a session     |
 | `<Leader>ol` | Normal | Load a session       |
 
-## Scrolling
-
-| Key            | Mode              | Description |
-| -------------- | ----------------- | ----------- |
-| `<Shift-Up>`   | Normal, Visual, X | Scroll up   |
-| `<Shift-Down>` | Normal, Visual, X | Scroll down |
-
-## Code Formatting
-
-| Key   | Mode   | Description      |
-| ----- | ------ | ---------------- |
-| `ff`  | Normal | Format code      |
-| `FF`  | Normal | Format and write |
-| `jq`  | Normal | Jq/Yq quickfix   |
-| `jqq` | Normal | Jq/Yq query      |
-
 ## File Explorer
 
 | Key         | Mode   | Description    |
 | ----------- | ------ | -------------- |
 | `<Leader>t` | Normal | Toggle NeoTree |
 
-## Buffer Navigation
+## Edition
 
-| Key           | Mode   | Description     |
-| ------------- | ------ | --------------- |
-| `<Ctrl-Down>` | Normal | Previous buffer |
-| `<Ctrl-Up>`   | Normal | Next buffer     |
-| `<Ctrl-x>`    | Normal | Close buffer    |
+### Format
 
-## Window Navigation
+| Key   | Mode   | Description     |
+| ----- | ------ | --------------- |
+| `ff`  | Normal | Format code     |
+| `FF`  | Normal | Format and save |
+| `jq`  | Normal | Jq/Yq quickfix  |
+| `jqq` | Normal | Jq/Yq query     |
+
+### Comment
+
+| Key           | Mode           | Description       |
+| ------------- | -------------- | ----------------- |
+| `<Leader>doc` | Normal, Visual | Create annotation |
+| `<Leader>cc`  | Normal, Visual | Toggle comment    |
+| `<Leader>cb`  | Normal, Visual | Comment block     |
+
+### Mutations
+
+| Key              | Mode           | Description                             |
+| ---------------- | -------------- | --------------------------------------- |
+| `<Ctrl-w>,<Del>` | Normal, Insert | Delete previous word                    |
+| `<Leader>q`      | Normal         | Toggle between single and double quotes |
+| `su`             | Normal         | Surround word with double quotes        |
+
+### Folding
+
+| Key | Mode                             | Description |
+| --- | -------------------------------- | ----------- |
+| `¨` | Normal, Insert, Operator, Visual | Toggle fold |
+
+### Indentation
+
+| Key | Mode   | Description           |
+| --- | ------ | --------------------- |
+| `<` | Visual | Unindent and reselect |
+| `>` | Visual | Indent and reselect   |
+
+## Buffer
+
+### Navigation
+
+| Key            | Mode              | Description       |
+| -------------- | ----------------- | ----------------- |
+| `<Ctrl-Down>`  | Normal            | Previous buffer   |
+| `<Ctrl-Up>`    | Normal            | Next buffer       |
+| `{n}k`         | Normal            | Move up n lines   |
+| `{n}j`         | Normal            | Move down n lines |
+| `<Shift-Up>`   | Normal, Visual, X | Scroll up         |
+| `<Shift-Down>` | Normal, Visual, X | Scroll down       |
+
+### Management
+
+| Key        | Mode   | Description  |
+| ---------- | ------ | ------------ |
+| `<Ctrl-x>` | Normal | Close buffer |
+
+## Window
+
+### Navigation
 
 | Key               | Mode   | Description        |
 | ----------------- | ------ | ------------------ |
@@ -71,19 +111,21 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | `<Leader>wm`      | Normal | Window move swap   |
 | `<Leader>win`     | Normal | Pick window        |
 
-## Window Management
+### Management
 
-| Key           | Mode   | Description         |
-| ------------- | ------ | ------------------- |
-| `<Ctrl-w>x`   | Normal | Close window        |
-| `<Leader>w-`  | Normal | Horizontal split    |
-| `<Leader>w\|` | Normal | Vertical split      |
-| `w<Left>`     | Normal | Resize window left  |
-| `w<Right>`    | Normal | Resize window right |
-| `w<Up>`       | Normal | Resize window up    |
-| `w<Down>`     | Normal | Resize window down  |
+| Key           | Mode   | Description                   |
+| ------------- | ------ | ----------------------------- |
+| `<Ctrl-w>x`   | Normal | Close window                  |
+| `<Leader>w-`  | Normal | Horizontal split              |
+| `<Leader>w\|` | Normal | Vertical split                |
+| `w<Left>`     | Normal | Resize window left            |
+| `w<Right>`    | Normal | Resize window right           |
+| `w<Up>`       | Normal | Resize window up              |
+| `w<Down>`     | Normal | Resize window down            |
+| `<Leader>fs`  | Normal | Maximize window               |
+| `<Ctrl-w>=`   | Normal | Equalize windows width/height |
 
-## Window Placement
+### Movement
 
 | Key                | Mode   | Description       |
 | ------------------ | ------ | ----------------- |
@@ -92,21 +134,16 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | `<Leader>w<Up>`    | Normal | Move window up    |
 | `<Leader>w<Down>`  | Normal | Move window down  |
 
-## Window Maximizer
+## Tab
 
-| Key          | Mode   | Description                   |
-| ------------ | ------ | ----------------------------- |
-| `<Leader>fs` | Normal | Maximize window               |
-| `<Ctrl-w>=`  | Normal | Equalize windows width/height |
-
-## Tab Navigation
+### Navigation
 
 | Key            | Mode   | Description  |
 | -------------- | ------ | ------------ |
 | `<Tab><Right>` | Normal | Next tab     |
 | `<Tab><Left>`  | Normal | Previous tab |
 
-## Tab Management
+### Management
 
 | Key      | Mode   | Description     |
 | -------- | ------ | --------------- |
@@ -114,50 +151,69 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | `<Tab>q` | Normal | Close tab       |
 | `<Tab>w` | Normal | Save everything |
 
-## LSP Navigation
+## LSP
 
-| Key                  | Mode   | Description         |
-| -------------------- | ------ | ------------------- |
-| `<Ctrl-Shift-Left>`  | Normal | Go to definition    |
-| `<Ctrl-Shift-Right>` | Normal | Go to declaration   |
-| `K`                  | Normal | Hover documentation |
-| `<Ctrl-k>`           | Insert | Signature help      |
+### Navigation
 
-## LSP Diagnostics
+| Key                  | Mode   | Description          |
+| -------------------- | ------ | -------------------- |
+| `<Leader>sa`         | Normal | Code actions         |
+| `<Leader>sra`        | Normal | Def, Ref, Dec, Impl  |
+| `<Leader>sde`        | Normal | Definitions          |
+| `<Leader>sr`         | Normal | References           |
+| `<Leader>sff`        | Normal | Document symbols     |
+| `<Leader>sic`        | Normal | Incoming calls       |
+| `<Leader>soc`        | Normal | Outgoing calls       |
+| `<Leader>si`         | Normal | Implementations      |
+| `<Ctrl-Shift-Left>`  | Normal | Go to definition     |
+| `<Ctrl-Shift-Right>` | Normal | Go to declaration    |
+| `K`                  | Normal | Hover documentation  |
+| `<Ctrl-k>`           | Insert | Signature definition |
+
+### Diagnostics
 
 | Key          | Mode   | Description           |
 | ------------ | ------ | --------------------- |
+| `<Leader>sd` | Normal | Search diagnostics    |
 | `<Leader>ee` | Normal | Show line diagnostics |
 | `<Ctrl-e>`   | Normal | Next diagnostic       |
 | `<Ctrl-p>`   | Normal | Previous diagnostic   |
 
-## LSP Actions
+## Refactor
 
-| Key           | Mode   | Description             |
-| ------------- | ------ | ----------------------- |
-| `<Leader>sa`  | Normal | Code actions            |
-| `<Leader>sd`  | Normal | Search diagnostics      |
-| `<Leader>sra` | Normal | LSP ref, def, dec, impl |
-| `<Leader>sde` | Normal | LSP definitions         |
-| `<Leader>sr`  | Normal | LSP references          |
-| `<Leader>sff` | Normal | LSP document symbols    |
-| `<Leader>sic` | Normal | LSP incoming calls      |
-| `<Leader>soc` | Normal | LSP outgoing calls      |
-| `<Leader>si`  | Normal | LSP implementations     |
-
-## Code Comments
-
-| Key           | Mode           | Description       |
-| ------------- | -------------- | ----------------- |
-| `<Leader>doc` | Normal, Visual | Create annotation |
-| `<Leader>cc`  | Normal, Visual | Toggle comment    |
-| `<Leader>cb`  | Normal, Visual | Comment block     |
-
-## Rename
+### Rename
 
 | Key          | Mode                   | Description   |
 | ------------ | ---------------------- | ------------- |
 | `<Leader>rn` | Insert, Normal, Visual | Rename symbol |
+
+## DAP
+
+### Interface
+
+| Key           | Mode   | Description                   |
+| ------------- | ------ | ----------------------------- |
+| `<Leader>dB`  | Normal | Set breakpoint with condition |
+| `<Leader>dn`  | Normal | Start new session             |
+| `<Leader>dc`  | Normal | Continue or start session     |
+| `<Leader>db`  | Normal | Toggle breakpoint             |
+| `<Leader>dso` | Normal | Step over                     |
+| `<Leader>dsi` | Normal | Step into                     |
+| `<Leader>do`  | Normal | Step out                      |
+| `<Leader>dp`  | Normal | Pause execution               |
+| `<Leader>ds`  | Normal | Stop session                  |
+| `<Leader>dex` | Normal | Toggle REPL                   |
+| `nb`          | Normal | Next breakpoint               |
+| `pb`          | Normal | Previous breakpoint           |
+| `sb`          | Normal | Current stopped breakpoint    |
+
+### Integrations
+
+| Key           | Mode   | Description                    |
+| ------------- | ------ | ------------------------------ |
+| `<Leader>dgt` | Normal | Debug Go test under cursor     |
+| `<Leader>dpt` | Normal | Debug Python test under cursor |
+| `<Leader>dpc` | Normal | Debug Python class             |
 
 ## Markdown
 
@@ -194,38 +250,11 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 
 ## YAML Schema
 
-| Key           | Mode   | Description                   |
-| ------------- | ------ | ----------------------------- |
-| `<Leader>yr`  | Normal | YAML schema match             |
-| `<Leader>syc` | Normal | Select buffer YAML schema     |
-| `<Leader>sy`  | Normal | Select matching YAML schemas  |
-| `<Leader>kv`  | Normal | Change Kubernetes YAML schema |
-
-## DAP
-
-| Key           | Mode   | Description                   |
-| ------------- | ------ | ----------------------------- |
-| `<Leader>dB`  | Normal | Set breakpoint with condition |
-| `<Leader>dn`  | Normal | Start new session             |
-| `<Leader>dc`  | Normal | Continue or start session     |
-| `<Leader>db`  | Normal | Toggle breakpoint             |
-| `<Leader>dso` | Normal | Step over                     |
-| `<Leader>dsi` | Normal | Step into                     |
-| `<Leader>do`  | Normal | Step out                      |
-| `<Leader>dp`  | Normal | Pause execution               |
-| `<Leader>ds`  | Normal | Stop session                  |
-| `<Leader>dex` | Normal | Toggle REPL                   |
-| `nb`          | Normal | Next breakpoint               |
-| `pb`          | Normal | Previous breakpoint           |
-| `sb`          | Normal | Current stopped breakpoint    |
-
-## DAP Integrations
-
-| Key           | Mode   | Description                    |
-| ------------- | ------ | ------------------------------ |
-| `<Leader>dgt` | Normal | Debug Go test under cursor     |
-| `<Leader>dpt` | Normal | Debug Python test under cursor |
-| `<Leader>dpc` | Normal | Debug Python class             |
+| Key           | Mode   | Description                  |
+| ------------- | ------ | ---------------------------- |
+| `<Leader>syc` | Normal | Schema picker                |
+| `<Leader>sy`  | Normal | Select from matching schemas |
+| `<Leader>kv`  | Normal | Change Kubernetes API schema |
 
 ## Terminal
 
@@ -236,44 +265,9 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 
 ## DBMS
 
-| Key           | Mode   | Description              |
-| ------------- | ------ | ------------------------ |
-| `<Leader>ddb` | Normal | Opens db ui in a new tab |
-
-## Miscellaneous
-
-| Key           | Mode   | Description       |
-| ------------- | ------ | ----------------- |
-| `<Leader>url` | Normal | View URLs         |
-| `<Leader>tw`  | Normal | Toggle Focus Mode |
-
-## Editing Motions
-
-| Key         | Mode           | Description                             |
-| ----------- | -------------- | --------------------------------------- |
-| `<Del>`     | Normal, Insert | Delete previous word                    |
-| `su`        | Normal         | Surround word with double quotes        |
-| `<Leader>q` | Normal         | Toggle between single and double quotes |
-
-## Folding
-
-| Key | Mode                             | Description |
-| --- | -------------------------------- | ----------- |
-| `¨` | Normal, Insert, Operator, Visual | Toggle fold |
-
-## Indentation
-
-| Key | Mode   | Description           |
-| --- | ------ | --------------------- |
-| `<` | Visual | Unindent and reselect |
-| `>` | Visual | Indent and reselect   |
-
-## Movement
-
-| Key    | Mode   | Description       |
-| ------ | ------ | ----------------- |
-| `{n}k` | Normal | Move up n lines   |
-| `{n}j` | Normal | Move down n lines |
+| Key           | Mode   | Description                     |
+| ------------- | ------ | ------------------------------- |
+| `<Leader>ddb` | Normal | Opens DB interface in a new tab |
 
 ## Snippets
 
@@ -283,5 +277,12 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | `<Ctrl-l>`    | Insert, Select | Expand or jump               |
 | `<Tab>`       | Insert, Select | Jump to next placeholder     |
 | `<Shift-Tab>` | Insert, Select | Jump to previous placeholder |
+
+## Miscellaneous
+
+| Key           | Mode   | Description       |
+| ------------- | ------ | ----------------- |
+| `<Leader>url` | Normal | Find URLs         |
+| `<Leader>tw`  | Normal | Toggle focus mode |
 
 </div>

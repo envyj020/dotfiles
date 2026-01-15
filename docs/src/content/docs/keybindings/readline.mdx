@@ -1,6 +1,9 @@
 ---
 title: GNU Readline Keybindings
 description: GNU Readline Keybindings (.inputrc)
+tableOfContents:
+  minHeadingLevel: 1
+  maxHeadingLevel: 3
 ---
 
 import { Aside } from "@astrojs/starlight/components";
@@ -15,39 +18,43 @@ Custom keybindings configured in `.inputrc` for enhanced command-line navigation
 
 <div class="keybindings-page">
 
-## History Navigation
+## History
 
 | Key      | Description                |
 | -------- | -------------------------- |
+| `Ctrl+e` | FZF search history         |
 | `Ctrl+p` | Search backward in history |
 | `Ctrl+n` | Search forward in history  |
 
-## Text Editing
+## Text Edition
 
 | Key      | Description                                      |
 | -------- | ------------------------------------------------ |
 | `Ctrl+w` | Delete word backwards                            |
+| `Ctrl+e` | Delete word forwards                             |
 | `Ctrl+k` | Deletes from cursor to the end of line           |
 | `Ctrl+u` | Deletes from cursor to the beginning of line     |
-| `Ctrl+f` | Transpose characters (swap current and previous) |
+| `Ctrl+f` | Transpose characters - swap current and previous |
 
-## Screen Control
+## Screen
 
 | Key      | Description  |
 | -------- | ------------ |
 | `Ctrl+l` | Clear screen |
 
-## Word Navigation
+## Navigation
 
-| Key                 | Description            |
-| ------------------- | ---------------------- |
-| `Shift+Right Arrow` | Move forward one word  |
-| `Shift+Left Arrow`  | Move backward one word |
+### Text
 
-## Directory Navigation
+| Key           | Description            |
+| ------------- | ---------------------- |
+| `Shift+Right` | Move forward one word  |
+| `Shift+Left`  | Move backward one word |
 
-| Key             | Description                   |
-| --------------- | ----------------------------- |
-| `Ctrl+Up Arrow` | Go up one directory (`cd ..`) |
+### Directory
+
+| Key       | Description           |
+| --------- | --------------------- |
+| `Ctrl+Up` | Go one directory back |
 
 </div>
