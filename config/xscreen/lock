@@ -19,7 +19,7 @@ I3LOCK_BAR_ENABLED=0
 
 readonly BLACK='000000' WHITE='ffffff' GREY='242121' RED='f38ba8' YELLOW='f9e2af'
 readonly ALPHA_0='00' ALPHA_10='1A' ALPHA_20='33' ALPHA_30='4D' ALPHA_40='66' ALPHA_60='99' ALPHA_70='B3'
-readonly BRIGHTNESS_THRESHOLD=60
+readonly BRIGHTNESS_THRESHOLD=60 HIDDEN="${BLACK}${ALPHA_0}"
 
 readonly WAYLAND_SESSION_TYPE="wayland"
 readonly X11_SESSION_TYPE="x11"
@@ -121,8 +121,8 @@ fi
 readonly PRIMARY_COLOR SECONDARY_COLOR
 
 declare -A PADLOCK_ICONS_MAPPING=(
-    [$BLACK]="${REPOSITORY_ROOTDIR}/static/icons/monkey-dark.png"
-    [$WHITE]="${REPOSITORY_ROOTDIR}/static/icons/monkey-white.png"
+    [$BLACK]="${REPOSITORY_ROOTDIR}/static/icons/coffee-dark.png"
+    [$WHITE]="${REPOSITORY_ROOTDIR}/static/icons/coffee-white.png"
 )
 
 readonly PADLOCK_ICON="${PADLOCK_ICONS_MAPPING[$PRIMARY_COLOR]}"
@@ -137,28 +137,39 @@ declare -a LOCK_OPTS=(
     "--ring-color=${PRIMARY_COLOR}${ALPHA_40}"
     "--line-color=${PRIMARY_COLOR}${ALPHA_10}"
     "--separator-color=${GREY}${ALPHA_20}"
+    "--ignore-empty-password"
 )
 
 declare -a I3LOCK_OPTS=(
-    "--keyhl-color=${SECONDARY_COLOR}${ALPHA_60}"
     "--ringver-color=${YELLOW}${ALPHA_70}"
     "--ringwrong-color=${RED}${ALPHA_70}"
     "--insidever-color=${YELLOW}${ALPHA_30}"
     "--insidewrong-color=${RED}${ALPHA_30}"
-    "--verif-color=${SECONDARY_COLOR}${ALPHA_0}"
-    "--wrong-color=${SECONDARY_COLOR}${ALPHA_0}"
+    "--verif-color=${HIDDEN}"
+    "--wrong-color=${HIDDEN}"
+    "--keyhl-color=${SECONDARY_COLOR}${ALPHA_60}"
     "--bshl-color=${SECONDARY_COLOR}${ALPHA_60}"
+    "--radius=$((PADLOCK_ICON_WIDTH - 20))"
+    "--screen=1"
+    "--indicator"
 )
 declare -a SWAYLOCK_OPTS=(
-    "--key-hl-color=${SECONDARY_COLOR}${ALPHA_60}"
     "--ring-ver-color=${YELLOW}${ALPHA_70}"
     "--ring-wrong-color=${RED}${ALPHA_70}"
+    "--ring-clear-color=${YELLOW}${ALPHA_70}"
+    "--line-ver-color=${YELLOW}${ALPHA_70}"
+    "--line-wrong-color=${RED}${ALPHA_70}"
+    "--line-clear-color=${YELLOW}${ALPHA_70}"
     "--inside-ver-color=${YELLOW}${ALPHA_30}"
     "--inside-wrong-color=${RED}${ALPHA_30}"
+    "--inside-clear-color=${YELLOW}${ALPHA_40}"
+    "--key-hl-color=${SECONDARY_COLOR}${ALPHA_60}"
     "--bs-hl-color=${SECONDARY_COLOR}${ALPHA_60}"
-    "--text-ver-color=${SECONDARY_COLOR}${ALPHA_0}"
-    "--text-wrong-color=${SECONDARY_COLOR}${ALPHA_0}"
+    "--text-ver-color=${HIDDEN}"
+    "--text-wrong-color=${HIDDEN}"
+    "--text-clear-color=${HIDDEN}"
     "--indicator-radius=$((PADLOCK_ICON_WIDTH - 20))"
+    "--indicator-idle-visible"
     "--hide-keyboard-layout"
     "--disable-caps-lock-text"
 )
