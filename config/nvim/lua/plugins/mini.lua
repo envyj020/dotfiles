@@ -1,12 +1,12 @@
 require("mini.move").setup({
     mappings = {
-        left = "<A-h>",
-        right = "<A-l>",
+        left = "<S-Tab>",
+        right = "<Tab>",
         down = "<A-j>",
         up = "<A-k>",
 
-        line_left = "<A-h>",
-        line_right = "<A-l>",
+        line_left = "<S-Tab>",
+        line_right = "<Tab>",
         line_down = "<A-j>",
         line_up = "<A-k>",
     },
