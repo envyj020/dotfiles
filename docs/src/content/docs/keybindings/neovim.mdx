@@ -52,11 +52,11 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 
 ### Comment
 
-| Key           | Mode           | Description       |
-| ------------- | -------------- | ----------------- |
-| `<Leader>doc` | Normal, Visual | Create annotation |
-| `<Leader>cc`  | Normal, Visual | Toggle comment    |
-| `<Leader>cb`  | Normal, Visual | Comment block     |
+| Key           | Mode           | Description                     |
+| ------------- | -------------- | ------------------------------- |
+| `<Leader>doc` | Normal, Visual | Create doc signature annotation |
+| `<Leader>cc`  | Normal, Visual | Toggle comment                  |
+| `<Leader>cb`  | Normal, Visual | Comment block                   |
 
 ### Mutations
 
@@ -68,16 +68,18 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 
 ### Folding
 
-| Key | Mode                             | Description |
-| --- | -------------------------------- | ----------- |
-| `¨` | Normal, Insert, Operator, Visual | Toggle fold |
+| Key | Mode                             | Description            |
+| --- | -------------------------------- | ---------------------- |
+| `¨` | Normal, Insert, Operator, Visual | Create and toggle fold |
 
-### Indentation
+### Lines
 
-| Key | Mode   | Description           |
-| --- | ------ | --------------------- |
-| `<` | Visual | Unindent and reselect |
-| `>` | Visual | Indent and reselect   |
+| Key       | Mode           | Description         |
+| --------- | -------------- | ------------------- |
+| `<Tab>`   | Normal, Visual | Indent              |
+| `<S-Tab>` | Normal, Visual | Unindent            |
+| `<A-k>`   | Normal, Visual | Move selection up   |
+| `<A-j>`   | Normal, Visual | Move selection down |
 
 ## Buffer
 
@@ -102,28 +104,28 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 
 ### Navigation
 
-| Key               | Mode   | Description        |
-| ----------------- | ------ | ------------------ |
-| `<Ctrl-w><Left>`  | Normal | Focus left window  |
-| `<Ctrl-w><Right>` | Normal | Focus right window |
-| `<Ctrl-w><Up>`    | Normal | Focus up window    |
-| `<Ctrl-w><Down>`  | Normal | Focus down window  |
-| `<Leader>wm`      | Normal | Window move swap   |
-| `<Leader>win`     | Normal | Pick window        |
+| Key               | Mode   | Description             |
+| ----------------- | ------ | ----------------------- |
+| `<Ctrl-w><Left>`  | Normal | Focus window left       |
+| `<Ctrl-w><Right>` | Normal | Focus window right      |
+| `<Ctrl-w><Up>`    | Normal | Focus window above      |
+| `<Ctrl-w><Down>`  | Normal | Focus window below      |
+| `<Leader>wm`      | Normal | Window interactive move |
+| `<Leader>win`     | Normal | Window picker           |
 
 ### Management
 
-| Key           | Mode   | Description                   |
-| ------------- | ------ | ----------------------------- |
-| `<Ctrl-w>x`   | Normal | Close window                  |
-| `<Leader>w-`  | Normal | Horizontal split              |
-| `<Leader>w\|` | Normal | Vertical split                |
-| `w<Left>`     | Normal | Resize window left            |
-| `w<Right>`    | Normal | Resize window right           |
-| `w<Up>`       | Normal | Resize window up              |
-| `w<Down>`     | Normal | Resize window down            |
-| `<Leader>fs`  | Normal | Maximize window               |
-| `<Ctrl-w>=`   | Normal | Equalize windows width/height |
+| Key           | Mode   | Description                 |
+| ------------- | ------ | --------------------------- |
+| `<Ctrl-w>x`   | Normal | Close window                |
+| `<Leader>w-`  | Normal | Horizontal split            |
+| `<Leader>w\|` | Normal | Vertical split              |
+| `w<Left>`     | Normal | Resize window left          |
+| `w<Right>`    | Normal | Resize window right         |
+| `w<Up>`       | Normal | Resize window up            |
+| `w<Down>`     | Normal | Resize window down          |
+| `<Leader>fs`  | Normal | Maximize window             |
+| `<Ctrl-w> =`  | Normal | Equalize windows dimensions |
 
 ### Movement
 
@@ -158,7 +160,7 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | Key                  | Mode   | Description          |
 | -------------------- | ------ | -------------------- |
 | `<Leader>sa`         | Normal | Code actions         |
-| `<Leader>sra`        | Normal | Def, Ref, Dec, Impl  |
+| `<Leader>sra`        | Normal | Search \*            |
 | `<Leader>sde`        | Normal | Definitions          |
 | `<Leader>sr`         | Normal | References           |
 | `<Leader>sff`        | Normal | Document symbols     |
@@ -167,17 +169,17 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | `<Leader>si`         | Normal | Implementations      |
 | `<Ctrl-Shift-Left>`  | Normal | Go to definition     |
 | `<Ctrl-Shift-Right>` | Normal | Go to declaration    |
-| `K`                  | Normal | Hover documentation  |
 | `<Ctrl-k>`           | Insert | Signature definition |
+| `K`                  | Normal | Signature docs       |
 
 ### Diagnostics
 
-| Key          | Mode   | Description           |
-| ------------ | ------ | --------------------- |
-| `<Leader>sd` | Normal | Search diagnostics    |
-| `<Leader>ee` | Normal | Show line diagnostics |
-| `<Ctrl-e>`   | Normal | Next diagnostic       |
-| `<Ctrl-p>`   | Normal | Previous diagnostic   |
+| Key          | Mode   | Description             |
+| ------------ | ------ | ----------------------- |
+| `<Leader>sd` | Normal | Buffer diagnostics      |
+| `<Leader>ee` | Normal | Show currect diagnostic |
+| `<Ctrl-e>`   | Normal | Next diagnostic         |
+| `<Ctrl-p>`   | Normal | Previous diagnostic     |
 
 ## Refactor
 
@@ -263,7 +265,7 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | `<Leader>;` | Normal   | Toggle terminal    |
 | `<Esc>`     | Terminal | Exit terminal mode |
 
-## DBMS
+## Database
 
 | Key           | Mode   | Description                     |
 | ------------- | ------ | ------------------------------- |
