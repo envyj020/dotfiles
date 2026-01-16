@@ -16,10 +16,15 @@ map("n", "<Leader>ol", common.nvim_session_manager("load"), keymap_opts("Loads a
 
 -- Scroll
 map({ "n", "v", "x" }, "<S-Up>", function()
-    require("neoscroll").ctrl_u({ duration = 150 })
+    require("neoscroll").ctrl_u({
+        duration = 150,
+    })
 end, keymap_opts("Scroll up"))
+
 map({ "n", "v", "x" }, "<S-Down>", function()
-    require("neoscroll").ctrl_d({ duration = 150 })
+    require("neoscroll").ctrl_d({
+        duration = 150,
+    })
 end, keymap_opts("Scroll down"))
 
 -- Formatting
@@ -37,13 +42,14 @@ map("n", "<C-Up>", command("bnext"), keymap_opts("Next buffer"))
 map("n", "<C-x>", require("mini.bufremove").delete, keymap_opts("Close buffer"))
 
 -- Window Navigation
-map("n", "<C-w><Left>", "<C-w>h", keymap_opts("Focus left window"))
-map("n", "<C-w><Right>", "<C-w>l", keymap_opts("Focus right window"))
-map("n", "<C-w><Up>", "<C-w>k", keymap_opts("Focus up window"))
-map("n", "<C-w><Down>", "<C-w>j", keymap_opts("Focus down window"))
+map("n", "<C-w><Left>", "<C-w>h", keymap_opts("Focus window left"))
+map("n", "<C-w><Right>", "<C-w>l", keymap_opts("Focus window right"))
+map("n", "<C-w><Up>", "<C-w>k", keymap_opts("Focus window above"))
+map("n", "<C-w><Down>", "<C-w>j", keymap_opts("Focus window below"))
+map("n", "<Leader>win", require("nvim-window").pick, keymap_opts("Window picker"))
 map("n", "<Leader>wm", function()
     require("winmove").start_mode("move")
-end, keymap_opts("Window move swap"))
+end, keymap_opts("Window interactive move"))
 
 -- Window Management
 map("n", "<C-w>x", "<C-w>c", keymap_opts("Close window"))
@@ -55,7 +61,10 @@ map("n", "w<Right>", require("smart-splits").resize_right, keymap_opts("Resize w
 map("n", "w<Up>", require("smart-splits").resize_up, keymap_opts("Resize window up"))
 map("n", "w<Down>", require("smart-splits").resize_down, keymap_opts("Resize window down"))
 
--- Window Placement
+map("n", "<Leader>fs", command("WindowsMaximize"), keymap_opts("Maximize window"))
+map("n", "<C-w>=", command("WindowsEqualize"), keymap_opts("Equalize windows dimensions"))
+
+-- Window Movement
 map("n", "<Leader>w<Left>", "<C-w>H", keymap_opts("Move window left"))
 map("n", "<Leader>w<Right>", "<C-w>L", keymap_opts("Move window right"))
 map("n", "<Leader>w<Up>", "<C-w>K", keymap_opts("Move window up"))
@@ -66,15 +75,15 @@ map("n", "<Tab><Right>", "gt", keymap_opts("Next tab"))
 map("n", "<Tab><Left>", "gT", keymap_opts("Previous tab"))
 
 -- Tab Management
-map("n", "<Tab>n", command("tabnew"), keymap_opts("New tab"))
-map("n", "<Tab>q", command("tabclose"), keymap_opts("Close tab"))
-map("n", "<Tab>w", command("wa"), keymap_opts("Save everything"))
+map("n", "<Tab>n", command("tabnew"), keymap_opts("Create a new tab"))
+map("n", "<Tab>q", command("tabclose"), keymap_opts("Close current tab"))
+map("n", "<Tab>w", command("wa"), keymap_opts("Save *"))
 
 -- LSP Signature Navigation
 map("n", "<C-S-Left>", vim.lsp.buf.definition, keymap_opts("Go to definition"))
 map("n", "<C-S-Right>", vim.lsp.buf.declaration, keymap_opts("Go to declaration"))
-map("n", "K", vim.lsp.buf.hover, keymap_opts("Hover documentation"))
-map("i", "<C-k>", vim.lsp.buf.signature_help, keymap_opts("Signature help"))
+map("i", "<C-k>", vim.lsp.buf.signature_help, keymap_opts("Show signature definition"))
+map("n", "K", vim.lsp.buf.hover, keymap_opts("Show signature documentation"))
 
 -- LSP Diagnostics
 map("n", "<Leader>ee", function()
@@ -90,19 +99,12 @@ map("n", "<C-p>", function()
 end, keymap_opts("Previous diagnostic"))
 
 -- Commentaries
-map({ "n", "v" }, "<Leader>doc", command("Neogen"), keymap_opts("Create annotation"))
+map({ "n", "v" }, "<Leader>doc", command("Neogen"), keymap_opts("Create doc signature annotation"))
 map({ "n", "v" }, "<Leader>cc", command("Commentary"), keymap_opts("Toggle comment"))
 map({ "n", "v" }, "<Leader>cb", "{v}:Commentary<CR>", keymap_opts("Comment block"))
 
--- Maximizer
-map("n", "<Leader>fs", command("WindowsMaximize"), keymap_opts("Maximize window"))
-map("n", "<C-w>=", command("WindowsEqualize"), keymap_opts("Equalize windows witdth/height"))
-
 -- Rename
 map({ "i", "n", "v" }, "<Leader>rn", require("renamer").rename, keymap_opts("Rename symbol"))
-
--- Twilight
-map("n", "<Leader>tw", command("Twilight"), keymap_opts("Toggle Twilight"))
 
 -- Markdown
 map("n", "<Leader>mk", command("RenderMarkdown", "buf_toggle"), keymap_opts("Markdown inline render"))
@@ -149,18 +151,18 @@ map("n", "<Leader>soc", command("Trouble", "lsp_outgoing_calls", "toggle"), keym
 map("n", "<Leader>si", command("Trouble", "lsp_implementations", "toggle"), keymap_opts("LSP implementations"))
 
 -- YAML Schema picker
-map("n", "<Leader>syc", telescope.extensions.schema_companion.select_schema, keymap_opts("Select Buffer YAML schema"))
+map("n", "<Leader>syc", telescope.extensions.schema_companion.select_schema, keymap_opts("Pick YAML schema"))
 map(
     "n",
     "<Leader>sy",
     telescope.extensions.schema_companion.select_from_matching_schemas,
-    keymap_opts("Select matching YAML schemas")
+    keymap_opts("Choose matching buffer YAML schemas")
 )
 map(
     "n",
     "<Leader>kv",
     require("schema-companion.matchers.kubernetes").change_version,
-    keymap_opts("Change Kubernetes YAML schema")
+    keymap_opts("Change Kubernetes API version YAML schema")
 )
 
 -- DAP
@@ -180,19 +182,17 @@ map("n", "nb", require("goto-breakpoints").next, keymap_opts("DAP: next breakpoi
 map("n", "pb", require("goto-breakpoints").prev, keymap_opts("DAP: previous breakpoint"))
 map("n", "sb", require("goto-breakpoints").stopped, keymap_opts("DAP: current stopped breakpoint"))
 
--- DAP Lang specific
+-- DAP Integrations
 map("n", "<Leader>dgt", require("dap-go").debug_test, keymap_opts("Debug GO test under cursor"))
 map("n", "<Leader>dpt", require("dap-python").test_method, keymap_opts("Debug Python test under cursor"))
 map("n", "<Leader>dpc", require("dap-python").test_class, keymap_opts("Debug Python class"))
 
--- Window Picker
-map("n", "<Leader>win", require("nvim-window").pick, keymap_opts("Pick window"))
-
 -- Terminal
 map("n", "<Leader>;", command("ToggleTerm"), keymap_opts("Toggle terminal"))
 
--- UrlView
-map("n", "<Leader>url", command("UrlView"), keymap_opts("View URLs"))
+-- Miscellaneous
+map("n", "<Leader>tw", command("Twilight"), keymap_opts("Toggle focus mode"))
+map("n", "<Leader>url", command("UrlView"), keymap_opts("Find URLs"))
 
 -- Shortcuts
 map("t", "<Esc>", "<C-\\><C-n>", keymap_opts("Exit terminal mode"))
@@ -218,7 +218,7 @@ map("n", "<leader>q", function()
     vim.fn.setpos(".", position)
 end, keymap_opts("Toggle surrounding quotes"))
 
---- DBMS
+--- Database
 map("n", "<Leader>ddb", function()
     vim.cmd("tabnew")
     vim.cmd("DBUI")
@@ -237,10 +237,6 @@ map("i", "¨", "<C-O>za", keymap_opts("Toggle fold"))
 map("n", "¨", "za", keymap_opts("Toggle fold"))
 map("o", "¨", "<C-C>za", keymap_opts("Toggle fold"))
 map("v", "¨", "zf", keymap_opts("Create fold"))
-
--- Indenting
-map("v", "<", "<gv", keymap_opts("Unindent and reselect txt", { noremap = true }))
-map("v", ">", ">gv", keymap_opts("Indent and reselect txt", { noremap = true }))
 
 -- Jumplist mutations
 map("n", "k", function()
