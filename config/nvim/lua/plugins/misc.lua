@@ -68,7 +68,7 @@ require("nvim-toc").setup({
 require("render-markdown").setup({
     completions = { lsp = { enabled = true } },
     latext = { enabled = false },
-    file_types = { "markdown", "norg", "rmd", "org", "codecompanion", "quarto", "vimwiki" },
+    file_types = { "markdown", "Avante", "norg", "rmd", "org", "codecompanion", "quarto", "vimwiki" },
     render_modes = { "n", "c", "t" },
     heading = {
         position = "inline",
