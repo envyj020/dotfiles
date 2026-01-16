@@ -12,12 +12,21 @@ function M.concat_tables(...)
     return extended
 end
 
---- Reloads Neovim configuration
+--- Reloads Neovim configuration by wiping out user cached modules.
 function M.nvim_config_reload()
-    local modules = { "^common", "^core", "^formatters", "^plugins" }
+    local mod_patterns = {}
+    local modules = vim.fs.dir(vim.fs.joinpath(vim.fn.stdpath("config"), "lua"), {
+        depth = 1
+    })
+
+    for name, type in modules do
+        if type == "directory" then
+            table.insert(mod_patterns, string.format("^%s", name))
+        end
+    end
 
     for name, _ in pairs(package.loaded) do
-        for _, pattern in ipairs(modules) do
+        for _, pattern in ipairs(mod_patterns) do
             if name:find(pattern) then
                 package.loaded[name] = nil
                 break
