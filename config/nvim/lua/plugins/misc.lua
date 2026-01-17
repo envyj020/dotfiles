@@ -76,22 +76,11 @@ require("render-markdown").setup({
 })
 
 require("urlview").setup({
-    default_title = "Links:",
-    default_picker = "telescope",
+    default_picker = "vim.ui.select",
     default_prefix = "https://",
-    navigate_method = "system",
+    log_level_min = vim.log.levels.WARN,
     unique = true,
     sorted = true,
-    debug = false,
-    -- NOTE: captures follow Lua pattern matching (https://riptutorial.com/lua/example/20315/lua-pattern-matching)
-    custom_searches = {
-        -- KEY: search source name
-        -- VALUE: custom search function or table (map with keys capture, format)
-        jira = {
-            capture = "JIRA%-%d+",
-            format = "https://jira.xxxx.com/browse/%s",
-        },
-    },
 })
 
 require("cutlass").setup({
@@ -100,5 +89,32 @@ require("cutlass").setup({
         select = "_",
         delete = "_",
         change = "_",
+    },
+})
+
+require("cloak").setup({
+    enabled = true,
+    cloak_character = "*",
+    patterns = {
+        {
+            file_pattern = ".env*",
+            cloak_pattern = "=.+",
+        },
+        {
+            file_pattern = { "*.yaml", "*.yml" },
+            cloak_pattern = {
+                "(value:%s*)(.+)",
+                "(token:%s*)(.+)",
+                "(stringData:%s*)(.+)",
+            },
+            replace = "%1",
+        },
+        {
+            file_pattern = { "docker-compose.yaml", "docker-compose.yml" },
+            cloak_pattern = {
+                "([A-Z%-_]+%s*[:=]%s*)(.+)",
+            },
+            replace = "%1",
+        },
     },
 })

@@ -198,9 +198,9 @@ map("n", "<Leader>url", command("UrlView"), keymap_opts("Find URLs"))
 map("t", "<Esc>", "<C-\\><C-n>", keymap_opts("Exit terminal mode"))
 map("i", "<Del>", "<C-\\><C-o>db", keymap_opts("Delete previous word"))
 map("n", "<Del>", "db", keymap_opts("Delete previous word"))
-map("n", "su", 'ysiw"', keymap_opts("Surround word with double quotes", { remap = true }))
+map("n", "<Leader>qq", 'ysiw"', keymap_opts("Surround word with double quotes", { remap = true }))
 
-map("n", "<leader>q", function()
+map("n", "<Leader>q", function()
     local position = vim.fn.getpos(".")
     local line = vim.api.nvim_get_current_line()
     local column = position[3]
@@ -223,6 +223,9 @@ map("n", "<Leader>ddb", function()
     vim.cmd("tabnew")
     vim.cmd("DBUI")
 end)
+
+--- Cloak
+map("n", "<Leader>h", command("CloakToggle"), keymap_opts("Toggle sensitive data"))
 
 -- Undo break points
 map("i", ",", ",<c-g>u", keymap_opts("Undo break point"))
@@ -247,7 +250,7 @@ map("n", "j", function()
     return (vim.v.count > 5 and "m'" .. vim.v.count or "") .. "j"
 end, keymap_opts("Move down with jumplist", { expr = true }))
 
--- VSnip Navigation
+-- Vsnip Navigation
 
 -- Expand
 map({ "i", "s" }, "<C-j>", function()

@@ -1,7 +1,7 @@
 local augroup = vim.api.nvim_create_augroup
 local autocmd = vim.api.nvim_create_autocmd
 
-local group = augroup("my-awesome-augroup", { clear = true })
+local group = augroup("AwesomeNeovim", { clear = true })
 
 -- Reload buffer if it was changed externally
 autocmd("CursorHold", {

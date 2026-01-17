@@ -113,7 +113,7 @@ Plug("davidmh/mdx.nvim")
 Plug("ray-x/go.nvim")
 Plug("kcl-lang/kcl.nvim")
 
---- BDMS
+--- Database
 Plug("tpope/vim-dadbod")
 Plug("kristijanhusak/vim-dadbod-ui")
 Plug("kristijanhusak/vim-dadbod-completion")
@@ -127,5 +127,6 @@ Plug("tpope/vim-commentary")
 Plug("gennaro-tedesco/nvim-jqx")
 Plug("manoelcampos/xml2lua")
 Plug("lunarmodules/lua-mimetypes")
+Plug("laytan/cloak.nvim")
 
 vim.call("plug#end")
