@@ -37,6 +37,7 @@ dependencies:
     dnf:
       - git-core
       - dnf-command(config-manager)
+      - perl-core
       - oxygen-cursor-themes
       - python3-virtualenv
       - wayland-devel
@@ -49,6 +50,7 @@ dependencies:
     apt-get:
       - git
       - git-extras
+      - perl
       - python3-venv
       - libwayland-bin
       - pkg-config
@@ -142,6 +144,10 @@ dependencies:
       - libxcb-imdkit-dev
       - libxcb-keysyms1-dev
   bumblebee:
+    common:
+      - python3-xkbcommon
+      - python3-netifaces
+      - python3-psutil
     dnf:
       - python3-devel
       - python3-tkinter

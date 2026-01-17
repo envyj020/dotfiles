@@ -574,15 +574,13 @@ base::bumblebee() {
 
     local -ra PIP_PACKAGES=(
         bumblebee-status
-        psutil
         xkbgroup
-        netifaces
     )
 
     BUMBLEBEE_PACKAGES=$(common::dependencies_from "bumblebee")
     sudo $PKG_MANAGER install -y $BUMBLEBEE_PACKAGES &>/dev/null
 
-    pip install --user "${PIP_PACKAGES[@]}" &>/dev/null
+    pip install --user "${PIP_PACKAGES[@]}" --break-system-packages &>/dev/null
     ln -sfn "$I3_CONFIG_DIR/i3bar/bumblebee-status" "$I3_CURRENT_STATUS_BAR_SYMLINK"
 
     common::stop_spinner
