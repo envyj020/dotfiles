@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# Dependencies:
+# Common: ImageMagick: https://github.com/ImageMagick/ImageMagick
+# Xorg: i3lock-color: https://github.com/Raymo111/i3lock-color
+# Wayland: swayidle: https://github.com/swaywm/swayidle, grim: https://git.sr.ht/~emersion/grim
+
 set -ueo pipefail
 
 REPOSITORY_ROOTDIR=$(realpath "$(dirname -- "${BASH_SOURCE[0]}")/../..")
@@ -54,7 +59,7 @@ case $XDG_SESSION_TYPE in
 "$X11_SESSION_TYPE")
     require_cmd "import"
     SESSION_TYPE="$X11_SESSION_TYPE"
-    SCREENSHOT_CMD=(import -silent -window root "$SCREENSHOT")
+    SCREENSHOT_CMD=(magick import -silent -window root "$SCREENSHOT")
     ;;
 *)
     log::error "Unknown XDG_SESSION_TYPE"
