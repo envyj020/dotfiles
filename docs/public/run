@@ -3,6 +3,7 @@
 set -eu
 
 {
+    : "${XDG_CONFIG_HOME:=$HOME/.config}"
     : "${XDG_CACHE_HOME:=$HOME/.cache}"
     : "${GITHUB_TOKEN:=}"
 
@@ -14,21 +15,22 @@ set -eu
     readonly GITHUB_BRANCH=main
 
     readonly BOLD='\033[1m'
+    readonly GREEN='\033[1;32m'
     readonly RED='\033[1;31m'
     readonly BLUE='\033[1;36m'
     readonly YELLOW='\033[0;33m'
     readonly NC='\033[0m'
 
     info() {
-        printf "${BLUE}INFO:${NC} ${BOLD}%b${NC}\n" "$*"
+        printf "${BLUE}🛈 INFO:${NC} ${BOLD}%b${NC}\n" "$*"
     }
 
     warn() {
-        printf "${YELLOW}WARNING:${NC} ${BOLD}%b${NC}\n" "$*"
+        printf "${YELLOW}‼ WARNING:${NC} ${BOLD}%b${NC}\n" "$*"
     }
 
     error() {
-        printf "${RED}ERROR:${NC} ${BOLD}%s${NC}\n" "$*" >&2
+        printf "${RED}✖ ERROR:${NC} ${BOLD}%b${NC}\n" "$*" >&2
         exit 1
     }
 
@@ -53,7 +55,7 @@ set -eu
         OS_NAME=$(awk -F'=' '/^ID=/ {print $2}' /etc/os-release)
         case $OS_NAME in
         fedora | ubuntu | debian) return 0 ;;
-        *) return 1 ;;
+        *) error "Your OS distribution: $OS_NAME is not supported" ;;
         esac
     }
 
@@ -74,11 +76,12 @@ set -eu
     require_token() {
         [ -n "$GITHUB_TOKEN" ] && return 0
         separator "=" 80
-        warn "${YELLOW}⚠${NC} ${BOLD}MISSING ${RED}GITHUB_TOKEN${NC}"
-        info "It looks like you have not exported GITHUB_TOKEN, please note"
-        info "github rate limits will likely cause the bootstrap process to crash."
-        info "Please run ${BLUE}export GITHUB_TOKEN=\$(<\"\$HOME/.GITHUB_TOKEN\")${NC}${BOLD} and execute again this script"
-        info "More info can be found here: https://envyj020.github.io/dotfiles/guides/installation/#prerequisites"
+        warn "${BOLD}MISSING ${RED}GITHUB_TOKEN${NC}"
+        info "It looks like you have not exported your ${BLUE}GITHUB_TOKEN${NC}, ${BOLD}please note"
+        info "Github API rate limits will likely cause the bootstrap process to crash."
+        info "Please run: ${GREEN}export GITHUB_TOKEN=\$(<\"\$HOME/.GITHUB_TOKEN\")${NC} ${BOLD}and execute"
+        info "again this script. Find more information at the link below:"
+        info "${BLUE}https://envyj020.github.io/dotfiles/guides/installation/#prerequisites${NC}"
         separator "=" 80
 
         info "Press [c] to continue anyway or [e] to exit:"
@@ -86,14 +89,13 @@ set -eu
             read -r choice
             case $choice in
             [cC])
-                info "Skipping $GITHUB_OWNER/$GITHUB_REPOSITORY default wallpaper"
                 return 0
                 ;;
             [eE])
                 error "Bootstrap aborted."
                 ;;
             *)
-                echo "Please press [y] to save it or [s] to skip."
+                echo -e "${BOLD}Please press [c] to continue or [e] to exit.${NC}"
                 ;;
             esac
         done
@@ -102,8 +104,8 @@ set -eu
 
     ask_background() {
         separator "=" 80
-        info "Do you want to include the default wallpaper from ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC}"
-        warn "If not, you must save yours under \$HOME/Pictures/wallpaper.jpg"
+        info "Do you want to include the default wallpaper from ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}?${NC}"
+        warn "If not, you must save yours under ${BLUE}\$HOME/Pictures/wallpaper.jpg${NC}"
         separator "=" 80
 
         info "Press [y] to add or [s] to skip: "
@@ -111,18 +113,18 @@ set -eu
             read -r choice
             case $choice in
             [sS])
-                info "Skipping $GITHUB_OWNER/$GITHUB_REPOSITORY default wallpaper"
+                info "Skipping $GITHUB_OWNER/$GITHUB_REPOSITORY background."
                 return 0
                 ;;
             [yY])
                 mkdir -p "$WALLPAPER_DIR"
                 make init && cp -f static/wallpaper.jpg "$WALLPAPER_DIR"
                 info "Saved successfully! If you want to set your own, remember"
-                info "to replace: \$HOME/Pictures/wallpaper.jpg"
+                info "to replace: ${BLUE}\$HOME/Pictures/wallpaper.jpg${NC}"
                 return 0
                 ;;
             *)
-                echo "Please press [y] to save it or [s] to skip."
+                echo -e "${BOLD}Please press [y] to save it or [s] to skip.${NC}"
                 ;;
             esac
         done
@@ -131,8 +133,8 @@ set -eu
     ask_base() {
         separator "=" 80
         info "You are about to install ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC}${BOLD} package baseline."
-        info "This process requires temporary ${RED}sudo${NC}${BOLD} privileges and will prompt"
-        info "for manual configuration preferences."
+        info "This process requires temporary ${RED}sudo${NC}${BOLD} privileges and"
+        info "will ask for your preferences."
         separator "=" 80
 
         info "Press [c] to continue, [s] to skip or [e] to exit: "
@@ -148,11 +150,10 @@ set -eu
                 ;;
             [cC])
                 make base || error "Failed to run 'make base'"
-                make mise || error "Failed to run 'make mise'"
                 return 0
                 ;;
             *)
-                echo "Please press [c] to continue, [s] to skip or [e] to exit."
+                echo -e "${BOLD}Please press [c] to continue, [s] to skip or [e] to exit.${NC}"
                 ;;
             esac
         done
@@ -161,9 +162,9 @@ set -eu
     ask_stow() {
         separator "=" 80
         info "Do you want to include symbolic links from ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC}"
-        info "to your ${YELLOW}\$HOME${NC} and ${YELLOW}\$HOME/.config${NC}${BOLD} directories."
+        info "to your ${YELLOW}\$HOME${NC} and ${YELLOW}\$HOME/.config${NC}${BOLD} directories?"
         warn "Existing files at these locations may cause conflicts and"
-        warn "will require to rename or move them prior to rerun this task"
+        warn "will require to rename or move them prior to rerun this task."
         separator "=" 80
 
         info "Press [c] to continue or [s] to skip: "
@@ -171,7 +172,7 @@ set -eu
             read -r choice
             case $choice in
             [sS])
-                info "Skipping $GITHUB_OWNER/$GITHUB_REPOSITORY symlinks."
+                info "Skipping $GITHUB_OWNER/$GITHUB_REPOSITORY stow."
                 return 0
                 ;;
             [cC])
@@ -179,13 +180,45 @@ set -eu
                 return 0
                 ;;
             *)
-                echo "Please press [c] to continue or [s] to skip."
+                echo -e "${BOLD}Please press [c] to continue or [s] to skip.${NC}"
+                ;;
+            esac
+        done
+    }
+
+    ask_mise_neovim() {
+        separator "=" 80
+        info "Let's finish the bootstrap process by installing ${BLUE}mise${NC} ${BOLD}system-wide"
+        info "dependencies and setup ${BLUE}Neovim${NC}. ${BOLD}It might take a while"
+        info "but wait for the task to finish before opening the editor."
+        separator "=" 80
+
+        info "Press [c] to continue or [s] to skip: "
+        while true; do
+            read -r choice
+            case $choice in
+            [sS])
+                info "Skipping $GITHUB_OWNER/$GITHUB_REPOSITORY mise and neovim hooks."
+                return 0
+                ;;
+            [cC])
+                if [ ! -s "$XDG_CONFIG_HOME/mise/config.tomls" ] || [ ! -s "$XDG_CONFIG_HOME/nvim/init.lua" ]; then
+                    error "Oops! You must symlink ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC} ${BOLD}to proceed."
+                fi
+                make mise || error "Failed to run 'make mise'"
+                make neovim || error "Failed to run 'make neovim'"
+                return 0
+                ;;
+            *)
+                echo -e "${BOLD}Please press [c] to continue or [s] to skip.${NC}"
                 ;;
             esac
         done
     }
 
     main() {
+        require_os
+        require_dependencies
         mkdir -p "$XDG_CACHE_HOME"
         checkout \
             "$GITHUB_BASE_URL/$GITHUB_OWNER/$GITHUB_REPOSITORY.git" \
@@ -196,11 +229,11 @@ set -eu
             ask_background
             ask_base
             ask_stow
-            info "Installation complete! You may need to restart your shell or run: ${BLUE}source ~/.bashrc${NC}"
+            ask_mise_neovim
+            info "Installation complete! You may need to restart your shell"
+            info "with: ${GREEN}exec \$SHELL -i${NC} ${BOLD}or run: ${GREEN}source ~/.bashrc${NC}"
         )
     }
 
-    require_os
-    require_dependencies
     main
 }
