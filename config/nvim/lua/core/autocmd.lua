@@ -7,7 +7,11 @@ local group = augroup("AwesomeNeovim", { clear = true })
 autocmd("CursorHold", {
     group = group,
     pattern = "*",
-    command = "checktime",
+    callback = function()
+        if vim.fn.getcmdwintype() == "" and vim.bo.buftype == "" and vim.fn.mode() == "n" then
+            vim.cmd("checktime")
+        end
+    end,
 })
 
 -- Disables comment wrapping
@@ -71,8 +75,23 @@ autocmd("LspAttach", {
         map("n", "<Leader>sde", command("Trouble", "lsp_definitions", "toggle"), keymap_opts("LSP definitions", opts))
         map("n", "<Leader>sr", command("Trouble", "lsp_references", "toggle"), keymap_opts("LSP references", opts))
         map("n", "<Leader>sff", command("Trouble", "symbols", "toggle"), keymap_opts("LSP document symbols", opts))
-        map("n", "<Leader>sic", command("Trouble", "lsp_incoming_calls", "toggle"), keymap_opts("LSP incoming calls", opts))
-        map("n", "<Leader>soc", command("Trouble", "lsp_outgoing_calls", "toggle"), keymap_opts("LSP outgoing calls", opts))
-        map("n", "<Leader>si", command("Trouble", "lsp_implementations", "toggle"), keymap_opts("LSP implementations", opts))
+        map(
+            "n",
+            "<Leader>sic",
+            command("Trouble", "lsp_incoming_calls", "toggle"),
+            keymap_opts("LSP incoming calls", opts)
+        )
+        map(
+            "n",
+            "<Leader>soc",
+            command("Trouble", "lsp_outgoing_calls", "toggle"),
+            keymap_opts("LSP outgoing calls", opts)
+        )
+        map(
+            "n",
+            "<Leader>si",
+            command("Trouble", "lsp_implementations", "toggle"),
+            keymap_opts("LSP implementations", opts)
+        )
     end,
 })
