@@ -90,4 +90,5 @@ require("mason-lspconfig").setup({
 
 require("mason-tool-installer").setup({
     ensure_installed = MASON_INSTALLER_PACKAGES,
+    run_on_start = #vim.api.nvim_list_uis() > 0,
 })
