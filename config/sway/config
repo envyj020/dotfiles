@@ -1,5 +1,5 @@
 # reference: man 5 sway
-# https://envyj020.github.io/dotfiles/keybindings/i3
+# https://envyj020.github.io/dotfiles/keybindings/wm
 
 set $font JetBrainsMono NF
 
