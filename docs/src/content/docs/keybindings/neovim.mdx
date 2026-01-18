@@ -10,9 +10,16 @@ import { Aside } from "@astrojs/starlight/components";
 
 A comprehensive reference of all custom keybindings configured in Neovim.
 
-<Aside icon="vim" title="Neovim Leader Key: <Space>">
+<Aside icon="vim" title="Leader Key: <Space>">
   Please note that many of the keybindings listed below reference actions or
   commands provided by third party extensions.
+</Aside>
+
+<Aside icon="vim" type="tip" title="What to expect">
+  This setup follows the Tab pages as Viewports philosophy. Instead of using the
+  traditional bufferline to manage files, It uses tabs to scope window layouts
+  in order to have multiple splits per tab and switch between different "views"
+  without cluttering the screen with 50 open file labels.
 </Aside>
 
 <div class="keybindings-page">
@@ -54,7 +61,7 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | ------------- | -------------- | ------------------------------- |
 | `<Leader>doc` | Normal, Visual | Create doc signature annotation |
 | `<Leader>cc`  | Normal, Visual | Toggle comment                  |
-| `<Leader>cb`  | Normal, Visual | Comment block                   |
+| `<Leader>cb`  | Normal, Visual | Toggle comment block            |
 
 ### Mutations
 
@@ -67,31 +74,31 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 
 ### Folding
 
-| Key | Mode                             | Description            |
-| --- | -------------------------------- | ---------------------- |
-| `¨` | Normal, Insert, Operator, Visual | Create and toggle fold |
+| Key | Mode                             | Description           |
+| --- | -------------------------------- | --------------------- |
+| `¨` | Normal, Insert, Operator, Visual | Create or toggle fold |
 
 ### Lines
 
-| Key       | Mode           | Description              |
-| --------- | -------------- | ------------------------ |
-| `<Tab>`   | Normal, Visual | Indent                   |
-| `<S-Tab>` | Normal, Visual | Unindent                 |
-| `<A-k>`   | Normal, Visual | Move line/selection up   |
-| `<A-j>`   | Normal, Visual | Move line/selection down |
+| Key       | Mode           | Description      |
+| --------- | -------------- | ---------------- |
+| `<Tab>`   | Normal, Visual | Indent           |
+| `<S-Tab>` | Normal, Visual | Unindent         |
+| `<A-k>`   | Normal, Visual | Move line/s up   |
+| `<A-j>`   | Normal, Visual | Move line/s down |
 
 ## Buffer
 
 ### Navigation
 
-| Key            | Mode              | Description       |
-| -------------- | ----------------- | ----------------- |
-| `<Ctrl-Down>`  | Normal            | Previous buffer   |
-| `<Ctrl-Up>`    | Normal            | Next buffer       |
-| `{n}k`         | Normal            | Move up n lines   |
-| `{n}j`         | Normal            | Move down n lines |
-| `<Shift-Up>`   | Normal, Visual, X | Scroll up         |
-| `<Shift-Down>` | Normal, Visual, X | Scroll down       |
+| Key            | Mode              | Description         |
+| -------------- | ----------------- | ------------------- |
+| `<Ctrl-Down>`  | Normal            | Previous buffer     |
+| `<Ctrl-Up>`    | Normal            | Next buffer         |
+| `{n}k`         | Normal            | Move up `n` lines   |
+| `{n}j`         | Normal            | Move down `n` lines |
+| `<Shift-Up>`   | Normal, Visual, X | Scroll up           |
+| `<Shift-Down>` | Normal, Visual, X | Scroll down         |
 
 ### Management
 
@@ -162,7 +169,7 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | `<Leader>sra`        | Normal | Search \*            |
 | `<Leader>sde`        | Normal | Definitions          |
 | `<Leader>sr`         | Normal | References           |
-| `<Leader>sff`        | Normal | Document symbols     |
+| `<Leader>sff`        | Normal | Symbols              |
 | `<Leader>sic`        | Normal | Incoming calls       |
 | `<Leader>soc`        | Normal | Outgoing calls       |
 | `<Leader>si`         | Normal | Implementations      |
@@ -173,12 +180,12 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 
 ### Diagnostics
 
-| Key          | Mode   | Description             |
-| ------------ | ------ | ----------------------- |
-| `<Leader>sd` | Normal | Buffer diagnostics      |
-| `<Leader>ee` | Normal | Show currect diagnostic |
-| `<Ctrl-e>`   | Normal | Next diagnostic         |
-| `<Ctrl-p>`   | Normal | Previous diagnostic     |
+| Key          | Mode   | Description              |
+| ------------ | ------ | ------------------------ |
+| `<Leader>sd` | Normal | Show Buffer diagnostics  |
+| `<Leader>ee` | Normal | Popup current diagnostic |
+| `<Ctrl-e>`   | Normal | Next diagnostic          |
+| `<Ctrl-p>`   | Normal | Previous diagnostic      |
 
 ## Refactor
 
@@ -249,7 +256,7 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | `<Leader>so` | Normal | Recent files     |
 | `<Leader>sb` | Normal | Search buffers   |
 
-## YAML Schema
+## YAML
 
 | Key           | Mode   | Description                  |
 | ------------- | ------ | ---------------------------- |
