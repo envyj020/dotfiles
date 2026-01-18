@@ -79,25 +79,6 @@ map("n", "<Tab>n", command("tabnew"), keymap_opts("Create a new tab"))
 map("n", "<Tab>q", command("tabclose"), keymap_opts("Close current tab"))
 map("n", "<Tab>w", command("wa"), keymap_opts("Save *"))
 
--- LSP Signature Navigation
-map("n", "<C-S-Left>", vim.lsp.buf.definition, keymap_opts("Go to definition"))
-map("n", "<C-S-Right>", vim.lsp.buf.declaration, keymap_opts("Go to declaration"))
-map("i", "<C-k>", vim.lsp.buf.signature_help, keymap_opts("Show signature definition"))
-map("n", "K", vim.lsp.buf.hover, keymap_opts("Show signature documentation"))
-
--- LSP Diagnostics
-map("n", "<Leader>ee", function()
-    vim.diagnostic.open_float({ scope = "line" })
-end, keymap_opts("Show line diagnostics"))
-
-map("n", "<C-e>", function()
-    vim.diagnostic.jump({ count = 1, float = true })
-end, keymap_opts("Next diagnostic"))
-
-map("n", "<C-p>", function()
-    vim.diagnostic.jump({ count = -1, float = true })
-end, keymap_opts("Previous diagnostic"))
-
 -- Commentaries
 map({ "n", "v" }, "<Leader>doc", command("Neogen"), keymap_opts("Create doc signature annotation"))
 map({ "n", "v" }, "<Leader>cc", command("Commentary"), keymap_opts("Toggle comment"))
@@ -135,20 +116,6 @@ map("n", "<Leader>sb", builtin.buffers, keymap_opts("Search buffers"))
 map("n", "<Leader>gs", builtin.git_status, keymap_opts("Git status"))
 map("n", "<Leader>gc", builtin.git_commits, keymap_opts("Git commits"))
 map("n", "<Leader>yr", require("schema-companion.context").match, keymap_opts("YAML Schema match"))
-
--- LSP
-
-map("n", "<Leader>sa", vim.lsp.buf.code_action, keymap_opts("Code actions"))
-
-map("n", "<Leader>sd", command("Trouble", "diagnostics", "toggle"), keymap_opts("Search diagnostics"))
-map("n", "<Leader>sra", command("Trouble", "lsp", "toggle"), keymap_opts("LSP ref,def,dec,impl"))
-map("n", "<Leader>sde", command("Trouble", "lsp_definitions", "toggle"), keymap_opts("LSP definitions"))
-map("n", "<Leader>sr", command("Trouble", "lsp_references", "toggle"), keymap_opts("LSP references"))
-map("n", "<Leader>sff", command("Trouble", "symbols", "toggle"), keymap_opts("LSP document symbols"))
-
-map("n", "<Leader>sic", command("Trouble", "lsp_incoming_calls", "toggle"), keymap_opts("LSP incoming calls"))
-map("n", "<Leader>soc", command("Trouble", "lsp_outgoing_calls", "toggle"), keymap_opts("LSP outgoing calls"))
-map("n", "<Leader>si", command("Trouble", "lsp_implementations", "toggle"), keymap_opts("LSP implementations"))
 
 -- YAML Schema picker
 map("n", "<Leader>syc", telescope.extensions.schema_companion.select_schema, keymap_opts("Pick YAML schema"))
