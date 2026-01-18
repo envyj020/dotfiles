@@ -27,7 +27,6 @@ command_exists 'kubectl' 'yq' && {
 command_exists 'asdf' && source <(asdf completion bash)
 command_exists 'task' && source <(task --completion bash)
 command_exists 'helm' && source <(helm completion bash)
-command_exists 'krew' && source <(krew completion bash)
 command_exists 'yq' && source <(yq completion bash)
 command_exists 'bob' && source <(bob complete bash)
 command_exists 'fzf' && source <(fzf --bash)
