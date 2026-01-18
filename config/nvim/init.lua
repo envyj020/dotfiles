@@ -11,7 +11,10 @@ if not NVIM_PLUG_INSTALLED then
         NVIM_PLUG_URL,
     })
     vim.cmd("source " .. NVIM_PLUG_DESTINATION)
-    vim.cmd("autocmd VimEnter * PlugInstall --sync | source $MYVIMRC")
+
+    if #vim.api.nvim_list_uis() > 0 then
+        vim.cmd("autocmd VimEnter * PlugInstall --sync | source $MYVIMRC")
+    end
 end
 
 require("core.options")
