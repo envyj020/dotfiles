@@ -64,11 +64,18 @@ you will need to provide your own preferences.
       2. Install the OS baseline packages:
           ```sh
           make base
-          make mise
           ```
       3. Symlink dotfiles settings:
           ```sh
           make stow
+          ```
+      4. Install mise dependencies:
+          ```sh
+          make mise
+          ```
+      5. Bootstrap Neovim:
+          ```sh
+          make neovim
           ```
     </Steps>
   </TabItem>
