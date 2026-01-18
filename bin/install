@@ -217,13 +217,13 @@ base::neovim() {
 
     local -r LATEST_BOB_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/MordechaiHadad/bob/releases/latest" | jq -r '.tag_name')
     local -r BOB_RELEASE_URL="https://github.com/MordechaiHadad/bob/releases/download/$LATEST_BOB_RELEASE_VERSION/bob-$OS-$(uname -m).zip"
-    local -r BOB_PACKAGE_FILENAME=$(basename $BOB_RELEASE_URL)
+    local -r BOB_ARCHIVE_NAME=$(basename $BOB_RELEASE_URL)
 
     [[ $(command -v bob) ]] || {
         curl -fsSLO --output-dir "$SANDBOX" "$BOB_RELEASE_URL"
-        unzip -qq "$SANDBOX/$BOB_PACKAGE_FILENAME" -d "$SANDBOX"
-        install "$SANDBOX/${BOB_PACKAGE_FILENAME%.*}/bob" "$XDG_BIN_HOME/bob"
-        bob use stable &>/dev/null && rm -rf "$XDG_CONFIG_HOME/bob/config.json"
+        unzip -qq "$SANDBOX/$BOB_ARCHIVE_NAME" -d "$SANDBOX"
+        install "$SANDBOX/${BOB_ARCHIVE_NAME%.*}/bob" "$XDG_BIN_HOME/bob"
+        bob use stable &>/dev/null && rm -f "$XDG_CONFIG_HOME/bob/config.json"
     }
 
     local -r COLORSCRIPT_REPOSITORY_URL=https://gitlab.com/dwt1/shell-color-scripts.git
@@ -633,18 +633,18 @@ base::rofi() {
     }
 
     local -r LATEST_ROFI_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/davatorium/rofi/releases/latest" | jq -r '.tag_name')
-    local -r ROFI_RELEASE_URL="https://github.com/davatorium/rofi/releases/download/$LATEST_ROFI_RELEASE_VERSION/rofi-$LATEST_ROFI_RELEASE_VERSION.tar.gz"
-    local -r ROFI_PACKAGE_FILENAME=$(basename $ROFI_RELEASE_URL)
+    local -r ROFI_ARCHIVE_DOWNLOAD_URL="https://github.com/davatorium/rofi/releases/download/$LATEST_ROFI_RELEASE_VERSION/rofi-$LATEST_ROFI_RELEASE_VERSION.tar.gz"
+    local -r ROFI_ARCHIVE_NAME=$(basename $ROFI_ARCHIVE_DOWNLOAD_URL)
 
     (
         ROFI_PACKAGES=$(common::dependencies_from "rofi")
         sudo $PKG_MANAGER install -y $ROFI_PACKAGES &>/dev/null
 
-        curl -fsSL $ROFI_RELEASE_URL | tar -xzf - -C $SANDBOX || {
-            log:error "Couldn't download and extract $ROFI_PACKAGE_FILENAME archive"
+        curl -fsSL $ROFI_ARCHIVE_DOWNLOAD_URL | tar -xzf - -C $SANDBOX || {
+            log:error "Couldn't download and extract $ROFI_ARCHIVE_NAME archive"
         }
 
-        cd "$SANDBOX/$(basename $ROFI_PACKAGE_FILENAME .tar.gz)"
+        cd "$SANDBOX/${ROFI_ARCHIVE_NAME/%.tar.gz/}"
 
         meson setup build --prefix "$(dirname $XDG_BIN_HOME)" &>/dev/null
         ninja -C build &>/dev/null && ninja -C build install &>/dev/null || {
@@ -763,13 +763,13 @@ cmd::gvm() {
     common::start_spinner
 
     local -r GO_VERSION=1.24.10
-    local -r GO_REMOTE_DOWNLOAD_URL="https://go.dev/dl/go${GO_VERSION}.${OS}-${ARCH}.tar.gz"
-    local -r GO_FILENAME=$(basename $GO_REMOTE_DOWNLOAD_URL)
+    local -r GO_ARCHIVE_DOWNLOAD_URL="https://go.dev/dl/go${GO_VERSION}.${OS}-${ARCH}.tar.gz"
+    local -r GO_ARCHIVE_NAME=$(basename $GO_ARCHIVE_DOWNLOAD_URL)
     local -r GVM_INSTALLER_URL="$RAW_GITHUB_URL/moovweb/gvm/master/binscripts/gvm-installer"
 
     [[ $(command -v go) ]] || {
-        curl -fsSL $GO_REMOTE_DOWNLOAD_URL | tar -C $XDG_BIN_HOME -xzf - || {
-            log:error "Couldn't download and extract $GO_FILENAME archive"
+        curl -fsSL $GO_ARCHIVE_DOWNLOAD_URL | tar -C $XDG_BIN_HOME -xzf - || {
+            log:error "Couldn't download and extract $GO_ARCHIVE_NAME archive"
         }
     }
 
@@ -875,9 +875,9 @@ base::stow() {
     }
 
     local -r STOW_VERSION=2.4.1
-    local -r STOW_SOURCE_DOWNLOAD_URL="http://ftp.gnu.org/gnu/stow/stow-$STOW_VERSION.tar.gz"
-    local -r STOW_SOURCE_FILENAME=$(basename $STOW_SOURCE_DOWNLOAD_URL)
-    local -r STOW_EXTRACTED_FILENAME="${STOW_SOURCE_FILENAME//.tar.gz/}"
+    local -r STOW_ARCHIVE_DOWNLOAD_URL="http://ftp.gnu.org/gnu/stow/stow-$STOW_VERSION.tar.gz"
+    local -r STOW_ARCHIVE_NAME=$(basename $STOW_ARCHIVE_DOWNLOAD_URL)
+    local -r STOW_UNARCHIVED_DIR="${STOW_ARCHIVE_NAME/%.tar.gz/}"
     local -r STOW_GPG_SIGNATURE_DOWNLOAD_URL="http://ftp.gnu.org/gnu/stow/stow-$STOW_VERSION.tar.gz.sig"
     local -r STOW_GPG_SIGNATURE_FILENAME=$(basename $STOW_GPG_SIGNATURE_DOWNLOAD_URL)
     local -r GNU_GPG_KEYRING_DOWNLOAD_URL="http://ftp.gnu.org/gnu/gnu-keyring.gpg"
@@ -886,19 +886,19 @@ base::stow() {
     sudo $PKG_MANAGER install -y $STOW_PACKAGES &>/dev/null
 
     curl -fsS $GNU_GPG_KEYRING_DOWNLOAD_URL | gpg --import &>/dev/null
-    curl -fsSLO --output-dir $SANDBOX $STOW_SOURCE_DOWNLOAD_URL
+    curl -fsSLO --output-dir $SANDBOX $STOW_ARCHIVE_DOWNLOAD_URL
     curl -fsSLO --output-dir $SANDBOX $STOW_GPG_SIGNATURE_DOWNLOAD_URL
 
-    gpg --verify "$SANDBOX/$STOW_GPG_SIGNATURE_FILENAME" "$SANDBOX/$STOW_SOURCE_FILENAME" || {
+    gpg --verify "$SANDBOX/$STOW_GPG_SIGNATURE_FILENAME" "$SANDBOX/$STOW_ARCHIVE_NAME" || {
         log::error "Stow GPG signature couldn't be verified."
     }
     (
-        tar -xzf "$SANDBOX/$STOW_SOURCE_FILENAME" -C $SANDBOX && cd $SANDBOX/$STOW_EXTRACTED_FILENAME || {
-            log:error "Couldn't extract $STOW_EXTRACTED_FILENAME archive"
+        tar -xzf "$SANDBOX/$STOW_ARCHIVE_NAME" -C $SANDBOX && cd $SANDBOX/$STOW_UNARCHIVED_DIR || {
+            log:error "Couldn't extract $STOW_ARCHIVE_NAME archive"
         }
 
         ./configure --prefix="$(basename $XDG_BIN_HOME)" && make install &>/dev/null || {
-            log:error "Couldn't compile and install $STOW_EXTRACTED_FILENAME"
+            log:error "Couldn't compile and install $STOW_UNARCHIVED_DIR"
         }
     )
 
@@ -933,22 +933,22 @@ cmd::asdf() {
     local -r ASDF_LATEST_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/asdf-vm/asdf/releases/latest" | jq -r '.tag_name')
     local -r ASDF_RELEASE_BASE_URL="https://github.com/asdf-vm/asdf/releases/download/$ASDF_LATEST_RELEASE_VERSION"
     # shellcheck disable=SC2031
-    local -r ASDF_BIN_DOWNLOAD_URL="$ASDF_RELEASE_BASE_URL/asdf-${ASDF_LATEST_RELEASE_VERSION}-$OS-$ARCH.tar.gz"
-    local -r ASDF_TAR_FILENAME=$(basename $ASDF_BIN_DOWNLOAD_URL)
+    local -r ASDF_ARCHIVE_DOWNLOAD_URL="$ASDF_RELEASE_BASE_URL/asdf-${ASDF_LATEST_RELEASE_VERSION}-$OS-$ARCH.tar.gz"
+    local -r ASDF_ARCHIVE_NAME=$(basename $ASDF_ARCHIVE_DOWNLOAD_URL)
     # shellcheck disable=SC2031
     local -r ASDF_MD5_DOWNLOAD_URL="$ASDF_RELEASE_BASE_URL/asdf-${ASDF_LATEST_RELEASE_VERSION}-$OS-$ARCH.tar.gz.md5"
     local -r ASDF_MD5_FILENAME=$(basename $ASDF_MD5_DOWNLOAD_URL)
 
-    curl -fsSLO --output-dir $SANDBOX $ASDF_BIN_DOWNLOAD_URL
+    curl -fsSLO --output-dir $SANDBOX $ASDF_ARCHIVE_DOWNLOAD_URL
     curl -fsSLO --output-dir $SANDBOX $ASDF_MD5_DOWNLOAD_URL
 
-    EXPECTED_MD5_CHECKSUM=$(cat $SANDBOX/$ASDF_MD5_FILENAME)
-    GENERATED_MD5_CHECKSUM=$(md5sum $SANDBOX/$ASDF_TAR_FILENAME | cut -d' ' -f1)
+    ASDF_EXPECTED_MD5_CHECKSUM=$(<"$SANDBOX/$ASDF_MD5_FILENAME")
+    ASDF_ARCHIVE_MD5_CHECKSUM=$(md5sum $SANDBOX/$ASDF_ARCHIVE_NAME | cut -d' ' -f1)
 
-    [[ $GENERATED_MD5_CHECKSUM == "$EXPECTED_MD5_CHECKSUM" ]] || {
-        log::error "$ASDF_TAR_FILENAME checksum verification failed."
+    [[ $ASDF_ARCHIVE_MD5_CHECKSUM == "$ASDF_EXPECTED_MD5_CHECKSUM" ]] || {
+        log::error "$ASDF_ARCHIVE_NAME checksum verification failed."
     }
-    tar -xzf "$SANDBOX/$ASDF_TAR_FILENAME" -C $SANDBOX
+    tar -xzf "$SANDBOX/$ASDF_ARCHIVE_NAME" -C $SANDBOX
     install $SANDBOX/asdf $XDG_BIN_HOME/asdf
 
     common::stop_spinner
@@ -967,20 +967,20 @@ cmd::cloudlens() {
 
     local -r CLOUDLENS_VERSION=$(curl -s "https://api.github.com/repos/one2nc/cloudlens/releases/latest" | jq -r '.tag_name')
     local -r CLOUDLENS_REMOTE_CHECKSUMS="https://github.com/one2nc/cloudlens/releases/download/$CLOUDLENS_VERSION/checksums.txt"
-    local -r CLOUDLENS_URL_BIN="https://github.com/one2nc/cloudlens/releases/download/$CLOUDLENS_VERSION/cloudlens_${CLOUDLENS_VERSION/v/}_${OS}_${ARCH}.tar.gz"
+    local -r CLOUDLENS_ARCHIVE_DOWNLOAD_URL="https://github.com/one2nc/cloudlens/releases/download/$CLOUDLENS_VERSION/cloudlens_${CLOUDLENS_VERSION/v/}_${OS}_${ARCH}.tar.gz"
     local -r CLOUDLENS_CHECKSUMS_FILENAME=$(basename $CLOUDLENS_REMOTE_CHECKSUMS)
-    local -r CLOUDLENS_BIN_FILENAME=$(basename $CLOUDLENS_URL_BIN)
+    local -r CLOUDLENS_ARCHIVE_NAME=$(basename $CLOUDLENS_ARCHIVE_DOWNLOAD_URL)
 
     curl -fsSLO --output-dir $SANDBOX $CLOUDLENS_REMOTE_CHECKSUMS
-    curl -fsSLO --output-dir $SANDBOX $CLOUDLENS_URL_BIN
+    curl -fsSLO --output-dir $SANDBOX $CLOUDLENS_ARCHIVE_DOWNLOAD_URL
 
-    local -r CLOUDLENS_CHECKSUM=$(grep "${CLOUDLENS_BIN_FILENAME/v/}" "$SANDBOX/$CLOUDLENS_CHECKSUMS_FILENAME" | cut -d' ' -f1)
+    local -r CLOUDLENS_CHECKSUM=$(grep "${CLOUDLENS_ARCHIVE_NAME/v/}" "$SANDBOX/$CLOUDLENS_CHECKSUMS_FILENAME" | cut -d' ' -f1)
 
-    echo $CLOUDLENS_CHECKSUM $SANDBOX/$CLOUDLENS_BIN_FILENAME | sha256sum --check &>/dev/null || {
-        log::error "$CLOUDLENS_BIN_FILENAME checksum verification failed."
+    echo $CLOUDLENS_CHECKSUM $SANDBOX/$CLOUDLENS_ARCHIVE_NAME | sha256sum --check &>/dev/null || {
+        log::error "$CLOUDLENS_ARCHIVE_NAME checksum verification failed."
     }
 
-    tar -xzf "$SANDBOX/$CLOUDLENS_BIN_FILENAME" -C $SANDBOX
+    tar -xzf "$SANDBOX/$CLOUDLENS_ARCHIVE_NAME" -C $SANDBOX
     install "$SANDBOX/cloudlens" "$XDG_BIN_HOME/cloudlens"
 
     common::stop_spinner
@@ -998,21 +998,21 @@ cmd::devbox() {
     }
 
     local -r DEVBOX_LATEST_VERSION=$(curl -s "https://api.github.com/repos/jetify-com/devbox/releases/latest" | jq -r '.tag_name')
-    local -r DEVBOX_RELEASE_URL="https://github.com/jetify-com/devbox/releases/download/$DEVBOX_LATEST_VERSION/devbox_${DEVBOX_LATEST_VERSION}_${OS}_${ARCH}.tar.gz"
+    local -r DEVBOX_ARCHIVE_DOWNLOAD_URL="https://github.com/jetify-com/devbox/releases/download/$DEVBOX_LATEST_VERSION/devbox_${DEVBOX_LATEST_VERSION}_${OS}_${ARCH}.tar.gz"
     local -r DEVBOX_CHECKSUMS_URL="https://github.com/jetify-com/devbox/releases/download/$DEVBOX_LATEST_VERSION/checksums.txt"
-    local -r DEVBOX_RELEASE_FILENAME=$(basename $DEVBOX_RELEASE_URL)
+    local -r DEVBOX_ARCHIVE_NAME=$(basename $DEVBOX_ARCHIVE_DOWNLOAD_URL)
     local -r DEVBOX_CHECKSUMS_FILENAME=$(basename $DEVBOX_CHECKSUMS_URL)
 
-    curl -fsSLO --output-dir $SANDBOX $DEVBOX_RELEASE_URL
+    curl -fsSLO --output-dir $SANDBOX $DEVBOX_ARCHIVE_DOWNLOAD_URL
     curl -fsSLO --output-dir $SANDBOX $DEVBOX_CHECKSUMS_URL
 
-    local -r DEVBOX_UPSTREAM_CHECKSUM=$(grep $DEVBOX_RELEASE_FILENAME $SANDBOX/$DEVBOX_CHECKSUMS_FILENAME | cut -d' ' -f1)
+    local -r DEVBOX_UPSTREAM_CHECKSUM=$(grep $DEVBOX_ARCHIVE_NAME $SANDBOX/$DEVBOX_CHECKSUMS_FILENAME | cut -d' ' -f1)
 
-    echo $DEVBOX_UPSTREAM_CHECKSUM $SANDBOX/$DEVBOX_RELEASE_FILENAME | sha256sum --check &>/dev/null || {
-        log::error "$DEVBOX_RELEASE_FILENAME checksum verification failed."
+    echo $DEVBOX_UPSTREAM_CHECKSUM $SANDBOX/$DEVBOX_ARCHIVE_NAME | sha256sum --check &>/dev/null || {
+        log::error "$DEVBOX_ARCHIVE_NAME checksum verification failed."
     }
 
-    tar -xzf $SANDBOX/$DEVBOX_RELEASE_FILENAME -C $SANDBOX
+    tar -xzf $SANDBOX/$DEVBOX_ARCHIVE_NAME -C $SANDBOX
     install "$SANDBOX/devbox" "$XDG_BIN_HOME/devbox"
 
     common::stop_spinner
@@ -1105,19 +1105,19 @@ kube::kubectl() {
     local -r KUBERLR_VERSION=$(curl -s https://api.github.com/repos/flavio/kuberlr/releases/latest | jq -r '.tag_name')
     local -r KUBERLR_SHA256_DOWNLOAD_URL="https://github.com/flavio/kuberlr/releases/download/$KUBERLR_VERSION/checksums.txt"
     local -r KUBERLR_SHA256_FILENAME=$(basename $KUBERLR_SHA256_DOWNLOAD_URL)
-    local -r KUBERLR_BIN_DOWNLOAD_URL="https://github.com/flavio/kuberlr/releases/download/$KUBERLR_VERSION/kuberlr_${KUBERLR_VERSION//v/}_${OS}_${ARCH}.tar.gz"
-    local -r KUBERLR_FILENAME=$(basename $KUBERLR_BIN_DOWNLOAD_URL)
+    local -r KUBERLR_ARCHIVE_DOWNLOAD_URL="https://github.com/flavio/kuberlr/releases/download/$KUBERLR_VERSION/kuberlr_${KUBERLR_VERSION//v/}_${OS}_${ARCH}.tar.gz"
+    local -r KUBERLR_ARCHIVE_NAME=$(basename $KUBERLR_ARCHIVE_DOWNLOAD_URL)
 
     curl -fsSLO --output-dir $SANDBOX $KUBERLR_SHA256_DOWNLOAD_URL
-    curl -fsSLO --output-dir $SANDBOX $KUBERLR_BIN_DOWNLOAD_URL
+    curl -fsSLO --output-dir $SANDBOX $KUBERLR_ARCHIVE_DOWNLOAD_URL
 
-    local -r KUBERLR_SHA256=$(grep $KUBERLR_FILENAME $SANDBOX/$KUBERLR_SHA256_FILENAME | cut -d' ' -f1)
-    echo $KUBERLR_SHA256 "$SANDBOX/$KUBERLR_FILENAME" | sha256sum --check --quiet || {
-        log::error "$KUBERLR_FILENAME checksum verification failed."
+    local -r KUBERLR_SHA256=$(grep $KUBERLR_ARCHIVE_NAME $SANDBOX/$KUBERLR_SHA256_FILENAME | cut -d' ' -f1)
+    echo $KUBERLR_SHA256 "$SANDBOX/$KUBERLR_ARCHIVE_NAME" | sha256sum --check --quiet || {
+        log::error "$KUBERLR_ARCHIVE_NAME checksum verification failed."
     }
 
-    tar -xzf "$SANDBOX/$KUBERLR_FILENAME" -C $SANDBOX >/dev/null
-    install "$SANDBOX/$(basename $KUBERLR_FILENAME .tar.gz)/kuberlr" "$XDG_BIN_HOME/kuberlr"
+    tar -xzf "$SANDBOX/$KUBERLR_ARCHIVE_NAME" -C $SANDBOX >/dev/null
+    install "$SANDBOX/${KUBERLR_ARCHIVE_NAME/%.tar.gz/}/kuberlr" "$XDG_BIN_HOME/kuberlr"
     ln -sfn $XDG_BIN_HOME/kuberlr $XDG_BIN_HOME/kubectl
 
     common::stop_spinner
@@ -1131,7 +1131,7 @@ kube::kube_prompt() {
 
     local -r KUBEPROMPT_LATEST_RELEASE_VERSION=$(curl -s "https://api.github.com/repos/c-bata/kube-prompt/releases/latest" | jq -r '.tag_name')
     local -r KUBEPROMPT_RELEASE_URL="https://github.com/c-bata/kube-prompt/releases/download/$KUBEPROMPT_LATEST_RELEASE_VERSION/kube-prompt_${KUBEPROMPT_LATEST_RELEASE_VERSION}_${OS}_${ARCH}.zip"
-    local -r KUBEPROMPT_FILENAME=$(basename $KUBEPROMPT_RELEASE_URL)
+    local -r KUBEPROMPT_ARCHIVE_NAME=$(basename $KUBEPROMPT_RELEASE_URL)
 
     [[ $(command -v kube-prompt) ]] && {
         common::stop_spinner
@@ -1139,7 +1139,7 @@ kube::kube_prompt() {
     }
 
     curl -fsSLO --output-dir $SANDBOX $KUBEPROMPT_RELEASE_URL
-    unzip -qq "$SANDBOX/$KUBEPROMPT_FILENAME" -d $SANDBOX
+    unzip -qq "$SANDBOX/$KUBEPROMPT_ARCHIVE_NAME" -d $SANDBOX
     install "$SANDBOX/kube-prompt" "$XDG_BIN_HOME/kube-prompt"
 
     common::stop_spinner
