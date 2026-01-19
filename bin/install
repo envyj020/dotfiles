@@ -375,21 +375,15 @@ base::kitty() {
         return 0
     }
 
-    local -r KITTY_APP_DIR="$HOME/.local/kitty.app"
+    local -r KITTY_HOME="$HOME/.local/kitty.app"
 
     sh <(curl -sSfL https://sw.kovidgoyal.net/kitty/installer.sh) &>/dev/null
 
-    ln -sf "$KITTY_APP_DIR/bin/kitty" "$KITTY_APP_DIR/bin/kitten" "$XDG_BIN_HOME"
+    ln -sf "$KITTY_HOME/bin/kitty" "$KITTY_HOME/bin/kitten" "$XDG_BIN_HOME"
 
-    cp "$KITTY_APP_DIR/share/applications/kitty.desktop" \
-        "$KITTY_APP_DIR/share/applications/kitty-open.desktop" \
-        "$XDG_DATA_HOME/applications"
-
-    sed -i "s|Icon=kitty|Icon=$KITTY_APP_DIR/share/icons/hicolor/256x256/apps/kitty.png|g" \
-        "$XDG_DATA_HOME/applications/kitty.desktop"
-
-    sed -i "s|Exec=kitty|Exec=$XDG_BIN_HOME/kitty|g" \
-        "$XDG_DATA_HOME/applications/kitty.desktop"
+    cp "$KITTY_HOME/share/applications/kitty.desktop" "$KITTY_HOME/share/applications/kitty-open.desktop" "$XDG_DATA_HOME/applications"
+    sed -i "s|Icon=kitty|Icon=$KITTY_HOME/share/icons/hicolor/256x256/apps/kitty.png|g" "$XDG_DATA_HOME/applications/kitty.desktop"
+    sed -i "s|Exec=kitty|Exec=$XDG_BIN_HOME/kitty|g" "$XDG_DATA_HOME/applications/kitty.desktop"
 
     common::stop_spinner
 }
