@@ -1,0 +1,10 @@
+--follow
+--hidden
+--sort=path
+--smart-case
+--glob=!{.git,.svn,.idea,.vscode,node_modules,target,build,out,dist,out-tsc,.venv,venv,charts,vendor,__pycache__}
+--glob=!{package-lock.json,yarn.lock,pnpm-lock.yaml,pylock.toml,poetry.lock,Pipfile.lock,uv.lock,Cargo.lock,composer.lock,Gemfile.lock,go.sum,gradle.lockfile,pubspec.lock}
+--glob=!*.{lock,bak,swp,swo}
+--colors=path:fg:0xe7,0x82,0x84
+--colors=match:fg:0xff,0x9e,0x64
+--colors=line:fg:0x8a,0xad,0xf4
