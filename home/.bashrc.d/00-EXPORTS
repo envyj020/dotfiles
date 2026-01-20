@@ -1,10 +1,6 @@
 # vim: set ft=sh:
 # shellcheck disable=SC2155,SC1091
 
-[ -z "$EXPORTS_SOURCED" ] || return
-
-export EXPORTS_SOURCED=1
-
 export FZF_COMPLETION_TRIGGER='**'
 
 FZF_EXCLUDE_DIRS=(
@@ -32,6 +28,8 @@ export TZ="Europe/Madrid"
 export TERM=xterm-256color
 export MANPAGER='nvim +Man!'
 export PAGER=most
+
+export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 
 export NVIM_COLORSCHEME='catppuccin-mocha'
 export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
@@ -80,7 +78,14 @@ export RED='\033[1;31m' YELLOW='\033[1;33m' GREEN='\033[1;32m' NC='\033[0m'
 
 [ -s "$XDG_DATA_HOME/lscolors.sh" ] && source "$XDG_DATA_HOME/lscolors.sh"
 
-declare -a BIN=(
+ADD_PATH() {
+    case ":$PATH:" in
+    *":$1:"*) ;;
+    *) export PATH="$PATH:$1" ;;
+    esac
+}
+
+declare -a PATHS=(
     "$HOME/bin"
     "$WORKSPACE/bin"
     "$XDG_BIN_HOME"
@@ -97,5 +102,8 @@ declare -a BIN=(
     "$PYENV_ROOT/bin"
 )
 
-export PATH="${PATH}:$(printf "%s:" "${BIN[@]}" | sed 's/:$//')"
-unset BIN FZF_EXCLUDE_DIRS
+for BIN in "${PATHS[@]}"; do
+    ADD_PATH "$BIN"
+done
+
+unset PATHS BIN FZF_EXCLUDE_DIRS
