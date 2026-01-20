@@ -55,9 +55,12 @@ A comprehensive reference of all custom keybindings configured in Tmux.
 
 | Key               | Description                   |
 | ----------------- | ----------------------------- |
+| `prefix + Ctrl+c` | Create new window             |
 | `prefix + Ctrl+w` | Create new window with prompt |
 | `prefix + Ctrl+,` | Rename current window         |
 | `prefix + &`      | Kill window with prompt       |
+| `prefix + j`      | Swap window position - left   |
+| `prefix + k`      | Swap window position - right  |
 
 ## Panes
 
@@ -86,6 +89,15 @@ A comprehensive reference of all custom keybindings configured in Tmux.
 | `prefix + Down`  | Resize pane down  |
 | `prefix + Left`  | Resize pane left  |
 | `prefix + Right` | Resize pane right |
+| `prefix + z`     | Zoom current pane |
+
+## Commands
+
+| Key                | Description   |
+| ------------------ | ------------- |
+| `prefix + :`       | Command mode  |
+| `:repane <name>`   | Rename pane   |
+| `:rewindow <name>` | Rename window |
 
 ## Plugins
 
@@ -102,7 +114,7 @@ A comprehensive reference of all custom keybindings configured in Tmux.
 | -------- | ------------------------------ |
 | `Ctrl+o` | Open selection with `$EDITOR`  |
 | `o`      | Open selection with `XDG-OPEN` |
-| `S`      | Search selection on Google     |
+| `S`      | Open selection on Google       |
 
 ### Gentrify
 
@@ -119,11 +131,11 @@ A comprehensive reference of all custom keybindings configured in Tmux.
 
 ### Extrakto
 
-| Key            | Description                           |
-| -------------- | ------------------------------------- |
-| `prefix + Tab` | Open fuzzy finder for text extraction |
-| `Enter`        | Copy selected text                    |
-| `Tab`          | Insert selected text                  |
+| Key            | Description           |
+| -------------- | --------------------- |
+| `prefix + Tab` | Open fuzzy finder     |
+| `Enter`        | Copy text selection   |
+| `Tab`          | Insert text selection |
 
 ### Notify
 
