@@ -378,7 +378,6 @@ base::kitty() {
     local -r KITTY_HOME="$HOME/.local/kitty.app"
 
     sh <(curl -sSfL https://sw.kovidgoyal.net/kitty/installer.sh) &>/dev/null
-
     ln -sf "$KITTY_HOME/bin/kitty" "$KITTY_HOME/bin/kitten" "$XDG_BIN_HOME"
 
     cp "$KITTY_HOME/share/applications/kitty.desktop" "$KITTY_HOME/share/applications/kitty-open.desktop" "$XDG_DATA_HOME/applications"
@@ -413,8 +412,7 @@ base::dir_colors() {
     }
 
     (
-        cd $LS_COLORS_SUBMODULE_DIR
-        sudo make generate
+        cd $LS_COLORS_SUBMODULE_DIR && sudo make generate
         install $LS_COLORS_FILENAME $XDG_DATA_HOME/$LS_COLORS_FILENAME
     )
 
