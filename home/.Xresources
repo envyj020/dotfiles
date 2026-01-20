@@ -9,4 +9,13 @@ Xft.lcdfilter: lcddefault
 Xcursor.theme: oxy-zions
 Xcursor.size: 24
 
+xterm*faceName: JetBrainsMono NF
+xterm*faceSize: 9
+xterm*scrollBar: false
+
+URxvt.font: xft:JetBrainsMono NF:size=9:style=Regular
+URxvt.boldFont: xft:JetBrainsMono NF:size=9:style=Bold
+URxvt.scrollBar: false
+URxvt.letterSpace: -1
+
 #include ".Xresources.d/theme"
