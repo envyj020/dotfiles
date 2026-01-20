@@ -1,9 +1,9 @@
 ---
 tmux:
   symbols:
-    branch: "⎇ "
+    branch: " "
     hashprefix: ":"
-    ahead: ""
+    ahead: " "
     behind: ""
     staged: "● "
     conflict: "✖ "
@@ -12,7 +12,7 @@ tmux:
     stashed: "󰜦 "
     clean: ✔
     insertions: Σ
-    deletions: Δ
+    deletions: " "
   styles:
     clear: "#[fg=default]"
     state: "#[fg=red,bold]"
