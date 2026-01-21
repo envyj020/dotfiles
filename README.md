@@ -31,7 +31,7 @@ Think of it less as a finished product and more as a constantly
 evolving project alongside my shifting needs.
 
 That said, you are more than welcome to explore and cherry-pick whatever you
-find useful.Whether it’s a single alias or a full configuration
+find useful. Whether it’s a single alias or a full configuration
 block, feel free to make it yours!
 
 <h2 align="center">🍻 Contribution</h2>
