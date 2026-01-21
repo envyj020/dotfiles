@@ -1,6 +1,6 @@
 require("avante").setup({
     mode = "agentic",
-    provider = "gemini",
+    provider = "gemini-cli",
     instructions_file = "AGENT.md",
     providers = {
         claude = {
@@ -38,5 +38,15 @@ require("avante").setup({
         minimize_diff = false,
         enable_cursor_planning_mode = true,
         enable_claude_text_editor_tool_mode = true,
+    },
+    acp_providers = {
+        ["gemini-cli"] = {
+            command = "gemini",
+            args = { "--experimental-acp" },
+            env = {
+                NODE_NO_WARNINGS = "1",
+                GEMINI_API_KEY = os.getenv("AVANTE_GEMINI_API_KEY"),
+            },
+        },
     },
 })
