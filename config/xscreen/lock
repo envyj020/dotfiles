@@ -53,20 +53,16 @@ require_cmd() {
 case $XDG_SESSION_TYPE in
 "$WAYLAND_SESSION_TYPE")
     require_cmd "grim"
-    SESSION_TYPE="$WAYLAND_SESSION_TYPE"
     SCREENSHOT_CMD=(grim "$SCREENSHOT")
     ;;
 "$X11_SESSION_TYPE")
     require_cmd "import"
-    SESSION_TYPE="$X11_SESSION_TYPE"
     SCREENSHOT_CMD=(magick import -silent -window root "$SCREENSHOT")
     ;;
 *)
     log::error "Unknown XDG_SESSION_TYPE"
     ;;
 esac
-
-readonly SESSION_TYPE
 
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -91,7 +87,7 @@ while [[ $# -gt 0 ]]; do
         shift 2
         ;;
     -b | --bar)
-        [[ $SESSION_TYPE == "$X11_SESSION_TYPE" ]] || log::error "${GREEN}-b|--bar${NC} is an ${RED}x11${NC} exclusive option"
+        [[ $XDG_SESSION_TYPE == "$X11_SESSION_TYPE" ]] || log::error "${GREEN}-b|--bar${NC} is an ${RED}x11${NC} exclusive option"
         I3LOCK_BAR_ENABLED=1
         shift
         ;;
@@ -197,7 +193,7 @@ if [[ "$I3LOCK_BAR_ENABLED" -eq 1 ]]; then
     I3LOCK_OPTS+=("${I3LOCK_BAR_OPTS[@]}")
 fi
 
-if [[ $SESSION_TYPE == "$WAYLAND_SESSION_TYPE" ]]; then
+if [[ $XDG_SESSION_TYPE == "$WAYLAND_SESSION_TYPE" ]]; then
     LOCK_CMD="swaylock"
     LOCK_OPTS+=("${SWAYLOCK_OPTS[@]}")
 else
