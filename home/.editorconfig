@@ -8,7 +8,7 @@ insert_final_newline = true
 trim_trailing_whitespace = true
 charset = utf-8
 
-[*.{yaml,yml,tf,hcl,json,xml}]
+[*.{scss,css,html,mjs,js,ts,yaml,yml,tf,hcl,json,xml}]
 indent_size = 2
 
 [Makefile]
