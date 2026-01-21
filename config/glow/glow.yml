@@ -2,7 +2,7 @@
 style: auto
 mouse: true
 pager: false
-width: 80
+width: 120
 all: false
 showLineNumbers: false
 preserveNewLines: true
