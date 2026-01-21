@@ -1,0 +1,14 @@
+--height=50%
+--info=inline-right
+--margin=1
+--padding=1
+--reverse
+--border=none
+--preview-window='noborder:noinfo'
+--preview='bat --color=always --style=numbers {}'
+--color='fg:-1,fg+:#d0d0d0,bg:-1,bg+:#313244'
+--color='hl:#fab387,hl+:#fab387,info:#f9e2af,marker:#87ff00'
+--color='prompt:#f38ba8,spinner:#af5fff,pointer:#af5fff,header:#87afaf'
+--color='border:#1d1d2d,label:#aeaeae,query:#f5e0dc'
+--bind='shift-up:preview-page-up'
+--bind='shift-down:preview-page-down'
