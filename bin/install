@@ -24,6 +24,10 @@ main::tear_down() {
 
 main::setup() {
 
+    if [[ $EUID -eq 0 ]]; then
+        log:error "This script is not meant to run as root"
+    fi
+
     mkdir -p \
         "$XDG_BIN_HOME" \
         "$XDG_CONFIG_HOME" \
