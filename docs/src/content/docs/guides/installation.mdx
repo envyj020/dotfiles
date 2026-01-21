@@ -45,20 +45,20 @@ you will need to provide your own preferences.
 <Tabs>
   <TabItem label="Standalone Installer" icon="rocket">
     <Code
-      code="sh <(curl -sSfL https://envyj020.github.io/dotfiles/run)"
+      code="sh <(curl --proto '=https' --tlsv1.3 -sSfL https://envyj020.github.io/dotfiles/run)"
       lang="sh"
     />
     <Aside type="tip">
       The standalone installer may be inspected before use or alternatively
       check out the source code directly on [GitHub](https://github.com/envyj020/dotfiles/blob/main/docs/public/run).
-      <Code code="curl -sSfL https://envyj020.github.io/dotfiles/run | less" lang="sh"/>
+      <Code code="curl --proto '=https' --tlsv1.3 -sSfL https://envyj020.github.io/dotfiles/run | less" lang="sh"/>
     </Aside>
   </TabItem>
   <TabItem label="Manual Installation" icon="seti:powershell">
     <Steps>
       1. Clone the repository:
           ```sh
-          git clone --depth 1 --recursive https://github.com/envyj020/dotfiles.git
+          git clone --depth 1 --recursive git@github.com:envyj020/dotfiles.git
           cd dotfiles
           ```
       2. Install the OS baseline packages:
