@@ -1,17 +1,6 @@
 # vim: set ft=sh:
 # shellcheck disable=SC2155,SC1091
 
-export FZF_COMPLETION_TRIGGER='**'
-
-FZF_EXCLUDE_DIRS=(
-    .git .svn .idea .vscode node_modules
-    target build out dist out-tsc .venv venv
-    charts vendor __pycache__
-)
-export FZF_DEFAULT_COMMAND="rg --files --hidden \
-    --no-ignore-vcs --sort path \
-    -g '!{$(printf "%s," "${FZF_EXCLUDE_DIRS[@]}" | sed 's/,$//')}'"
-
 export LANGUAGE=en_US.UTF-8
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -30,7 +19,6 @@ export TERM=xterm-256color
 export MANPAGER='nvim +Man!'
 export PAGER=most
 
-export FZF_DEFAULT_OPTS_FILE="$XDG_CONFIG_HOME/fzf/config"
 export RIPGREP_CONFIG_PATH="$HOME/.ripgreprc"
 
 export NVIM_COLORSCHEME='catppuccin-mocha'
@@ -68,6 +56,19 @@ export PROMPT_DIRTRIM=5
 export HISTCONTROL=ignoreboth
 export HISTSIZE='32768'
 export HISTFILESIZE="$HISTSIZE"
+
+export FZF_COMPLETION_TRIGGER='**'
+export FZF_DEFAULT_OPTS_FILE="$XDG_CONFIG_HOME/fzf/config"
+
+FZF_EXCLUDE_DIRS=(
+    .git .svn .idea .vscode node_modules
+    target build out dist out-tsc .venv venv
+    charts vendor __pycache__
+)
+
+export FZF_DEFAULT_COMMAND="rg --files --hidden \
+    --no-ignore-vcs --sort path \
+    -g '!{$(printf "%s," "${FZF_EXCLUDE_DIRS[@]}" | sed 's/,$//')}'"
 
 export RED='\033[1;31m' YELLOW='\033[1;33m' GREEN='\033[1;32m' NC='\033[0m'
 
