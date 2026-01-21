@@ -5,7 +5,7 @@
 --reverse
 --border=none
 --preview-window='noborder:noinfo'
---preview='bat --color=always --style=numbers {}'
+--preview='[ -f {} ] && bat --color=always --style=numbers {}'
 --color='fg:-1,fg+:#d0d0d0,bg:-1,bg+:#313244'
 --color='hl:#fab387,hl+:#fab387,info:#f9e2af,marker:#87ff00'
 --color='prompt:#f38ba8,spinner:#af5fff,pointer:#af5fff,header:#87afaf'
