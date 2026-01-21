@@ -23,6 +23,7 @@ dependencies:
       - wget2
       - curl
       - pass
+      - glow
       - gnupg2
       - btop
       - fastfetch
