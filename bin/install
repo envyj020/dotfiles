@@ -28,6 +28,11 @@ main::setup() {
         log:error "This script is not meant to run as root"
     fi
 
+    case $OS_NAME in
+    fedora | xUbuntu | debian) ;;
+    *) log::error "OS: $OS_NAME is not supported" ;;
+    esac
+
     mkdir -p \
         "$XDG_BIN_HOME" \
         "$XDG_CONFIG_HOME" \
@@ -46,13 +51,7 @@ main::setup() {
         PATH="$PATH_TO_PREPEND:$PATH"
     done
 
-    case $OS_NAME in
-    fedora | xUbuntu | debian)
-        common::start_sudo_keepalive
-        return 0
-        ;;
-    *) log::error "OS: $OS_NAME is not supported" ;;
-    esac
+    common::start_sudo_keepalive
 }
 
 base::packages() {
