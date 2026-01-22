@@ -34,10 +34,8 @@ set -eu
         exit 1
     }
 
-    separator() (
-        CHAR="${1:-=}"
-        COUNT="${2:-40}"
-        printf "${BLUE}%${COUNT}s${NC}\n" | tr ' ' "$CHAR"
+    row() (
+        printf '%.0s─' $(seq 1 "$(tput cols)")
     )
 
     checkout() {
@@ -75,14 +73,14 @@ set -eu
 
     require_token() {
         [ -n "$GITHUB_TOKEN" ] && return 0
-        separator "=" 80
+        row
         warn "${BOLD}MISSING ${RED}GITHUB_TOKEN${NC}"
         info "It looks like you have not exported your ${BLUE}GITHUB_TOKEN${NC}, ${BOLD}please note"
         info "Github API rate limits will likely cause the bootstrap process to crash."
         info "Please run: ${GREEN}export GITHUB_TOKEN=\$(<\"\$HOME/.GITHUB_TOKEN\")${NC} ${BOLD}and execute"
         info "again this script. Find more information at the link below:"
         info "${BLUE}https://envyj020.github.io/dotfiles/guides/installation/#prerequisites${NC}"
-        separator "=" 80
+        row
 
         info "Press [c] to continue anyway or [e] to exit:"
         while true; do
@@ -103,10 +101,10 @@ set -eu
     }
 
     ask_background() {
-        separator "=" 80
+        row
         info "Do you want to include the default wallpaper from ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}?${NC}"
         warn "If not, you must save yours under ${BLUE}\$HOME/Pictures/wallpaper.jpg${NC}"
-        separator "=" 80
+        row
 
         info "Press [y] to add or [s] to skip:"
         while true; do
@@ -131,11 +129,11 @@ set -eu
     }
 
     ask_base() {
-        separator "=" 80
+        row
         info "You are about to install ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC}${BOLD} package baseline."
         info "This process requires temporary ${RED}sudo${NC}${BOLD} privileges and"
         info "will ask for your preferences."
-        separator "=" 80
+        row
 
         info "Press [c] to continue, [s] to skip or [e] to exit:"
         while true; do
@@ -160,12 +158,12 @@ set -eu
     }
 
     ask_stow() {
-        separator "=" 80
+        row
         info "Do you want to include symbolic links from ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC}"
         info "to your ${YELLOW}\$HOME${NC} and ${YELLOW}\$HOME/.config${NC}${BOLD} directories?"
         warn "Existing files at these locations may cause conflicts and"
         warn "will require to rename or move them prior to rerun this task."
-        separator "=" 80
+        row
 
         info "Press [c] to continue or [s] to skip:"
         while true; do
@@ -187,11 +185,11 @@ set -eu
     }
 
     ask_mise_neovim() {
-        separator "=" 80
+        row
         info "Let's finish the bootstrap process by installing ${BLUE}mise${NC} ${BOLD}system-wide"
         info "dependencies and setup ${BLUE}Neovim${NC}. ${BOLD}It might take a while"
         info "but wait for the task to finish before opening the editor."
-        separator "=" 80
+        row
 
         info "Press [c] to continue or [s] to skip: "
         while true; do
