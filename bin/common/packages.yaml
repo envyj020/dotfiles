@@ -10,9 +10,8 @@ dependencies:
       - coreutils
       - binutils
       - asciidoc
-      - mercurial
-      - meson
       - ninja-build
+      - meson
       - ffmpeg
       - zoxide
       - p7zip
@@ -22,12 +21,12 @@ dependencies:
       - bison
       - wget2
       - curl
+      - gnupg2
       - pass
       - glow
-      - gnupg2
       - btop
-      - fastfetch
       - duf
+      - fastfetch
       - hyperfine
       - httpie
       - asciinema
@@ -37,8 +36,8 @@ dependencies:
       - jq
     dnf:
       - git-core
-      - dnf-command(config-manager)
       - perl-core
+      - dnf-command(config-manager)
       - oxygen-cursor-themes
       - python3-virtualenv
       - wayland-devel
@@ -47,7 +46,6 @@ dependencies:
       - ImageMagick
       - libnotify
       - pango
-      - navi
     apt-get:
       - git
       - git-extras
@@ -61,7 +59,6 @@ dependencies:
       - libpango-1.0-0
       - python-is-python3
       - build-essential
-      - gping
     xUbuntu:
       - oxygen-cursor-theme
     debian:
