@@ -71,14 +71,6 @@ require("render-markdown").setup({
     },
 })
 
-require("urlview").setup({
-    default_picker = "vim.ui.select",
-    default_prefix = "https://",
-    log_level_min = vim.log.levels.WARN,
-    unique = true,
-    sorted = true,
-})
-
 require("cutlass").setup({
     cut_key = "x",
     registers = {

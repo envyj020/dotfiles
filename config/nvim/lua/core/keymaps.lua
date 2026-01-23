@@ -161,7 +161,6 @@ map("n", "<Leader>h", command("CloakToggle"), keymap_opts("Toggle sensitive data
 map("n", "<Leader>tw", function()
     Snacks.toggle.dim():toggle()
 end, keymap_opts("Toggle focus mode"))
-map("n", "<Leader>url", command("UrlView"), keymap_opts("Find URLs"))
 map("n", "<C-a>", function()
     require("dial.map").manipulate("increment", "normal")
 end, keymap_opts("Increment version"))
