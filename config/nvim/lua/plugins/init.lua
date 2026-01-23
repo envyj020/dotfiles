@@ -43,6 +43,7 @@ Plug("tpope/vim-fugitive")
 Plug("tpope/vim-obsession")
 Plug("tpope/vim-dotenv")
 Plug("monaqa/dial.nvim")
+Plug("folke/flash.nvim")
 
 --- Git
 Plug("NeogitOrg/neogit")

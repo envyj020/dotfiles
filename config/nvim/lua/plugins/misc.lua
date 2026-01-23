@@ -44,6 +44,11 @@ require("colorizer").setup({
     },
 })
 
+require("flash").setup({
+    search = { multi_window = false },
+    modes = { treesitter_search = { search = { multi_window = false } } },
+})
+
 require("schema-companion").setup({
     formatting = false,
     enable_telescope = true,

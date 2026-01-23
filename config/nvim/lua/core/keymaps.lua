@@ -20,8 +20,19 @@ map("n", "FF", command("FormatWrite"), keymap_opts("Format and write"))
 map("n", "jq", command("JqxList"), keymap_opts("Jq/Yq quickfix"))
 map("n", "jqq", command("JqxQuery"), keymap_opts("Jq/Yq query"))
 
--- NeoTree
+-- File Manager
 map("n", "<leader>t", command("Neotree", "toggle", "reveal"), keymap_opts("Toggle NeoTree"))
+
+-- Flash
+map({ "n", "x", "o" }, "s", function()
+    require("flash").jump()
+end, keymap_opts("Flash"))
+map({ "n", "x", "o" }, "S", function()
+    require("flash").treesitter()
+end, keymap_opts("Flash Treesitter"))
+map({ "x", "o" }, "r", function()
+    require("flash").treesitter_search()
+end, keymap_opts("Treesitter search"))
 
 -- Buffer Navigation
 map("n", "<C-Down>", command("bprevious"), keymap_opts("Previous buffer"))
@@ -146,8 +157,9 @@ map("n", "<Leader>;", command("ToggleTerm"), keymap_opts("Toggle terminal"))
 map("t", "<Esc>", "<C-\\><C-n>", keymap_opts("Exit terminal mode"))
 
 -- Miscellaneous
+map("n", "<Leader>h", command("CloakToggle"), keymap_opts("Toggle sensitive data"))
 map("n", "<Leader>tw", function()
-    _G.Snacks.toggle.dim():toggle()
+    Snacks.toggle.dim():toggle()
 end, keymap_opts("Toggle focus mode"))
 map("n", "<Leader>url", command("UrlView"), keymap_opts("Find URLs"))
 map("n", "<C-a>", function()
@@ -195,9 +207,6 @@ map("n", "<Leader>ddb", function()
     vim.cmd("tabnew")
     vim.cmd("DBUI")
 end, keymap_opts("Open Database UI"))
-
---- Cloak
-map("n", "<Leader>h", command("CloakToggle"), keymap_opts("Toggle sensitive data"))
 
 -- Undo break points
 map("i", ",", ",<c-g>u", keymap_opts("Undo break point"))
