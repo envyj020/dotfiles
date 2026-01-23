@@ -91,4 +91,22 @@ require("snacks").setup({
         enabled = snack_dashboard.enabled,
         sections = snack_dashboard.sections,
     },
+    input = {
+        icon = " ",
+        relative = "cursor",
+    },
+    dim = {
+        scope = {
+            min_size = 5,
+            max_size = 20,
+            siblings = true,
+        },
+        animate = {
+            easing = "inQuad",
+        },
+    },
+    toggle = {
+        map = vim.keymap.set,
+        notify = false,
+    },
 })

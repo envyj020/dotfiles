@@ -158,7 +158,10 @@ map("n", "<Leader>dpc", require("dap-python").test_class, keymap_opts("Debug Pyt
 map("n", "<Leader>;", command("ToggleTerm"), keymap_opts("Toggle terminal"))
 
 -- Miscellaneous
-map("n", "<Leader>tw", command("Twilight"), keymap_opts("Toggle focus mode"))
+map("n", "<Leader>tw", function()
+    _G.Snacks.toggle.dim():toggle()
+end, keymap_opts("Toggle focus mode"))
+
 map("n", "<Leader>url", command("UrlView"), keymap_opts("Find URLs"))
 
 -- Shortcuts
@@ -189,7 +192,7 @@ end, keymap_opts("Toggle surrounding quotes"))
 map("n", "<Leader>ddb", function()
     vim.cmd("tabnew")
     vim.cmd("DBUI")
-end)
+end, keymap_opts("Open Database UI"))
 
 --- Cloak
 map("n", "<Leader>h", command("CloakToggle"), keymap_opts("Toggle sensitive data"))

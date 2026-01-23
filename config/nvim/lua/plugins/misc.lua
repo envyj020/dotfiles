@@ -30,8 +30,6 @@ require("renamer").setup({
     handler = nil,
 })
 
-require("twilight").setup()
-
 require("colorizer").setup({
     user_default_options = {
         names = false,
@@ -43,13 +41,6 @@ require("colorizer").setup({
         virtualtext = "󱓻 ",
         virtualtext_inline = true,
         virtualtext_mode = "foreground",
-    },
-})
-
-require("dressing").setup({
-    input = {
-        enabled = true,
-        relative = "win",
     },
 })
 
