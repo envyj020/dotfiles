@@ -70,7 +70,6 @@ local MASON_SUPPORTED_PACKAGES = {
     "emmet_ls",
     "pyright",
     "vimls",
-    "taplo",
     "tflint",
     "ruff",
     "kcl",

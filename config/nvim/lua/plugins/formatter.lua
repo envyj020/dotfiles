@@ -12,7 +12,7 @@ require("formatter").setup({
         markdown = { require("formatter.filetypes.markdown").prettierd },
         json = { require("formatter.filetypes.json").prettierd },
         yaml = { require("formatter.filetypes.yaml").prettierd },
-        toml = { require("formatter.filetypes.toml").taplo },
+        toml = { require("formatters.toml").tombi },
         python = { require("formatter.filetypes.python").ruff },
         sh = { require("formatter.filetypes.sh").shfmt },
         go = { require("formatter.filetypes.go").goimports },
