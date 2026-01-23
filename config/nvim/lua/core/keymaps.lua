@@ -14,19 +14,6 @@ map("n", "<Leader>oc", common.nvim_session_manager("create"), keymap_opts("Creat
 map("n", "<Leader>od", common.nvim_session_manager("delete"), keymap_opts("Deletes a neovim session"))
 map("n", "<Leader>ol", common.nvim_session_manager("load"), keymap_opts("Loads a neovim session"))
 
--- Scroll
-map({ "n", "v", "x" }, "<S-Up>", function()
-    require("neoscroll").ctrl_u({
-        duration = 150,
-    })
-end, keymap_opts("Scroll up"))
-
-map({ "n", "v", "x" }, "<S-Down>", function()
-    require("neoscroll").ctrl_d({
-        duration = 150,
-    })
-end, keymap_opts("Scroll down"))
-
 -- Formatting
 map("n", "ff", command("Format"), keymap_opts("Format code"))
 map("n", "FF", command("FormatWrite"), keymap_opts("Format and write"))
@@ -156,16 +143,31 @@ map("n", "<Leader>dpc", require("dap-python").test_class, keymap_opts("Debug Pyt
 
 -- Terminal
 map("n", "<Leader>;", command("ToggleTerm"), keymap_opts("Toggle terminal"))
+map("t", "<Esc>", "<C-\\><C-n>", keymap_opts("Exit terminal mode"))
 
 -- Miscellaneous
 map("n", "<Leader>tw", function()
     _G.Snacks.toggle.dim():toggle()
 end, keymap_opts("Toggle focus mode"))
-
 map("n", "<Leader>url", command("UrlView"), keymap_opts("Find URLs"))
+map("n", "<C-a>", function()
+    require("dial.map").manipulate("increment", "normal")
+end, keymap_opts("Increment version"))
+map("n", "<C-x>", function()
+    require("dial.map").manipulate("decrement", "normal")
+end, keymap_opts("Decrement version"))
+map({ "n", "v", "x" }, "<S-Up>", function()
+    require("neoscroll").ctrl_u({
+        duration = 150,
+    })
+end, keymap_opts("Scroll up"))
+map({ "n", "v", "x" }, "<S-Down>", function()
+    require("neoscroll").ctrl_d({
+        duration = 150,
+    })
+end, keymap_opts("Scroll down"))
 
--- Shortcuts
-map("t", "<Esc>", "<C-\\><C-n>", keymap_opts("Exit terminal mode"))
+-- Mutations
 map("i", "<Del>", "<C-\\><C-o>db", keymap_opts("Delete previous word"))
 map("n", "<Del>", "db", keymap_opts("Delete previous word"))
 map("n", "<Leader>qq", 'ysiw"', keymap_opts("Surround word with double quotes", { remap = true }))
