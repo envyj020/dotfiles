@@ -117,6 +117,9 @@ map("n", "<Leader>gs", builtin.git_status, keymap_opts("Git status"))
 map("n", "<Leader>gc", builtin.git_commits, keymap_opts("Git commits"))
 map("n", "<Leader>yr", require("schema-companion.context").match, keymap_opts("YAML Schema match"))
 
+-- Marks
+map("n", "<Leader>sm", command("MarksListBuf"), keymap_opts("Find Marks"))
+
 -- YAML Schema picker
 map("n", "<Leader>syc", telescope.extensions.schema_companion.select_schema, keymap_opts("Pick YAML schema"))
 map(

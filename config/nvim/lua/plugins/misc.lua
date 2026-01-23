@@ -80,3 +80,16 @@ require("cloak").setup({
         },
     },
 })
+
+local bookmark_signs = { "", "⚡", "", "", "", "", "", "", "", "" }
+local bookmark_opts = {}
+
+for i, sign in ipairs(bookmark_signs) do
+    local index = (i - 1)
+    bookmark_opts["bookmark_" .. index] = {
+        sign = sign,
+        virt_text = "Bookmark: " .. index,
+    }
+end
+
+require("marks").setup(bookmark_opts)

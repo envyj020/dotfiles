@@ -110,6 +110,7 @@ Plug("jiangmiao/auto-pairs")
 Plug("jghauser/mkdir.nvim")
 Plug("danymat/neogen")
 Plug("smjonas/inc-rename.nvim")
+Plug("chentoast/marks.nvim")
 
 Plug("cenk1cenk2/schema-companion.nvim", { commit = "71c9e53b399dc7063381c693b7f06f7144772d45" })
 Plug("davidmh/mdx.nvim")
