@@ -83,7 +83,9 @@ map({ "n", "v" }, "<Leader>cc", command("Commentary"), keymap_opts("Toggle comme
 map({ "n", "v" }, "<Leader>cb", "{v}:Commentary<CR>", keymap_opts("Comment block"))
 
 -- Rename
-map({ "i", "n", "v" }, "<Leader>rn", require("renamer").rename, keymap_opts("Rename symbol"))
+map({ "n", "v" }, "<Leader>rn", function()
+    return ":IncRename " .. vim.fn.expand("<cword>")
+end, keymap_opts("Rename symbol", { expr = true }))
 
 -- Markdown
 map("n", "<Leader>mk", command("RenderMarkdown", "buf_toggle"), keymap_opts("Markdown inline render"))

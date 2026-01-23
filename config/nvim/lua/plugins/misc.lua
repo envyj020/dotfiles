@@ -1,33 +1,7 @@
-local renamer_u = require("renamer.mappings.utils")
-
-require("renamer").setup({
-    title = "Rename",
-    padding = {
-        top = 0,
-        left = 0,
-        bottom = 0,
-        right = 0,
-    },
-    min_width = 15,
-    max_width = 45,
-    border = true,
-    border_chars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
-    show_refs = true,
-    with_qf_list = true,
-    with_popup = true,
-
-    --- @diagnostic disable-next-line: assign-type-mismatch
-    mappings = {
-        ["<c-i>"] = renamer_u.set_cursor_to_start,
-        ["<c-a>"] = renamer_u.set_cursor_to_end,
-        ["<c-e>"] = renamer_u.set_cursor_to_word_end,
-        ["<c-b>"] = renamer_u.set_cursor_to_word_start,
-        ["<c-c>"] = renamer_u.clear_line,
-        ["<c-u>"] = renamer_u.undo,
-        ["<c-r>"] = renamer_u.redo,
-    },
-    --- @diagnostic disable-next-line: assign-type-mismatch
-    handler = nil,
+require("inc_rename").setup({
+    input_buffer_type = "snacks",
+    preview_empty_name = false,
+    save_in_cmdline_history = false,
 })
 
 require("colorizer").setup({

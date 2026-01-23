@@ -93,7 +93,7 @@ require("snacks").setup({
     },
     input = {
         icon = " ",
-        relative = "cursor",
+        expand = true,
     },
     dim = {
         scope = {
@@ -108,5 +108,12 @@ require("snacks").setup({
     toggle = {
         map = vim.keymap.set,
         notify = false,
+    },
+    styles = {
+        input = {
+            relative = "cursor",
+            row = -8,
+            col = -18,
+        },
     },
 })
