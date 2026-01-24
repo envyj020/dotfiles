@@ -85,13 +85,6 @@ map({ "n", "v" }, "<Leader>rn", function()
     return ":IncRename " .. vim.fn.expand("<cword>")
 end, keymap_opts("Rename symbol", { expr = true }))
 
--- Markdown
-map("n", "<Leader>mk", command("RenderMarkdown", "buf_toggle"), keymap_opts("Markdown inline render"))
-map("n", "<Leader>mp", command("MarkdownPreview"), keymap_opts("Markdown preview"))
-map("n", "<Leader>tocu", command("TOCList"), keymap_opts("Markdown ToC unordered list"))
-map("n", "<Leader>toco", command("TOC"), keymap_opts("Markdown ToC ordered list"))
-map("n", "<bs>", command("edit", "#<CR>"), keymap_opts("Previous markdown file", { silent = true }))
-
 -- Git
 map("n", "<Leader>g", command("Neogit"), keymap_opts("Open Neogit"))
 map("n", "<Leader>gb", command("Gitsigns", "blame"), keymap_opts("Git blame"))

@@ -40,12 +40,12 @@ autocmd("BufReadPost", {
 -- Set LSP keybindings on supported buffers
 autocmd("LspAttach", {
     group = group,
-    callback = function(args)
+    callback = function(e)
         local common = require("common")
         local keymap_opts = common.keymap_opts
         local command = common.command
         local map = vim.keymap.set
-        local opts = { buffer = args.buf }
+        local opts = { buffer = e.buf }
 
         -- LSP Signatures
         map("n", "<C-S-Left>", vim.lsp.buf.definition, keymap_opts("Go to definition", opts))
