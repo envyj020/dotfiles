@@ -8,7 +8,7 @@ tableOfContents:
 
 import { Aside } from "@astrojs/starlight/components";
 
-A comprehensive reference of all custom keybindings configured in Neovim.
+While not an exhaustive list, here are the most essential keybindings for my daily Neovim use.
 
 <Aside icon="vim" title="Leader Key: <Space>">
   Please note that many of the keybindings listed below reference actions or
@@ -19,7 +19,7 @@ A comprehensive reference of all custom keybindings configured in Neovim.
   This setup follows the Tab pages as Viewports philosophy. Instead of using the
   traditional bufferline to manage files, It uses tabs to scope window layouts
   in order to have multiple splits per tab and switch between different "views"
-  without cluttering the screen with 50 open file labels.
+  without cluttering the screen.
 </Aside>
 
 <div class="keybindings-page">
@@ -38,30 +38,28 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | `<Leader>od` | Normal | Delete a session     |
 | `<Leader>ol` | Normal | Load a session       |
 
-## File Explorer
+## File Manager
 
-| Key         | Mode   | Description    |
-| ----------- | ------ | -------------- |
-| `<Leader>t` | Normal | Toggle NeoTree |
+| Key         | Mode   | Description         |
+| ----------- | ------ | ------------------- |
+| `<Leader>t` | Normal | Toggle File Manager |
 
 ## Edition
 
 ### Format
 
-| Key   | Mode   | Description     |
-| ----- | ------ | --------------- |
-| `ff`  | Normal | Format code     |
-| `FF`  | Normal | Format and save |
-| `jq`  | Normal | Jq/Yq quickfix  |
-| `jqq` | Normal | Jq/Yq query     |
+| Key  | Mode   | Description     |
+| ---- | ------ | --------------- |
+| `ff` | Normal | Format code     |
+| `FF` | Normal | Format and save |
 
 ### Comment
 
 | Key           | Mode           | Description                     |
 | ------------- | -------------- | ------------------------------- |
 | `<Leader>doc` | Normal, Visual | Create doc signature annotation |
-| `<Leader>cc`  | Normal, Visual | Toggle comment                  |
-| `<Leader>cb`  | Normal, Visual | Toggle comment block            |
+| `<Leader>cc`  | Normal, Visual | Toggle inline comment           |
+| `<Leader>cb`  | Normal, Visual | Toggle block comment            |
 
 ### Mutations
 
@@ -87,18 +85,41 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 | `<A-k>`   | Normal, Visual | Move line/s up   |
 | `<A-j>`   | Normal, Visual | Move line/s down |
 
+## Marks
+
+### Navigation
+
+| Key          | Mode   | Description   |
+| ------------ | ------ | ------------- |
+| `<Leader>sm` | Normal | Search marks  |
+| `m}`         | Normal | Next mark     |
+| `m{`         | Normal | Previous mark |
+
+### Management
+
+| Key       | Mode   | Description                 |
+| --------- | ------ | --------------------------- |
+| `m,`      | Normal | Set alpha mark              |
+| `m;`      | Normal | Toggle alpha mark           |
+| `m[0-9]`  | Normal | Set bookmark group [0-9]    |
+| `dm[0-9]` | Normal | Delete bookmark group [0-9] |
+| `dm=`     | Normal | Delete current line mark    |
+
 ## Buffer
 
 ### Navigation
 
-| Key            | Mode              | Description         |
-| -------------- | ----------------- | ------------------- |
-| `<Ctrl-Down>`  | Normal            | Previous buffer     |
-| `<Ctrl-Up>`    | Normal            | Next buffer         |
-| `{n}k`         | Normal            | Move up `n` lines   |
-| `{n}j`         | Normal            | Move down `n` lines |
-| `<Shift-Up>`   | Normal, Visual, X | Scroll up           |
-| `<Shift-Down>` | Normal, Visual, X | Scroll down         |
+| Key            | Mode              | Description             |
+| -------------- | ----------------- | ----------------------- |
+| `<Ctrl-Down>`  | Normal            | Previous buffer         |
+| `<Ctrl-Up>`    | Normal            | Next buffer             |
+| `{n}k`         | Normal            | Move up `n` lines       |
+| `{n}j`         | Normal            | Move down `n` lines     |
+| `<Shift-Up>`   | Normal, Visual, X | Scroll up               |
+| `<Shift-Down>` | Normal, Visual, X | Scroll down             |
+| `s`            | Normal, Visual, X | Flash Search            |
+| `S`            | Normal, Visual, X | Flash Treesitter        |
+| `r`            | X, O              | Flash Treesitter Search |
 
 ### Management
 
@@ -180,12 +201,11 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 
 ### Diagnostics
 
-| Key          | Mode   | Description              |
-| ------------ | ------ | ------------------------ |
-| `<Leader>sd` | Normal | Show Buffer diagnostics  |
-| `<Leader>ee` | Normal | Popup current diagnostic |
-| `<Ctrl-e>`   | Normal | Next diagnostic          |
-| `<Ctrl-p>`   | Normal | Previous diagnostic      |
+| Key          | Mode   | Description             |
+| ------------ | ------ | ----------------------- |
+| `<Leader>sd` | Normal | Show Buffer diagnostics |
+| `<Ctrl-e>`   | Normal | Next diagnostic         |
+| `<Ctrl-p>`   | Normal | Previous diagnostic     |
 
 ## Refactor
 
@@ -288,9 +308,12 @@ A comprehensive reference of all custom keybindings configured in Neovim.
 
 ## Miscellaneous
 
-| Key           | Mode   | Description       |
-| ------------- | ------ | ----------------- |
-| `<Leader>url` | Normal | Find URLs         |
-| `<Leader>tw`  | Normal | Toggle focus mode |
+| Key          | Mode   | Description       |
+| ------------ | ------ | ----------------- |
+| `<Leader>tw` | Normal | Toggle focus mode |
+| `<Ctrl-a>`   | Normal | Increment version |
+| `<Ctrl-x>`   | Normal | Decrement version |
+| `jq`         | Normal | Jq/Yq quickfix    |
+| `jqq`        | Normal | Jq/Yq query       |
 
 </div>
