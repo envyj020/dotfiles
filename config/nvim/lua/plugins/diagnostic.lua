@@ -2,18 +2,18 @@
 -- vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 local highlights = {
-  DiagnosticLineError = { bg = "#311b2d" },
-  DiagnosticLineWarn  = { bg = "#33291d" },
-  DiagnosticLineHint  = { bg = "#1b2e33" },
-  DiagnosticLineInfo  = { bg = "#1e2e20" },
-  DiagnosticNrError   = { fg = "#ff6b6b" },
-  DiagnosticNrWarn    = { fg = "#f0ad4e" },
-  DiagnosticNrHint    = { fg = "#4fc3f7" },
-  DiagnosticNrInfo    = { fg = "#81c784" },
+    DiagnosticLineError = { bg = "#311b2d" },
+    DiagnosticLineWarn = { bg = "#33291d" },
+    DiagnosticLineHint = { bg = "#1b2e33" },
+    DiagnosticLineInfo = { bg = "#1e2e20" },
+    DiagnosticNrError = { fg = "#ff6b6b" },
+    DiagnosticNrWarn = { fg = "#f0ad4e" },
+    DiagnosticNrHint = { fg = "#4fc3f7" },
+    DiagnosticNrInfo = { fg = "#81c784" },
 }
 
 for name, opts in pairs(highlights) do
-  vim.api.nvim_set_hl(0, name, opts)
+    vim.api.nvim_set_hl(0, name, opts)
 end
 
 vim.diagnostic.config({
@@ -35,6 +35,29 @@ vim.diagnostic.config({
             [vim.diagnostic.severity.WARN] = "DiagnosticLineWarn",
             [vim.diagnostic.severity.INFO] = "DiagnosticLineInfo",
             [vim.diagnostic.severity.HINT] = "DiagnosticLineHint",
+        },
+    },
+})
+
+require("tiny-inline-diagnostic").setup({
+    transparent_bg = false,
+    transparent_cursorline = true,
+    signs = {
+        diag = "󱠇 ",
+        vertical = " │",
+        vertical_end = " └",
+        arrow = "   ",
+        up_arrow = "  ",
+        right = "",
+    },
+    blend = {
+        factor = 0.1,
+    },
+    options = {
+        use_icons_from_diagnostic = false,
+        show_source = {
+            enabled = true,
+            if_many = true,
         },
     },
 })

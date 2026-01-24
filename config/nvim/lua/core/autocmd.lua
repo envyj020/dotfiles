@@ -42,7 +42,6 @@ autocmd("LspAttach", {
     group = group,
     callback = function(args)
         local common = require("common")
-
         local keymap_opts = common.keymap_opts
         local command = common.command
         local map = vim.keymap.set
@@ -55,16 +54,12 @@ autocmd("LspAttach", {
         map("n", "K", vim.lsp.buf.hover, keymap_opts("Show signature documentation", opts))
 
         -- LSP Diagnostics
-        map("n", "<Leader>ee", function()
-            vim.diagnostic.open_float({ scope = "line" })
-        end, keymap_opts("Show line diagnostics", opts))
-
         map("n", "<C-e>", function()
-            vim.diagnostic.jump({ count = 1, float = true })
+            vim.diagnostic.jump({ count = 1 })
         end, keymap_opts("Next diagnostic", opts))
 
         map("n", "<C-p>", function()
-            vim.diagnostic.jump({ count = -1, float = true })
+            vim.diagnostic.jump({ count = -1 })
         end, keymap_opts("Previous diagnostic", opts))
 
         -- LSP Navigation

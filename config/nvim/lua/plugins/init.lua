@@ -44,6 +44,9 @@ Plug("tpope/vim-dotenv")
 Plug("monaqa/dial.nvim")
 Plug("folke/flash.nvim")
 Plug("chrishrb/gx.nvim")
+Plug("akinsho/toggleterm.nvim")
+Plug("jiangmiao/auto-pairs")
+Plug("jghauser/mkdir.nvim")
 
 --- Git
 Plug("NeogitOrg/neogit")
@@ -56,11 +59,12 @@ Plug("williamboman/mason.nvim", { tag = "stable" })
 Plug("williamboman/mason-lspconfig.nvim", { tag = "stable" })
 Plug("WhoIsSethDaniel/mason-tool-installer.nvim")
 
---- LSP
+--- LSP - Diagnostics
 Plug("folke/trouble.nvim")
 Plug("neovim/nvim-lspconfig")
 Plug("nvim-lua/lsp-status.nvim")
 Plug("ray-x/lsp_signature.nvim")
+Plug("rachartier/tiny-inline-diagnostic.nvim")
 
 --- CMP
 Plug("hrsh7th/nvim-cmp")
@@ -105,13 +109,9 @@ Plug("jonsmithers/vim-html-template-literals")
 Plug("catgoose/nvim-colorizer.lua")
 Plug("mhartington/formatter.nvim")
 Plug("mfussenegger/nvim-lint")
-Plug("akinsho/toggleterm.nvim")
-Plug("jiangmiao/auto-pairs")
-Plug("jghauser/mkdir.nvim")
 Plug("danymat/neogen")
 Plug("smjonas/inc-rename.nvim")
 Plug("chentoast/marks.nvim")
-
 Plug("cenk1cenk2/schema-companion.nvim", { commit = "71c9e53b399dc7063381c693b7f06f7144772d45" })
 Plug("davidmh/mdx.nvim")
 Plug("ray-x/go.nvim")

@@ -17,8 +17,6 @@ map("n", "<Leader>ol", common.nvim_session_manager("load"), keymap_opts("Loads a
 -- Formatting
 map("n", "ff", command("Format"), keymap_opts("Format code"))
 map("n", "FF", command("FormatWrite"), keymap_opts("Format and write"))
-map("n", "jq", command("JqxList"), keymap_opts("Jq/Yq quickfix"))
-map("n", "jqq", command("JqxQuery"), keymap_opts("Jq/Yq query"))
 
 -- File Manager
 map("n", "<leader>t", command("Neotree", "toggle", "reveal"), keymap_opts("Toggle NeoTree"))
@@ -162,6 +160,8 @@ map("n", "<Leader>;", command("ToggleTerm"), keymap_opts("Toggle terminal"))
 map("t", "<Esc>", "<C-\\><C-n>", keymap_opts("Exit terminal mode"))
 
 -- Miscellaneous
+map("n", "jq", command("JqxList"), keymap_opts("Jq/Yq quickfix"))
+map("n", "jqq", command("JqxQuery"), keymap_opts("Jq/Yq query"))
 map("n", "<Leader>h", command("CloakToggle"), keymap_opts("Toggle sensitive data"))
 map("n", "<Leader>tw", function()
     Snacks.toggle.dim():toggle()
