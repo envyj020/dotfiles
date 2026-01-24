@@ -164,13 +164,13 @@ version = "0.25.2"
 backend = "aqua:stefanprodan/timoni"
 
 [[tools."aqua:sxyazi/yazi"]]
-version = "26.1.4"
+version = "26.1.22"
 backend = "aqua:sxyazi/yazi"
 
 [tools."aqua:sxyazi/yazi".platforms.linux-x64]
-checksum = "sha256:76e5010e1dcd11259d34bda4cca75d33fad4b4deb59dadf179832a39d6b99994"
-size = 10715068
-url = "https://github.com/sxyazi/yazi/releases/download/v26.1.4/yazi-x86_64-unknown-linux-musl.zip"
+checksum = "sha256:b977351968206c0b78d2ef5bf21351685cc191b58a4c7e1c98c37db5d0a381f8"
+size = 10705023
+url = "https://github.com/sxyazi/yazi/releases/download/v26.1.22/yazi-x86_64-unknown-linux-musl.zip"
 
 [[tools."aqua:tfutils/tfenv"]]
 version = "3.0.0"
