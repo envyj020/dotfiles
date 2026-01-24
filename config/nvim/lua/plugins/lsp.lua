@@ -12,20 +12,17 @@ local LSP_SERVERS = {
     "vimls",
     "lua_ls",
     "gh_actions_ls",
-    "tombi"
+    "tombi",
 }
 
--- Turn off func arg virtual text hints
-vim.lsp.inlay_hint.enable(false)
-
 for _, server in ipairs(LSP_SERVERS) do
-  local has_custom_opts, server_opts = pcall(require, "lsp-settings." .. server)
-  local opts = has_custom_opts and server_opts or {}
+    local has_custom_opts, server_opts = pcall(require, "extensions.lsp-settings." .. server)
+    local opts = has_custom_opts and server_opts or {}
 
-  vim.lsp.config(server, opts)
+    vim.lsp.config(server, opts)
 end
 
--- Enable LSPs
+vim.lsp.inlay_hint.enable(false)
 vim.lsp.enable(LSP_SERVERS)
 
 require("lsp_signature").setup({
