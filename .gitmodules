@@ -1,24 +1,32 @@
 [submodule "modules/LS_COLORS"]
 	path = modules/LS_COLORS
 	url = https://github.com/trapd00r/LS_COLORS.git
+	branch = master
 [submodule "modules/catppuccin-yazi-themes"]
 	path = modules/catppuccin-yazi-themes
 	url = https://github.com/catppuccin/yazi.git
+	branch = main
 [submodule "modules/catppuccin-bat-themes"]
 	path = modules/catppuccin-bat-themes
 	url = https://github.com/catppuccin/bat.git
+	branch = main
 [submodule "modules/catppuccin-btop-themes"]
 	path = modules/catppuccin-btop-themes
 	url = https://github.com/catppuccin/btop.git
+	branch = main
 [submodule "modules/catppuccin-k9s-themes"]
 	path = modules/catppuccin-k9s-themes
 	url = https://github.com/catppuccin/k9s.git
+	branch = main
 [submodule "modules/catppuccin-eza-themes"]
 	path = modules/catppuccin-eza-themes
 	url = https://github.com/catppuccin/eza.git
+	branch = main
 [submodule "modules/catppuccin-xresources-themes"]
 	path = modules/catppuccin-xresources-themes
 	url = https://github.com/catppuccin/xresources.git
+	branch = main
 [submodule "modules/catppuccin-waybar-themes"]
 	path = modules/catppuccin-waybar-themes
 	url = https://github.com/catppuccin/waybar.git
+	branch = main
