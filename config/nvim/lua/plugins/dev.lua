@@ -8,3 +8,7 @@ require("go").setup({
         enable = false,
     },
 })
+
+require("uv").setup({
+    picker_integration = true,
+})
