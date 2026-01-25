@@ -184,7 +184,7 @@ set -eu
         done
     }
 
-    ask_mise_neovim() {
+    ask_dependencies() {
         row
         info "Let's finish the bootstrap process by installing ${BLUE}mise${NC} ${BOLD}system-wide"
         info "dependencies and setup ${BLUE}Neovim${NC}. ${BOLD}It might take a while"
@@ -200,7 +200,7 @@ set -eu
                 return 0
                 ;;
             [cC])
-                if [ ! -s "$XDG_CONFIG_HOME/mise/config.tomls" ] || [ ! -s "$XDG_CONFIG_HOME/nvim/init.lua" ]; then
+                if [ ! -s "$XDG_CONFIG_HOME/mise/mise.toml" ] || [ ! -s "$XDG_CONFIG_HOME/nvim/init.lua" ]; then
                     error "Oops! You must symlink ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC} ${BOLD}to proceed."
                 fi
                 make mise || error "Failed to run 'make mise'"
@@ -227,7 +227,7 @@ set -eu
             ask_background
             ask_base
             ask_stow
-            ask_mise_neovim
+            ask_dependencies
             info "Installation complete! You may need to restart your shell"
             info "with: ${GREEN}exec \$SHELL -i${NC} ${BOLD}or run: ${GREEN}source ~/.bashrc${NC}"
         )
