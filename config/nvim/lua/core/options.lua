@@ -58,6 +58,7 @@ o.mouse = "a"
 o.inccommand = "split"
 o.foldmethod = "manual"
 o.sessionoptions:remove("blank")
+o.showtabline = 2
 o.laststatus = 3
 
 o.shada = "!,'150,<100,s20,h"

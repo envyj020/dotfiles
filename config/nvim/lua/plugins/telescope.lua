@@ -1,15 +1,6 @@
 local telescope = require("telescope")
 local actions = require("telescope.actions")
 
-local highlights = {
-    TelescopeSelection = { fg = "#ff38a2", bold = true },
-    TelescopeMatching = { fg = "#d9bcef" },
-}
-
-for name, opts in pairs(highlights) do
-    vim.api.nvim_set_hl(0, name, opts)
-end
-
 telescope.setup({
     defaults = {
         border = true,

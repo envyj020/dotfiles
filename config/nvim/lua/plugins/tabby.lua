@@ -1,11 +1,9 @@
-vim.o.showtabline = 2
-
-local palette = require("catppuccin.palettes").get_palette("mocha")
+local catppuccin = require("catppuccin.palettes").get_palette("mocha")
 
 local theme = {
+    current_tab = "TabLineSel",
     fill = "TabLineFill",
     head = "TabLine",
-    current_tab = "TabLineSel",
     tab = "TabLine",
     win = "TabLine",
     tail = "TabLine",
@@ -16,7 +14,7 @@ require("tabby").setup({
     line = function(line)
         return {
             {
-                { "  ", hl = { fg = palette.green, bg = palette.base } },
+                { "  ", hl = { fg = catppuccin.green, bg = catppuccin.base } },
                 line.sep("", theme.head, theme.fill),
             },
             line.tabs().foreach(function(tab)
