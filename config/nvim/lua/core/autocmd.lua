@@ -14,6 +14,40 @@ autocmd("CursorHold", {
     end,
 })
 
+-- Install missing Treesitter parser if any for a given buffer and turns it on
+autocmd("Filetype", {
+    group = group,
+    pattern = "*",
+    callback = function(e)
+        local ok, nvim_treesitter = pcall(require, "nvim-treesitter")
+
+        if not ok then
+            return
+        end
+
+        local ft = vim.bo[e.buf].ft
+        local treesitter_parsers = require("nvim-treesitter.parsers")
+        local parser = vim.treesitter.language.get_lang(ft)
+
+        if not treesitter_parsers[parser] then
+            return
+        end
+
+        nvim_treesitter.install({ parser }):await(function(err)
+            if err then
+                vim.notify("Couldn't install Treesitter parser for filetype: " .. ft .. " error: " .. err)
+                return
+            end
+
+            pcall(vim.treesitter.start, e.buf)
+            vim.opt_local.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+            vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+            vim.opt_local.foldmethod = "expr"
+            vim.opt_local.foldlevel = 100
+        end)
+    end,
+})
+
 -- Disables comment wrapping
 autocmd("FileType", {
     group = group,
@@ -37,7 +71,7 @@ autocmd("BufReadPost", {
     end,
 })
 
--- Set LSP keybindings on supported buffers
+-- Set LSP keybindings on LSP enabled buffers
 autocmd("LspAttach", {
     group = group,
     callback = function(e)

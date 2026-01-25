@@ -9,10 +9,10 @@ Plug("folke/tokyonight.nvim")
 Plug("catppuccin/nvim")
 
 --- Treesitter
-Plug("nvim-treesitter/nvim-treesitter", { ["do"] = ":TSUpdate", ["branch"] = "master" })
-Plug("nvim-treesitter/nvim-treesitter-refactor")
-Plug("nvim-treesitter/nvim-treesitter-textobjects")
-Plug("nvim-treesitter/playground")
+Plug("nvim-treesitter/nvim-treesitter", { ["do"] = ":TSUpdate", ["branch"] = "main" })
+Plug("nvim-treesitter/nvim-treesitter-textobjects", { ["branch"] = "main" })
+Plug("nvim-treesitter/nvim-treesitter-context")
+-- Plug("nvim-treesitter/nvim-treesitter-locals")
 
 --- Viewport
 Plug("nanozuki/tabby.nvim")

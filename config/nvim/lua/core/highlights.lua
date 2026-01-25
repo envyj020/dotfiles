@@ -1,6 +1,10 @@
+local catppuccin = require("catppuccin.palettes").get_palette("mocha")
+
 local highlights = {
-    MatchParen = { bg = "#87c095", bold = true },
-    LinrNr = {},
+    TreesitterContextBottom = { fg = catppuccin.rosewater, bg = catppuccin.base, underline = false, bold = true },
+    MatchParen = { fg = catppuccin.green, bold = true },
+    CurSearch = { fg = catppuccin.base, bg = catppuccin.peach },
+    LineNr = { fg = catppuccin.surface1 },
 }
 
 for name, opts in pairs(highlights) do

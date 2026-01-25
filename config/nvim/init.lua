@@ -17,14 +17,15 @@ if not NVIM_PLUG_INSTALLED then
     end
 end
 
+require("core.settings")
 require("core.options")
+require("core.commands")
 require("core.autocmd")
 require("core.filetypes")
 require("plugins")
 
 if NVIM_PLUG_INSTALLED then
     require("core.keymaps")
-    require("core.settings")
-    require("core.highlights")
     require("plugins.entrypoint")
+    require("core.highlights")
 end

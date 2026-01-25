@@ -1,14 +1,5 @@
 vim.g.editorconfig = true
 
--- In case I come back to NerdTree
-vim.g.NERDTreeShowHidden = 1
-vim.g.NERDTreeWinSize = 60
-vim.g.NERDTreeFileExtensionHighlightFullName = 1
-vim.g.NERDTreeExactMatchHighlightFullName = 1
-vim.g.NERDTreePatternMatchHighlightFullName = 1
-vim.g.NERDTreeHighlightFolders = 1
-vim.g.NERDTreeHighlightFoldersFullName = 1
-
 vim.g.mkdp_auto_start = 0
 vim.g.mkdp_auto_close = 1
 vim.g.mkdp_command_for_global = 0

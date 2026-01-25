@@ -19,7 +19,7 @@ map("n", "ff", command("Format"), keymap_opts("Format code"))
 map("n", "FF", command("FormatWrite"), keymap_opts("Format and write"))
 
 -- File Manager
-map("n", "<leader>t", command("Neotree", "toggle", "reveal"), keymap_opts("Toggle NeoTree"))
+map("n", "<Leader>t", command("Neotree", "toggle", "reveal"), keymap_opts("Toggle NeoTree"))
 
 -- Flash
 map({ "n", "x", "o" }, "s", function()
@@ -31,6 +31,103 @@ end, keymap_opts("Flash Treesitter"))
 map({ "x", "o" }, "r", function()
     require("flash").treesitter_search()
 end, keymap_opts("Treesitter search"))
+
+-- Treesitter
+local treesitter_select = require("nvim-treesitter-textobjects.select").select_textobject
+local treesitter_swap = require("nvim-treesitter-textobjects.swap")
+local treesitter_move = require("nvim-treesitter-textobjects.move")
+
+-- Context
+map("n", "<Leader>c", function()
+    require("treesitter-context").go_to_context(vim.v.count1)
+end, keymap_opts("Jump to context", { silent = true }))
+
+-- Select
+-- @Function
+map({ "x", "o" }, "of", function()
+    treesitter_select("@function.outer", "textobjects")
+end, keymap_opts("Treesitter @function.outer"))
+map({ "x", "o" }, "if", function()
+    treesitter_select("@function.inner", "textobjects")
+end, keymap_opts("Treesitter @function.inner:s"))
+
+-- @Class
+map({ "x", "o" }, "oc", function()
+    treesitter_select("@class.outer", "textobjects")
+end, keymap_opts("Treesitter @class.outer:s"))
+map({ "x", "o" }, "ic", function()
+    treesitter_select("@class.inner", "textobjects")
+end, keymap_opts("Treesitter @class.inner:s"))
+
+-- @Parameter
+map({ "x", "o" }, "op", function()
+    treesitter_select("@parameter.outer", "textobjects")
+end, keymap_opts("Treesitter @parameter.outer:s"))
+map({ "x", "o" }, "ip", function()
+    treesitter_select("@parameter.inner", "textobjects")
+end, keymap_opts("Treesitter @parameter.inner:s"))
+
+-- @Variable
+map({ "x", "o" }, "ov", function()
+    treesitter_select("@assignment.outer", "textobjects")
+end, keymap_opts("Treesitter @assignment.outer:s"))
+map({ "x", "o" }, "iv", function()
+    treesitter_select("@assignment.inner", "textobjects")
+end, keymap_opts("Treesitter @assignment.inner:s"))
+
+-- Swap
+map("n", "<Leader>a", function()
+    treesitter_swap.swap_next("@parameter.inner")
+end, keymap_opts("Treesitter @swap.next"))
+map("n", "<Leader>A", function()
+    treesitter_swap.swap_previous("@parameter.outer")
+end, keymap_opts("Treesitter @swap.previous"))
+
+-- Move
+-- @Parameter
+map({ "n", "x", "o" }, "np", function()
+    treesitter_move.goto_next_start("@parameter.outer", "textobjects")
+end, keymap_opts("Treesitter @parameter.outer:m next start"))
+map({ "n", "x", "o" }, "nP", function()
+    treesitter_move.goto_next_end("@parameter.outer", "textobjects")
+end, keymap_opts("Treesitter @parameter.outer:m next end"))
+
+map({ "n", "x", "o" }, "pp", function()
+    treesitter_move.goto_previous_start("@parameter.outer", "textobjects")
+end, keymap_opts("Treesitter @parameter.outer:m previous start"))
+map({ "n", "x", "o" }, "pP", function()
+    treesitter_move.goto_previous_end("@parameter.outer", "textobjects")
+end, keymap_opts("Treesitter @parameter.outer:m previous end"))
+
+-- @Function
+map({ "n", "x", "o" }, "nf", function()
+    treesitter_move.goto_next_start("@function.outer", "textobjects")
+end, keymap_opts("Treesitter @function.outer:m next start"))
+map({ "n", "x", "o" }, "nF", function()
+    treesitter_move.goto_next_end("@function.outer", "textobjects")
+end, keymap_opts("Treesitter @function.outer:m next end"))
+
+map({ "n", "x", "o" }, "pf", function()
+    treesitter_move.goto_previous_start("@function.outer", "textobjects")
+end, keymap_opts("Treesitter @function.outer:m previous start"))
+map({ "n", "x", "o" }, "pF", function()
+    treesitter_move.goto_previous_end("@function.outer", "textobjects")
+end, keymap_opts("Treesitter @function.outer:m previous end"))
+
+--@Class
+map({ "n", "x", "o" }, "nc", function()
+    treesitter_move.goto_next_start("@class.outer", "textobjects")
+end, keymap_opts("Treesitter @class.outer:m next start"))
+map({ "n", "x", "o" }, "nC", function()
+    treesitter_move.goto_next_end("@class.outer", "textobjects")
+end, keymap_opts("Treesitter @class.outer:m next end"))
+
+map({ "n", "x", "o" }, "pc", function()
+    treesitter_move.goto_previous_start("@class.outer", "textobjects")
+end, keymap_opts("Treesitter @class.outer:m previous start"))
+map({ "n", "x", "o" }, "pC", function()
+    treesitter_move.goto_previous_end("@class.outer", "textobjects")
+end, keymap_opts("Treesitter @class.outer:m previous end"))
 
 -- Buffer Navigation
 map("n", "<C-Down>", command("bprevious"), keymap_opts("Previous buffer"))
