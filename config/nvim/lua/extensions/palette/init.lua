@@ -39,11 +39,10 @@ local CATPPUCCIN_EXTENDED_THEME = {
     },
 }
 
-local CATPPUCCIN_FALLBACK_THEME = vim.g.catppuccin_theme
 local CATPPUCCIN_THEMES = vim.tbl_keys(CATPPUCCIN_EXTENDED_THEME)
 
-function M.extended(name)
-    name = vim.tbl_contains(CATPPUCCIN_THEMES, name) and name or CATPPUCCIN_FALLBACK_THEME
+function M.get(name)
+    name = vim.tbl_contains(CATPPUCCIN_THEMES, name) and name or vim.g.catppuccin_theme
 
     local base = require("catppuccin.palettes").get_palette(name)
     return vim.tbl_extend("keep", base, CATPPUCCIN_EXTENDED_THEME[name])
