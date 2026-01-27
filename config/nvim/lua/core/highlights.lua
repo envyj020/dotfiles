@@ -1,4 +1,4 @@
-local catppuccin = require("extensions.palette").extended("mocha")
+local catppuccin = require("extensions.palette").extended(vim.g.catppuccin_theme)
 
 local highlights = {
     DiagnosticLineError = { bg = catppuccin.err },

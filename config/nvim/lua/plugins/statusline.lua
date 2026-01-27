@@ -1,5 +1,5 @@
 local lualine = require("lualine")
-local catppuccin = require("extensions.palette").extended("mocha")
+local catppuccin = require("extensions.palette").extended(vim.g.catppuccin_theme)
 
 local colors = {
     bg = catppuccin.base,

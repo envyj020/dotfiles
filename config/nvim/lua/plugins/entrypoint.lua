@@ -1,6 +1,5 @@
 -- Color Scheme
-local NVIM_COLORSCHEME = os.getenv("NVIM_COLORSCHEME") or "catppuccin-mocha"
-vim.cmd("colorscheme " .. NVIM_COLORSCHEME)
+vim.cmd("colorscheme " .. vim.g.neovim_colorscheme)
 
 --- Import Plugins config
 require("plugins.avante")

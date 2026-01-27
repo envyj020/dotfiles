@@ -39,7 +39,7 @@ local CATPPUCCIN_EXTENDED_THEME = {
     },
 }
 
-local CATPPUCCIN_FALLBACK_THEME = "mocha"
+local CATPPUCCIN_FALLBACK_THEME = vim.g.catppuccin_theme
 local CATPPUCCIN_THEMES = vim.tbl_keys(CATPPUCCIN_EXTENDED_THEME)
 
 function M.extended(name)
