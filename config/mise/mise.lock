@@ -3,13 +3,13 @@ version = "15.1.0"
 backend = "aqua:BurntSushi/ripgrep"
 
 [[tools."aqua:aws/aws-cli"]]
-version = "2.33.3"
+version = "2.33.8"
 backend = "aqua:aws/aws-cli"
 
 [tools."aqua:aws/aws-cli".platforms.linux-x64]
-checksum = "blake3:71d59c3da22e447fbba16fbf75184ea0eb7341a99c9bcd1db6c3b43b5ee527c7"
-size = 66879387
-url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.33.3.zip"
+checksum = "blake3:90e22f0b33eba2bc2b22a70ca9c190a05c208730783b9479e297864f7e1e5005"
+size = 66897224
+url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64-2.33.8.zip"
 
 [[tools."aqua:casey/just"]]
 version = "1.46.0"
@@ -25,13 +25,13 @@ version = "1.0.0"
 backend = "aqua:chmln/sd"
 
 [[tools."aqua:cli/cli"]]
-version = "2.85.0"
+version = "2.86.0"
 backend = "aqua:cli/cli"
 
 [tools."aqua:cli/cli".platforms.linux-x64]
-checksum = "sha256:5dcc4e282b9c22c0d31c217805976448c966cfc56c20157c78385a8a62c93cf0"
-size = 13599591
-url = "https://github.com/cli/cli/releases/download/v2.85.0/gh_2.85.0_linux_amd64.tar.gz"
+checksum = "sha256:f3b08bd6a28420cc2229b0a1a687fa25f2b838d3f04b297414c1041ca68103c7"
+size = 13627589
+url = "https://github.com/cli/cli/releases/download/v2.86.0/gh_2.86.0_linux_amd64.tar.gz"
 
 [[tools."aqua:dandavison/delta"]]
 version = "0.18.2"
@@ -55,13 +55,13 @@ version = "0.23.4"
 backend = "aqua:eza-community/eza"
 
 [[tools."aqua:go-task/task"]]
-version = "3.46.4"
+version = "3.48.0"
 backend = "aqua:go-task/task"
 
 [tools."aqua:go-task/task".platforms.linux-x64]
-checksum = "sha256:4b0098862292de03d568c851b207bce5fdb8a59cb533d6ed4132386151926c46"
-size = 10537373
-url = "https://github.com/go-task/task/releases/download/v3.46.4/task_linux_amd64.tar.gz"
+checksum = "sha256:f4bfc4eef1b2557b262f3cc0a79976a421885cb7b9e71cfe75568a2ebe4d7ae5"
+size = 15070834
+url = "https://github.com/go-task/task/releases/download/v3.48.0/task_linux_amd64.tar.gz"
 
 [[tools."aqua:grafana/tanka"]]
 version = "0.36.3"
@@ -73,13 +73,13 @@ size = 20668600
 url = "https://github.com/grafana/tanka/releases/download/v0.36.3/tk-linux-amd64"
 
 [[tools."aqua:helm/helm"]]
-version = "4.0.5"
+version = "4.1.0"
 backend = "aqua:helm/helm"
 
 [tools."aqua:helm/helm".platforms.linux-x64]
-checksum = "sha256:730e4e9fbff94168249ddd0b9b1b8c357b7f64815462dd88c6b39f09bf18b814"
-size = 19971724
-url = "https://get.helm.sh/helm-v4.0.5-linux-amd64.tar.gz"
+checksum = "sha256:8e7ae5cb890c56f53713bffec38e41cd8e7e4619ebe56f8b31cd383bfb3dbb83"
+size = 19316695
+url = "https://get.helm.sh/helm-v4.1.0-linux-amd64.tar.gz"
 
 [[tools."aqua:helmfile/helmfile"]]
 version = "1.2.3"
@@ -128,6 +128,11 @@ url = "https://github.com/kubernetes-sigs/kind/releases/download/v0.31.0/kind-li
 [[tools."aqua:kubernetes-sigs/krew"]]
 version = "0.4.5"
 backend = "aqua:kubernetes-sigs/krew"
+
+[tools."aqua:kubernetes-sigs/krew".platforms.linux-x64]
+checksum = "sha256:bacc06800bda14ec063cd0b6f377a961fdf4661c00366bf9834723cd28bfabc7"
+size = 5054827
+url = "https://github.com/kubernetes-sigs/krew/releases/download/v0.4.5/krew-linux_amd64.tar.gz"
 
 [[tools."aqua:kubernetes-sigs/kustomize"]]
 version = "5.8.0"
@@ -191,18 +196,18 @@ size = 19719039
 url = "https://github.com/turbot/steampipe/releases/download/v2.3.4/steampipe_linux_amd64.tar.gz"
 
 [[tools."npm:@anthropic-ai/claude-code"]]
-version = "2.1.14"
+version = "2.1.20"
 backend = "npm:@anthropic-ai/claude-code"
 
 [[tools."npm:@google/gemini-cli"]]
-version = "0.25.0"
+version = "0.25.2"
 backend = "npm:@google/gemini-cli"
 
 [[tools.usage]]
-version = "2.13.1"
+version = "2.15.0"
 backend = "aqua:jdx/usage"
 
 [tools.usage.platforms.linux-x64]
-checksum = "sha256:6c0a17eaee4f6fad5aba79c3151678f92dd493854fc4be78fe58902abc101b40"
-size = 2803643
-url = "https://github.com/jdx/usage/releases/download/v2.13.1/usage-x86_64-unknown-linux-musl.tar.gz"
+checksum = "sha256:48df61e87ee6f547bc2af9b01e90f0ae3c8e7c8c684ed2343b3ccd5aed4bbed2"
+size = 2767132
+url = "https://github.com/jdx/usage/releases/download/v2.15.0/usage-x86_64-unknown-linux-musl.tar.gz"
