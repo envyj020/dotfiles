@@ -16,7 +16,7 @@ end
 function M.nvim_config_reload()
     local mod_patterns = {}
     local modules = vim.fs.dir(vim.fs.joinpath(vim.fn.stdpath("config"), "lua"), {
-        depth = 1
+        depth = 1,
     })
 
     for name, type in modules do
@@ -134,6 +134,26 @@ function M.nvim_session_manager(action)
 
         actions[action]()
     end
+end
+
+function M.rename_tab()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local bufn = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":t")
+    local win_id = vim.api.nvim_get_current_win()
+    local tab_id = vim.api.nvim_win_get_tabpage(win_id)
+    local tab_name = require("tabby.feature.tab_name").get(tab_id)
+
+    vim.ui.input({
+        prompt = "Enter tab name:",
+        default = tab_name or "",
+        completion = "dir",
+    }, function(name)
+        if not name or name == "" or name == bufn or name == tab_name then
+            return
+        end
+        name = (name:gsub("%s+", "")):sub(0, 15)
+        require("tabby").tab_rename(name)
+    end)
 end
 
 return M

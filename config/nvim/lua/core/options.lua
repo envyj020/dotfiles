@@ -58,6 +58,7 @@ o.mouse = "a"
 o.inccommand = "split"
 o.foldmethod = "manual"
 o.sessionoptions:remove("blank")
+o.sessionoptions:append({ "tabpages", "globals" })
 o.showtabline = 2
 o.laststatus = 3
 

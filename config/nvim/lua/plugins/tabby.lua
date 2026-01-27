@@ -1,12 +1,12 @@
 local catppuccin = require("catppuccin.palettes").get_palette("mocha")
 
 local theme = {
-    current_tab = "TabLineSel",
     fill = "TabLineFill",
     head = "TabLine",
     tab = "TabLine",
     win = "TabLine",
     tail = "TabLine",
+    current_tab = "TabLineSel",
 }
 
 require("tabby").setup({
@@ -37,7 +37,7 @@ require("tabby").setup({
                 return {
                     line.sep("", hl, theme.fill),
                     tab.number(),
-                    "  ",
+                    "  " .. tab_name,
                     modified and "",
                     tab.close_btn(""),
                     line.sep("", hl, theme.fill),

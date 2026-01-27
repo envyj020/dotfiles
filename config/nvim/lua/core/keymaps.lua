@@ -169,7 +169,8 @@ map("n", "<Tab><Left>", "gT", keymap_opts("Previous tab"))
 
 -- Tab Management
 map("n", "<Tab>n", command("tabnew"), keymap_opts("Create a new tab"))
-map("n", "<Tab>q", command("tabclose"), keymap_opts("Close current tab"))
+map("n", "<Tab>x", command("tabclose"), keymap_opts("Close current tab"))
+map("n", "<Tab>r", common.rename_tab, keymap_opts("Rename current tab"))
 map("n", "<Tab>w", command("wa"), keymap_opts("Save *"))
 
 -- Commentaries
