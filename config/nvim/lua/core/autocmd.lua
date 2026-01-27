@@ -71,7 +71,7 @@ autocmd("BufReadPost", {
     end,
 })
 
--- Set LSP keybindings on LSP enabled buffers
+-- Set LSP keybindings on supported buffers
 autocmd("LspAttach", {
     group = group,
     callback = function(e)

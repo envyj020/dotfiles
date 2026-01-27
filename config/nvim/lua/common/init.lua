@@ -1,7 +1,7 @@
 local M = {}
 
 --- Concatenates a variadic number of tables
----@param ... table[] Variable number of tables to concatenate
+---@param ... table[] Variadic number of tables to concatenate
 ---@return table extended A new table containing all the elements from the input tables
 function M.concat_tables(...)
     local extended = {}
@@ -37,7 +37,7 @@ function M.nvim_config_reload()
     vim.notify("Config Reloaded Successfully!", vim.log.levels.INFO, { title = "Neovim" })
 end
 
---- Prepares the keymap options for a given command
+--- Prepares the keymap options for a given mapping
 ---@param desc string Command description
 ---@param extra_opts table|nil Extra options
 ---@return table
@@ -53,13 +53,13 @@ end
 --- Prepares a keymap command
 ---@param cmd string Main command
 ---@vararg ... string|nil Optional subcommands
----@return string Formatted command to use in keymap_set
+---@return string Formatted command to use in vim.keymap.set
 function M.command(cmd, ...)
     local args = table.concat({ ... }, " ")
     return (":%s%s<CR>"):format(cmd, args ~= "" and " " .. args or "")
 end
 
---- Manages a neovim session
+--- Manages a neovim session, requires tpope/vim-obsession
 ---@param action string create|delete|load
 ---@return function
 function M.nvim_session_manager(action)
@@ -136,6 +136,7 @@ function M.nvim_session_manager(action)
     end
 end
 
+--- Renames a Tabby tab interactively, requires nanozuki/tabby.nvim
 function M.rename_tab()
     local bufnr = vim.api.nvim_get_current_buf()
     local bufn = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ":t")
