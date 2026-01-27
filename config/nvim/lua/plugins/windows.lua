@@ -1,19 +1,6 @@
-local palette = require("catppuccin.palettes").get_palette("mocha")
-
-vim.o.winwidth = 5
-vim.o.winminwidth = 5
-vim.o.equalalways = false
-
-vim.api.nvim_set_hl(0, "mocha_window_picker", {
-    fg = palette.text,
-    bg = palette.mantle,
-    bold = true,
-    reverse = false,
-})
-
 require("nvim-window").setup({
     render = "float",
-    normal_hl = "mocha_window_picker",
+    normal_hl = "WindowPicker",
     border = "none",
 })
 

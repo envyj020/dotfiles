@@ -1,18 +1,18 @@
 local lualine = require("lualine")
-local palette = require("catppuccin.palettes").get_palette("mocha")
+local catppuccin = require("extensions.palette").extended("mocha")
 
 local colors = {
-    bg = palette.base,
-    fg = palette.peach,
-    blue = palette.lavender,
-    yellow = palette.yellow,
-    cyan = palette.mauve,
-    green = palette.green,
-    orange = palette.peach,
-    red = palette.red,
-    darkblue = "#081633",
-    violet = "#a9a1e1",
-    magenta = "#c678dd",
+    bg = catppuccin.base,
+    fg = catppuccin.peach,
+    blue = catppuccin.lavender,
+    yellow = catppuccin.yellow,
+    cyan = catppuccin.mauve,
+    green = catppuccin.green,
+    orange = catppuccin.peach,
+    red = catppuccin.red,
+    darkblue = catppuccin.darkblue,
+    violet = catppuccin.violet,
+    magenta = catppuccin.magenta,
 }
 
 local conditions = {

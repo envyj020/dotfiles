@@ -23,6 +23,11 @@ o.smartcase = true
 o.hlsearch = true
 o.incsearch = true
 
+-- Windows
+o.winwidth = 5
+o.winminwidth = 5
+o.equalalways = false
+
 --- Wrapping
 o.wrap = false
 

@@ -1,21 +1,3 @@
--- Show diagnostic when hovering
--- vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
-
-local highlights = {
-    DiagnosticLineError = { bg = "#311b2d" },
-    DiagnosticLineWarn = { bg = "#33291d" },
-    DiagnosticLineHint = { bg = "#1b2e33" },
-    DiagnosticLineInfo = { bg = "#1e2e20" },
-    DiagnosticNrError = { fg = "#ff6b6b" },
-    DiagnosticNrWarn = { fg = "#f0ad4e" },
-    DiagnosticNrHint = { fg = "#4fc3f7" },
-    DiagnosticNrInfo = { fg = "#81c784" },
-}
-
-for name, opts in pairs(highlights) do
-    vim.api.nvim_set_hl(0, name, opts)
-end
-
 vim.diagnostic.config({
     signs = {
         text = {
@@ -64,7 +46,7 @@ require("tiny-inline-diagnostic").setup({
 
 -- https://github.com/folke/trouble.nvim/blob/main/lua/trouble/view/window.lua
 local window = {
-    ["common"] = {
+    ["base"] = {
         type = "split",
         position = "bottom",
         size = 0.3,
@@ -94,7 +76,7 @@ require("trouble").setup({
     pinned = false,
     warn_no_results = true,
     open_no_results = false,
-    win = window.common,
+    win = window.base,
     preview = {
         type = "main",
         scratch = true,
@@ -130,7 +112,7 @@ require("trouble").setup({
         symbols = {
             mode = "lsp_document_symbols",
             focus = true,
-            win = window.common,
+            win = window.base,
             filter = {
                 ["not"] = function(item)
                     local excluded_by_filetype = {

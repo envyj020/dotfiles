@@ -1,4 +1,4 @@
-local palette = require("catppuccin.palettes").get_palette("mocha")
+local catppuccin = require("extensions.palette").extended("mocha")
 
 require("toggleterm").setup({
     direction = "float",
@@ -11,7 +11,7 @@ require("toggleterm").setup({
     persist_mode = true,
     highlights = {
         FloatBorder = {
-            guifg = palette.surface2,
+            guifg = catppuccin.surface2,
         },
     },
 })

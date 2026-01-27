@@ -1,4 +1,4 @@
-local catppuccin = require("catppuccin.palettes").get_palette("mocha")
+local catppuccin = require("extensions.palette").extended("mocha")
 
 local theme = {
     fill = "TabLineFill",
