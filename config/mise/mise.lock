@@ -37,10 +37,6 @@ url = "https://github.com/cli/cli/releases/download/v2.85.0/gh_2.85.0_linux_amd6
 version = "0.18.2"
 backend = "aqua:dandavison/delta"
 
-[[tools."aqua:datreeio/datree"]]
-version = "1.9.19"
-backend = "aqua:datreeio/datree"
-
 [[tools."aqua:derailed/k9s"]]
 version = "0.50.18"
 backend = "aqua:derailed/k9s"
