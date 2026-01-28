@@ -72,8 +72,7 @@ cmp.setup({
         { name = "path" },
         { name = "vsnip" },
         { name = "emoji" },
-    }, {
-    }),
+    }, {}),
 })
 
 cmp.setup.cmdline("/", {
