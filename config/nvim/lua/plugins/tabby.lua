@@ -3,9 +3,9 @@ local catppuccin = require("extensions.palette").get(vim.g.catppuccin_theme)
 local theme = {
     fill = "TabLineFill",
     head = "TabLine",
-    tab = "TabLine",
     win = "TabLine",
     tail = "TabLine",
+    tab = "TabLine",
     current_tab = "TabLineSel",
 }
 

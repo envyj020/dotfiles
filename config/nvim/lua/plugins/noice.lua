@@ -22,21 +22,24 @@ require("noice").setup({
         inc_rename = false,
         lsp_doc_border = false,
     },
+    views = {
+        confirm = {
+            border = {
+                style = "rounded",
+                text = { top = {} },
+            },
+        },
+    },
     routes = {
         {
             filter = { event = "msg_show", error = true, min_height = 5 },
             view = "split",
         },
         {
-            filter = { event = "msg_show", find = "Type  :qa  and press <Enter> to exit Nvim" },
-            opts = { skip = true },
-        },
-        {
-            filter = { event = "msg_show", find = "Type  :qa!  and press <Enter> to abandon all changes and exit Nvim" },
+            filter = { event = "msg_show", find = "Type.*:qa!?.*" },
             opts = { skip = true },
         },
     },
-    -- For routing debug
     -- format = {
     --     notify = {
     --         "{level} ",

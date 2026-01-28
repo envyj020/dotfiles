@@ -1,6 +1,8 @@
 local catppuccin = require("extensions.palette").get(vim.g.catppuccin_theme)
 
 local highlights = {
+    NoiceConfirmBorder = { fg = catppuccin.surface0 },
+    NoiceConfirm = { fg = catppuccin.rosewater },
     DiagnosticLineError = { bg = catppuccin.err },
     DiagnosticLineWarn = { bg = catppuccin.warn },
     DiagnosticLineHint = { bg = catppuccin.hint },
