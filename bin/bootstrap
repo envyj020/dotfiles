@@ -30,8 +30,8 @@ main() {
     local -ra NEOVIM_COMMANDS=(
         "PlugInstall --sync"
         "TSISync"
-        "MasonISync"
         "MasonToolsInstallSync"
+        "MasonISync"
     )
 
     for NEOVIM_COMMAND in "${NEOVIM_COMMANDS[@]}"; do
