@@ -25,7 +25,7 @@ main::tear_down() {
 main::setup() {
 
     if [[ $EUID -eq 0 ]]; then
-        log:error "This script is not meant to run as root"
+        log::error "This script is not meant to run as root"
     fi
 
     case $OS_NAME in
@@ -298,7 +298,7 @@ base::fonts() {
         mkdir -p "$NERD_FONTS_DESTINATION/$NERD_FONT"
 
         curl -fsSL "$NERD_FONTS_RELEASE_BASE_URL/$NERD_FONTS_LATEST_TAG/$NERD_FONT.tar.xz" | tar -C "$NERD_FONTS_DESTINATION/$NERD_FONT" -xJf - || {
-            log:error "Couldn't download and extract $NERD_FONT archive into $NERD_FONTS_DESTINATION"
+            log::error "Couldn't download and extract $NERD_FONT archive into $NERD_FONTS_DESTINATION"
         }
 
         fc-cache -f "$NERD_FONTS_DESTINATION/$NERD_FONT"
@@ -668,7 +668,7 @@ base::rofi() {
         sudo $PKG_MANAGER install -y $ROFI_PACKAGES &>/dev/null
 
         curl -fsSL $ROFI_ARCHIVE_DOWNLOAD_URL | tar -xzf - -C $SANDBOX || {
-            log:error "Couldn't download and extract $ROFI_ARCHIVE_NAME archive"
+            log::error "Couldn't download and extract $ROFI_ARCHIVE_NAME archive"
         }
 
         cd "$SANDBOX/${ROFI_ARCHIVE_NAME/%.tar.gz/}"
@@ -797,7 +797,7 @@ cmd::gvm() {
 
     [[ $(command -v go) ]] || {
         curl -fsSL $GO_ARCHIVE_DOWNLOAD_URL | tar -C $XDG_BIN_HOME -xzf - || {
-            log:error "Couldn't download and extract $GO_ARCHIVE_NAME archive"
+            log::error "Couldn't download and extract $GO_ARCHIVE_NAME archive"
         }
     }
 
@@ -922,11 +922,11 @@ base::stow() {
     }
     (
         tar -xzf "$SANDBOX/$STOW_ARCHIVE_NAME" -C $SANDBOX && cd $SANDBOX/$STOW_UNARCHIVED_DIR || {
-            log:error "Couldn't extract $STOW_ARCHIVE_NAME archive"
+            log::error "Couldn't extract $STOW_ARCHIVE_NAME archive"
         }
 
         ./configure --prefix="$(basename $XDG_BIN_HOME)" && make install &>/dev/null || {
-            log:error "Couldn't compile and install $STOW_UNARCHIVED_DIR"
+            log::error "Couldn't compile and install $STOW_UNARCHIVED_DIR"
         }
     )
 
