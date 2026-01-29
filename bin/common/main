@@ -5,6 +5,23 @@ set -ueo pipefail
 
 source "$(dirname "${BASH_SOURCE[0]}")/logging"
 
+# Checks if the specified commands are available
+#
+# Arguments:
+#   $@ - cmd1 cmd2...
+#
+# Returns:
+#   0 on success
+#   exit 1 if any command is not available
+
+common::require_cmd() {
+    for cmd in "$@"; do
+        if ! command -v "$cmd" &>/dev/null; then
+            log::error "$cmd is required but not installed."
+        fi
+    done
+}
+
 # Checks if a value exists in an array
 #
 # Arguments:
