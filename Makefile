@@ -28,7 +28,7 @@ base: ## Install base OS packages
 
 .PHONY: base
 
-bootstrap: init stow ## Bootstrap mise and neovim dependencies
+bootstrap: stow ## Bootstrap mise and neovim dependencies
 	bin/bootstrap
 
 .PHONY: bootstrap
