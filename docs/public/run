@@ -203,8 +203,7 @@ set -eu
                 if [ ! -s "$XDG_CONFIG_HOME/mise/mise.toml" ] || [ ! -s "$XDG_CONFIG_HOME/nvim/init.lua" ]; then
                     error "Oops! You must symlink ${YELLOW}${GITHUB_OWNER}/${GITHUB_REPOSITORY}${NC} ${BOLD}to proceed."
                 fi
-                make mise || error "Failed to run 'make mise'"
-                make neovim || error "Failed to run 'make neovim'"
+                make bootstrap || error "Failed to run 'make bootstrap'"
                 return 0
                 ;;
             *)

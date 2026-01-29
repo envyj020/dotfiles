@@ -1,31 +1,13 @@
 MAKEFLAGS += --silent
 SHELL := /bin/bash
 
-NVM_DIR = $(HOME)/.nvm/nvm.sh
 XDG_BIN_HOME := $(HOME)/.local/bin
-XDG_DATA_HOME := $(HOME)/.local/share
-
 PATH := $(XDG_BIN_HOME):$(PATH)
-PATH := $(XDG_DATA_HOME)/bob/nvim-bin:$(PATH)
 
 RED := \033[1;31m
 GREEN := \033[1;32m
 BLUE := \033[1;36m
 NC := \033[0m
-
-define CMD_EXISTS
-	if ! command -v $(1) >/dev/null 2>&1; then
-		echo -e "$(RED)$(1) not found$(NC). Run $(GREEN)make base$(NC)"
-		exit 1
-	fi
-endef
-
-define FILE_EXISTS
-	if [[ ! -f $(1) ]]; then
-		echo -e "$(RED)$(1) not found$(NC). Run $(GREEN)make base$(NC)"
-		exit 1
-	fi
-endef
 
 all: help
 
@@ -41,58 +23,24 @@ init:
 
 .PHONY: init
 
-base: init ## Install base OS packages
+base: ## Install base OS packages
 	bin/install
 
 .PHONY: base
 
-.ONESHELL:
-mise: f-nvm x-mise stow ## Install mise packages
-	set -e
-	source $(NVM_DIR)
-	mise install &>/dev/null
-	eval "$$(mise activate bash)"
-	ya pkg install &>/dev/null
+bootstrap: init stow ## Bootstrap mise and neovim dependencies
+	bin/bootstrap
 
-.PHONY: mise
+.PHONY: bootstrap
 
-.ONESHELL:
-neovim: x-neovim stow mise ## Install Neovim dependencies
-	set -e
-	eval "$$(mise activate bash)"
-	nvim --headless "+PlugInstall --sync" +qa &>/dev/null
-	nvim --headless "+TSISync" +qa &>/dev/null
-	nvim --headless "+MasonISync" +qa &>/dev/null
-	nvim --headless "+MasonToolsInstallSync" +qa &>/dev/null
-
-stow: x-stow init ## Symlinks dotfiles
+stow: init ## Symlinks dotfiles
 	stow home -t $(HOME)
 	stow config -t $(HOME)/.config
 
 .PHONY: stow
 
-unstow: x-stow ## Remove dotfiles symlinks
+unstow: ## Remove dotfiles symlinks
 	stow -D home -t $(HOME)
 	stow -D config -t $(HOME)/.config
 
 .PHONY: unstow
-
-x-stow:
-	$(call CMD_EXISTS,stow)
-
-.PHONY: x-stow
-
-x-mise:
-	$(call CMD_EXISTS,mise)
-
-.PHONY: x-mise
-
-x-neovim:
-	$(call CMD_EXISTS,nvim)
-
-.PHONY: x-neovim
-
-f-nvm:
-	$(call FILE_EXISTS,$(NVM_DIR))
-
-.PHONY: f-nvm

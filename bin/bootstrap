@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+SCRIPT_DIR=$(realpath "$(dirname -- "${BASH_SOURCE[0]}")")
+readonly SCRIPT_DIR
+
+: "${XDG_BIN_HOME:=$HOME/.local/bin}"
+: "${XDG_DATA_HOME:=$HOME/.local/share}"
+
+PATH="$XDG_BIN_HOME:$PATH"
+PATH="$XDG_DATA_HOME/bob/nvim-bin:$PATH"
+
+source "$SCRIPT_DIR/common/main"
+
+main() {
+    common::require_cmd "mise" "nvim"
+
+    [[ -f "$HOME/.nvm/nvm.sh" ]] || {
+        log::error "nvm source is required but missing"
+    }
+    # shellcheck source=/dev/null
+    source "$HOME/.nvm/nvm.sh"
+
+    mise install &>/dev/null
+    eval "$(mise env)"
+
+    ya pkg install &>/dev/null
+
+    local -ra NEOVIM_COMMANDS=(
+        "PlugInstall --sync"
+        "TSISync"
+        "MasonISync"
+        "MasonToolsInstallSync"
+    )
+
+    for NEOVIM_COMMAND in "${NEOVIM_COMMANDS[@]}"; do
+        nvim --headless "+${NEOVIM_COMMAND}" +qa &>/dev/null
+    done
+}
+
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    main
+fi
