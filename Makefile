@@ -62,6 +62,7 @@ neovim: x-neovim stow mise ## Install Neovim dependencies
 	eval "$$(mise activate bash)"
 	nvim --headless "+PlugInstall --sync" +qa &>/dev/null
 	nvim --headless "+TSISync" +qa &>/dev/null
+	nvim --headless "+MasonISync" +qa &>/dev/null
 	nvim --headless "+MasonToolsInstallSync" +qa &>/dev/null
 
 stow: x-stow init ## Symlinks dotfiles

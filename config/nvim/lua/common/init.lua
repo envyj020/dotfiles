@@ -1,5 +1,7 @@
 local M = {}
 
+M.headless = #vim.api.nvim_list_uis() == 0
+
 --- Concatenates a variadic number of tables
 ---@param ... table[] Variadic number of tables to concatenate
 ---@return table extended A new table containing all the elements from the input tables
