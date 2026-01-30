@@ -1,7 +1,7 @@
-local dap, dapui, dapvtext = require("dap"), require("dapui"), require("nvim-dap-virtual-text")
-local dap_pkg_base_path = vim.fn.stdpath("data") .. "/mason"
+local dap, dapui = require("dap"), require("dapui")
+local mason_base_path = vim.fs.joinpath(vim.fn.stdpath("data"), "mason")
 
-dapvtext.setup({
+require("nvim-dap-virtual-text").setup({
     enabled = true,
     enabled_commands = true,
     highlight_changed_variables = true,
@@ -16,7 +16,12 @@ dapvtext.setup({
     virt_lines = false,
 })
 
--- DAP Signs: DapBreakpoint|DapBreakpointCondition|DapLogPoint|DapStopped|DapBreakpointRejected
+-- DAP Signs:
+-- DapBreakpoint
+-- DapBreakpointCondition
+-- DapLogPoint
+-- DapStopped
+-- DapBreakpointRejected
 
 vim.fn.sign_define(
     "DapStopped",
@@ -95,7 +100,7 @@ require("dap-go").setup({
 
 dap.adapters.bashdb = {
     type = "executable",
-    command = dap_pkg_base_path .. "/packages/bash-debug-adapter/bash-debug-adapter",
+    command = vim.fs.joinpath(mason_base_path, "bin/bash-debug-adapter"),
     name = "bashdb",
 }
 
@@ -105,8 +110,8 @@ dap.configurations.sh = {
         request = "launch",
         name = "Launch file",
         showDebugOutput = true,
-        pathBashdb = dap_pkg_base_path .. "/packages/bash-debug-adapter/extension/bashdb_dir/bashdb",
-        pathBashdbLib = dap_pkg_base_path .. "/packages/bash-debug-adapter/extension/bashdb_dir",
+        pathBashdb = vim.fs.joinpath(mason_base_path, "packages/bash-debug-adapter/extension/bashdb_dir/bashdb"),
+        pathBashdbLib = vim.fs.joinpath(mason_base_path, "packages/bash-debug-adapter/extension/bashdb_dir"),
         trace = true,
         file = "${file}",
         program = "${file}",
@@ -127,8 +132,10 @@ dap.adapters["pwa-node"] = {
     host = "localhost",
     port = "${port}",
     executable = {
-        command = dap_pkg_base_path .. "/bin/js-debug-adapter",
-        args = { "${port}" },
+        command = vim.fs.joinpath(mason_base_path, "bin/js-debug-adapter"),
+        args = {
+            "${port}",
+        },
     },
 }
 

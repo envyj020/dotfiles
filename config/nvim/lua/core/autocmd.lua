@@ -71,6 +71,18 @@ autocmd("BufReadPost", {
     end,
 })
 
+-- Linter
+autocmd({ "BufEnter", "BufWritePost" }, {
+    group = group,
+    callback = function()
+        local ok, lint = pcall(require, "lint")
+        if not ok then
+            return
+        end
+        lint.try_lint()
+    end,
+})
+
 -- Set LSP keybindings on supported buffers
 autocmd("LspAttach", {
     group = group,
@@ -94,11 +106,11 @@ autocmd("LspAttach", {
             vim.diagnostic.jump({ count = -1 })
         end, keymap_opts("Previous diagnostic", opts))
 
+        -- LSP Navigation
         local function show(subcommand)
             return command("Trouble", subcommand, "toggle")
         end
 
-        -- LSP Navigation
         map("n", "<C-S-Left>", vim.lsp.buf.definition, keymap_opts("Go to definition", opts))
         map("n", "<C-S-Right>", vim.lsp.buf.declaration, keymap_opts("Go to declaration", opts))
         map("n", "<Leader>sa", vim.lsp.buf.code_action, keymap_opts("Code actions", opts))
