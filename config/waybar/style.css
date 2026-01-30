@@ -47,7 +47,7 @@ menu {
 }
 
 menuitem {
-    transition: background 200ms ease;
+  transition: background 200ms ease;
 }
 
 menuitem:hover {
@@ -75,7 +75,7 @@ menuitem:hover {
 }
 
 #network {
-  color: @yellow;
+  color: @rosewater;
   border-radius: 1.5rem;
 }
 
