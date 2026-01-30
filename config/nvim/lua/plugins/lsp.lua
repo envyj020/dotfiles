@@ -4,8 +4,7 @@ local servers = require("extensions.lsp.servers")
 
 for _, server in ipairs(servers) do
     local has_custom_opts, server_opts = pcall(require, "extensions.lsp.settings." .. server)
-    local opts = has_custom_opts and server_opts or {}
-
+    local opts = vim.tbl_deep_extend("force", vim.lsp.config[server] or {}, has_custom_opts and server_opts or {})
     vim.lsp.config(server, opts)
 end
 
