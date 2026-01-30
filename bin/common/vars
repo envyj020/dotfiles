@@ -55,6 +55,6 @@ readonly -a NERD_FONTS_TO_INSTALL=(
     "IBMPlexMono"
 )
 
-if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+if [[ ${BASH_SOURCE[0]} == "$0" ]]; then
     log::error "Execution denied: This script is a library and must be sourced."
 fi
