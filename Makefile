@@ -23,6 +23,11 @@ init:
 
 .PHONY: init
 
+pre-commit-hooks: ## Install pre-commit hooks
+	pre-commit install
+
+.PHONY: pre-commit-hooks
+
 base: ## Install base OS packages
 	bin/install
 
