@@ -94,34 +94,34 @@ autocmd("LspAttach", {
         local opts = { buffer = e.buf }
 
         -- LSP Signatures
-        map("i", "<C-k>", vim.lsp.buf.signature_help, keymap_opts("Show signature definition", opts))
-        map("n", "K", vim.lsp.buf.hover, keymap_opts("Show signature documentation", opts))
+        map("i", "<C-k>", vim.lsp.buf.signature_help, keymap_opts("LSP: show signature definition", opts))
+        map("n", "K", vim.lsp.buf.hover, keymap_opts("LSP: show signature documentation", opts))
 
         -- LSP Diagnostics
         map("n", "<C-e>", function()
             vim.diagnostic.jump({ count = 1 })
-        end, keymap_opts("Next diagnostic", opts))
+        end, keymap_opts("LSP: next diagnostic", opts))
 
         map("n", "<C-p>", function()
             vim.diagnostic.jump({ count = -1 })
-        end, keymap_opts("Previous diagnostic", opts))
+        end, keymap_opts("LSP: previous diagnostic", opts))
 
         -- LSP Navigation
         local function show(subcommand)
             return command("Trouble", subcommand, "toggle")
         end
 
-        map("n", "<C-S-Left>", vim.lsp.buf.definition, keymap_opts("Go to definition", opts))
-        map("n", "<C-S-Right>", vim.lsp.buf.declaration, keymap_opts("Go to declaration", opts))
-        map("n", "<Leader>sa", vim.lsp.buf.code_action, keymap_opts("Code actions", opts))
+        map("n", "<C-S-Left>", vim.lsp.buf.definition, keymap_opts("LSP: go to definition", opts))
+        map("n", "<C-S-Right>", vim.lsp.buf.declaration, keymap_opts("LSP: go to declaration", opts))
+        map("n", "<Leader>sa", vim.lsp.buf.code_action, keymap_opts("LSP: code actions", opts))
 
-        map("n", "<Leader>sd", show("diagnostics"), keymap_opts("Search diagnostics", opts))
-        map("n", "<Leader>sra", show("lsp"), keymap_opts("LSP ref,def,dec,impl", opts))
-        map("n", "<Leader>sde", show("lsp_definitions"), keymap_opts("LSP definitions", opts))
-        map("n", "<Leader>sr", show("lsp_references"), keymap_opts("LSP references", opts))
-        map("n", "<Leader>sff", show("symbols"), keymap_opts("LSP document symbols", opts))
-        map("n", "<Leader>sic", show("lsp_incoming_calls"), keymap_opts("LSP incoming calls", opts))
-        map("n", "<Leader>soc", show("lsp_outgoing_calls"), keymap_opts("LSP outgoing calls", opts))
-        map("n", "<Leader>si", show("lsp_implementations"), keymap_opts("LSP implementations", opts))
+        map("n", "<Leader>sd", show("diagnostics"), keymap_opts("LSP: Search diagnostics", opts))
+        map("n", "<Leader>sra", show("lsp"), keymap_opts("LSP: search *", opts))
+        map("n", "<Leader>sde", show("lsp_definitions"), keymap_opts("LSP: definitions", opts))
+        map("n", "<Leader>sr", show("lsp_references"), keymap_opts("LSP: references", opts))
+        map("n", "<Leader>sff", show("symbols"), keymap_opts("LSP: document symbols", opts))
+        map("n", "<Leader>sic", show("lsp_incoming_calls"), keymap_opts("LSP: incoming calls", opts))
+        map("n", "<Leader>soc", show("lsp_outgoing_calls"), keymap_opts("LSP: outgoing calls", opts))
+        map("n", "<Leader>si", show("lsp_implementations"), keymap_opts("LSP: implementations", opts))
     end,
 })
