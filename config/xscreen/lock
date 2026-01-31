@@ -104,13 +104,12 @@ while [[ $# -gt 0 ]]; do
 done
 
 "${SCREENSHOT_CMD[@]}"
-readonly SCREENSHOT
 
 SCREENSHOT_AVG_BRIGHTNESS_PERCENTAGE=$(magick "$SCREENSHOT" -gravity center -crop 100x100+0+0 +repage \
     -colorspace HSB -channel B -format "%[fx:int(mean*100)]" info:)
 readonly SCREENSHOT_AVG_BRIGHTNESS_PERCENTAGE
 
-if [[ "$SCREENSHOT_AVG_BRIGHTNESS_PERCENTAGE" -gt "$BRIGHTNESS_THRESHOLD" ]]; then
+if [[ $SCREENSHOT_AVG_BRIGHTNESS_PERCENTAGE -gt $BRIGHTNESS_THRESHOLD ]]; then
     PRIMARY_COLOR=$BLACK
     SECONDARY_COLOR=$WHITE
 else
@@ -189,7 +188,7 @@ readonly -a I3LOCK_BAR_OPTS=(
     "--bar-total-width=${I3LOCK_BAR_WIDTH}"
 )
 
-if [[ "$I3LOCK_BAR_ENABLED" -eq 1 ]]; then
+if [[ $I3LOCK_BAR_ENABLED -eq 1 ]]; then
     I3LOCK_OPTS+=("${I3LOCK_BAR_OPTS[@]}")
 fi
 
