@@ -37,8 +37,17 @@ telescope.setup({
         },
         file_ignore_patterns = {
             ".git",
+            ".svn",
+            ".idea",
+            ".vscode",
+            "target",
+            "build",
+            "out",
+            "venv",
+            "dist",
             "vendor",
             "node_modules",
+            "__pycache__",
         },
         prompt_prefix = "🔎 ",
         mappings = {
