@@ -78,14 +78,17 @@ Plug("hrsh7th/cmp-vsnip")
 Plug("hrsh7th/vim-vsnip")
 Plug("rafamadriz/friendly-snippets")
 
---- Debugging
+--- Debugging - Testing
 Plug("mfussenegger/nvim-dap")
 Plug("rcarriga/nvim-dap-ui")
 Plug("ofirgall/goto-breakpoints.nvim")
 Plug("nvim-neotest/nvim-nio")
+Plug("nvim-neotest/neotest")
 Plug("theHamsta/nvim-dap-virtual-text")
 Plug("leoluz/nvim-dap-go")
 Plug("mfussenegger/nvim-dap-python")
+Plug("fredrikaverpil/neotest-golang")
+Plug("nvim-neotest/neotest-python")
 
 --- Telescope
 Plug("nvim-lua/plenary.nvim")
