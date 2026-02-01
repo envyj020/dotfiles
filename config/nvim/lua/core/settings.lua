@@ -19,7 +19,9 @@ vim.g.closetag_shortcut = ">"
 
 vim.g.neovim_session_dir = vim.fs.joinpath(vim.fn.stdpath("data"), "obsession")
 vim.g.neovim_colorscheme = os.getenv("NVIM_COLORSCHEME") or "catppuccin-mocha"
-vim.g.catppuccin_theme = string.match(vim.g.neovim_colorscheme, "-(.*)")
+vim.g.catppuccin_theme = string.find(vim.g.neovim_colorscheme, "catppuccin")
+        and string.match(vim.g.neovim_colorscheme, "-(.*)")
+    or "mocha"
 
 vim.g.db_ui_dotenv_variable_prefix = "NVIM_DB_"
 vim.g.db_ui_use_nerd_fonts = 1
