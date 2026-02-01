@@ -34,7 +34,6 @@ usage = "latest"
 "aqua:dandavison/delta" = "latest"
 "aqua:BurntSushi/ripgrep" = "latest"
 "aqua:junegunn/fzf" = "latest"
-"aqua:juliosueiras/terraform-lsp" = "latest"
 "aqua:tfutils/tfenv" = { version = "latest", postinstall = "mise run tfenv:init" }
 "aqua:kubernetes/minikube" = "latest"
 "aqua:kubernetes-sigs/kind" = "latest"

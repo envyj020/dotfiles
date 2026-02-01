@@ -94,10 +94,6 @@ url = "https://github.com/helmfile/helmfile/releases/download/v1.2.3/helmfile_1.
 version = "0.6.0"
 backend = "aqua:jsonnet-bundler/jsonnet-bundler"
 
-[[tools."aqua:juliosueiras/terraform-lsp"]]
-version = "0.0.12"
-backend = "aqua:juliosueiras/terraform-lsp"
-
 [[tools."aqua:junegunn/fzf"]]
 version = "0.67.0"
 backend = "aqua:junegunn/fzf"
