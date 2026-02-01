@@ -14,7 +14,7 @@ autocmd("CursorHold", {
     end,
 })
 
--- Install missing Treesitter parser if any for a given buffer and turns it on
+-- Replicates Treesitter master branch auto_install feature
 autocmd("Filetype", {
     group = group,
     pattern = "*",
@@ -35,7 +35,10 @@ autocmd("Filetype", {
 
         nvim_treesitter.install({ parser }):await(function(err)
             if err then
-                vim.notify("Couldn't install Treesitter parser for filetype: " .. ft .. " error: " .. err)
+                vim.notify(
+                    "Couldn't install Treesitter parser for filetype: " .. ft .. " error: " .. err,
+                    vim.log.levels.ERROR
+                )
                 return
             end
 
@@ -107,7 +110,7 @@ autocmd("LspAttach", {
         end, keymap_opts("LSP: previous diagnostic", opts))
 
         -- LSP Navigation
-        local function show(subcommand)
+        local function toggle(subcommand)
             return command("Trouble", subcommand, "toggle")
         end
 
@@ -115,13 +118,13 @@ autocmd("LspAttach", {
         map("n", "<C-S-Right>", vim.lsp.buf.declaration, keymap_opts("LSP: go to declaration", opts))
         map("n", "<Leader>sa", vim.lsp.buf.code_action, keymap_opts("LSP: code actions", opts))
 
-        map("n", "<Leader>sd", show("diagnostics"), keymap_opts("LSP: Search diagnostics", opts))
-        map("n", "<Leader>sra", show("lsp"), keymap_opts("LSP: search *", opts))
-        map("n", "<Leader>sde", show("lsp_definitions"), keymap_opts("LSP: definitions", opts))
-        map("n", "<Leader>sr", show("lsp_references"), keymap_opts("LSP: references", opts))
-        map("n", "<Leader>sff", show("symbols"), keymap_opts("LSP: document symbols", opts))
-        map("n", "<Leader>sic", show("lsp_incoming_calls"), keymap_opts("LSP: incoming calls", opts))
-        map("n", "<Leader>soc", show("lsp_outgoing_calls"), keymap_opts("LSP: outgoing calls", opts))
-        map("n", "<Leader>si", show("lsp_implementations"), keymap_opts("LSP: implementations", opts))
+        map("n", "<Leader>sd", toggle("diagnostics"), keymap_opts("LSP: Search diagnostics", opts))
+        map("n", "<Leader>sra", toggle("lsp"), keymap_opts("LSP: search *", opts))
+        map("n", "<Leader>sde", toggle("lsp_definitions"), keymap_opts("LSP: definitions", opts))
+        map("n", "<Leader>sr", toggle("lsp_references"), keymap_opts("LSP: references", opts))
+        map("n", "<Leader>sff", toggle("symbols"), keymap_opts("LSP: document symbols", opts))
+        map("n", "<Leader>sic", toggle("lsp_incoming_calls"), keymap_opts("LSP: incoming calls", opts))
+        map("n", "<Leader>soc", toggle("lsp_outgoing_calls"), keymap_opts("LSP: outgoing calls", opts))
+        map("n", "<Leader>si", toggle("lsp_implementations"), keymap_opts("LSP: implementations", opts))
     end,
 })
