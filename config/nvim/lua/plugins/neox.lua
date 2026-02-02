@@ -6,6 +6,9 @@ require("neotest").setup({
                 "**/vendor",
                 "**/e2e",
             },
+            env = {
+                CGO_ENABLED = "1",
+            },
         }),
         require("nvim-ginkgo"),
         require("neotest-python")({
@@ -18,6 +21,11 @@ require("neogen").setup({
     enabled = true,
     snippet_engine = "vsnip",
     input_after_comment = true,
+})
+
+require("neoscroll").setup({
+    easing = "linear",
+    mappings = {},
 })
 
 require("neo-tree").setup({

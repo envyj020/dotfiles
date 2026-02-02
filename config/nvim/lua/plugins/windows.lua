@@ -13,11 +13,6 @@ require("windows").setup({
     },
 })
 
-require("neoscroll").setup({
-    easing = "linear",
-    mappings = {},
-})
-
 require("smart-splits").setup({
     ignored_buftypes = {
         "nofile",
