@@ -37,13 +37,13 @@ local treesitter_select = require("nvim-treesitter-textobjects.select").select_t
 local treesitter_swap = require("nvim-treesitter-textobjects.swap")
 local treesitter_move = require("nvim-treesitter-textobjects.move")
 
--- Context
+--- Context
 map("n", "<Leader>c", function()
     require("treesitter-context").go_to_context(vim.v.count1)
 end, keymap_opts("Treesitter: jump to context", { silent = true }))
 
--- Select
--- @Function
+--- Select
+--- @Function
 map({ "x", "o" }, "of", function()
     treesitter_select("@function.outer", "textobjects")
 end, keymap_opts("Treesitter: @function.outer:s"))
@@ -51,7 +51,7 @@ map({ "x", "o" }, "if", function()
     treesitter_select("@function.inner", "textobjects")
 end, keymap_opts("Treesitter: @function.inner:s"))
 
--- @Class
+--- @Class
 map({ "x", "o" }, "oc", function()
     treesitter_select("@class.outer", "textobjects")
 end, keymap_opts("Treesitter: @class.outer:s"))
@@ -59,7 +59,7 @@ map({ "x", "o" }, "ic", function()
     treesitter_select("@class.inner", "textobjects")
 end, keymap_opts("Treesitter: @class.inner:s"))
 
--- @Parameter
+--- @Parameter
 map({ "x", "o" }, "op", function()
     treesitter_select("@parameter.outer", "textobjects")
 end, keymap_opts("Treesitter: @parameter.outer:s"))
@@ -67,7 +67,7 @@ map({ "x", "o" }, "ip", function()
     treesitter_select("@parameter.inner", "textobjects")
 end, keymap_opts("Treesitter: @parameter.inner:s"))
 
--- @Variable
+--- @Variable
 map({ "x", "o" }, "ov", function()
     treesitter_select("@assignment.outer", "textobjects")
 end, keymap_opts("Treesitter: @assignment.outer:s"))
@@ -75,7 +75,7 @@ map({ "x", "o" }, "iv", function()
     treesitter_select("@assignment.inner", "textobjects")
 end, keymap_opts("Treesitter: @assignment.inner:s"))
 
--- Swap
+--- Swap
 map("n", "<Leader>a", function()
     treesitter_swap.swap_next("@parameter.inner")
 end, keymap_opts("Treesitter: @swap.next"))
@@ -83,8 +83,8 @@ map("n", "<Leader>A", function()
     treesitter_swap.swap_previous("@parameter.outer")
 end, keymap_opts("Treesitter: @swap.previous"))
 
--- Move
--- @Parameter
+--- Move
+--- @Parameter
 map({ "n", "x", "o" }, "np", function()
     treesitter_move.goto_next_start("@parameter.outer", "textobjects")
 end, keymap_opts("Treesitter: @parameter.outer:m next start"))
@@ -99,7 +99,7 @@ map({ "n", "x", "o" }, "pP", function()
     treesitter_move.goto_previous_end("@parameter.outer", "textobjects")
 end, keymap_opts("Treesitter: @parameter.outer:m previous end"))
 
--- @Function
+--- @Function
 map({ "n", "x", "o" }, "nf", function()
     treesitter_move.goto_next_start("@function.outer", "textobjects")
 end, keymap_opts("Treesitter: @function.outer:m next start"))
@@ -114,7 +114,7 @@ map({ "n", "x", "o" }, "pF", function()
     treesitter_move.goto_previous_end("@function.outer", "textobjects")
 end, keymap_opts("Treesitter: @function.outer:m previous end"))
 
---@Class
+--- @Class
 map({ "n", "x", "o" }, "nc", function()
     treesitter_move.goto_next_start("@class.outer", "textobjects")
 end, keymap_opts("Treesitter: @class.outer:m next start"))
@@ -244,61 +244,66 @@ map("n", "sb", require("goto-breakpoints").stopped, keymap_opts("DAP: current st
 -- DAP Integrations - NeoTest
 map("n", "<Leader>tnd", function()
     require("neotest").run.run({ suite = false, strategy = "dap" })
-end, keymap_opts("DEBUG: run nearest test with DAP integration"))
+end, keymap_opts("Debug: run nearest test with DAP integration"))
 
 map("n", "<Leader>tfd", function()
     require("neotest").run.run({ vim.fn.expand("%"), suite = false, strategy = "dap" })
-end, keymap_opts("DEBUG: run current test file with DAP integration"))
+end, keymap_opts("Debug: run current test file with DAP integration"))
 
 map("n", "<Leader>tn", function()
     require("neotest").run.run({ suite = false })
-end, keymap_opts("TEST: run nearest test"))
+end, keymap_opts("Test: run nearest test"))
 
 map("n", "<Leader>tf", function()
     require("neotest").run.run({ vim.fn.expand("%"), suite = false })
-end, keymap_opts("TEST: run current test file"))
+end, keymap_opts("Test: run current test file"))
 
 map("n", "<leader>td", function()
     require("neotest").run.run({ vim.fn.getcwd(), suite = false })
-end, keymap_opts("TEST: run current dir tests"))
+end, keymap_opts("Test: run current dir tests"))
 
 map("n", "<Leader>ts", function()
     require("neotest").summary.toggle()
-end, keymap_opts("DEBUG: open summary"))
+end, keymap_opts("Debug: open summary"))
 
 map("n", "<Leader>tt", function()
     require("neotest").run.stop()
-end, keymap_opts("TEST: stop test execution"))
+end, keymap_opts("Test: stop test execution"))
 
 vim.keymap.set("n", "<Leader>to", function()
     require("neotest").output.open({ enter = true, auto_close = true })
-end, { desc = "DEBUG: open test output" })
+end, { desc = "Debug: open test output" })
 
 vim.keymap.set("n", "<Leader>top", function()
     require("neotest").output_panel.toggle()
-end, { desc = "DEBUG: open test output panel" })
+end, { desc = "Debug: open test output panel" })
 
 vim.keymap.set("n", "<Leader>tw", function()
     require("neotest").watch.toggle(vim.fn.expand("%"))
-end, { desc = "TEST: run test on file changes" })
+end, { desc = "Test: run test on file changes" })
 
 -- Terminal
-map("n", "<Leader>;", command("ToggleTerm"), keymap_opts("Toggle terminal"))
-map("t", "<Esc>", "<C-\\><C-n>", keymap_opts("Exit terminal mode"))
+map("n", "<Leader>;", command("ToggleTerm"), keymap_opts("Terminal: toggle"))
+map("t", "<Esc>", "<C-\\><C-n>", keymap_opts("Terminal: exit"))
 
 -- Miscellaneous
 map("n", "jq", command("JqxList"), keymap_opts("Jq/Yq quickfix"))
 map("n", "jqq", command("JqxQuery"), keymap_opts("Jq/Yq query"))
+
 map("n", "<Leader>h", command("CloakToggle"), keymap_opts("Toggle sensitive data"))
+
 map("n", "<Leader>z", function()
     Snacks.toggle.dim():toggle()
 end, keymap_opts("Toggle focus mode"))
+
 map("n", "<C-a>", function()
     require("dial.map").manipulate("increment", "normal")
 end, keymap_opts("Increment version"))
+
 map("n", "<C-x>", function()
     require("dial.map").manipulate("decrement", "normal")
 end, keymap_opts("Decrement version"))
+
 map({ "n", "v", "x" }, "<S-Up>", function()
     require("neoscroll").ctrl_u({
         duration = 150,
