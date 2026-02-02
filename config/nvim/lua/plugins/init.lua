@@ -88,6 +88,7 @@ Plug("theHamsta/nvim-dap-virtual-text")
 Plug("leoluz/nvim-dap-go")
 Plug("mfussenegger/nvim-dap-python")
 Plug("fredrikaverpil/neotest-golang")
+Plug("nvim-contrib/nvim-ginkgo")
 Plug("nvim-neotest/neotest-python")
 
 --- Telescope

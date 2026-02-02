@@ -241,10 +241,46 @@ map("n", "nb", require("goto-breakpoints").next, keymap_opts("DAP: next breakpoi
 map("n", "pb", require("goto-breakpoints").prev, keymap_opts("DAP: previous breakpoint"))
 map("n", "sb", require("goto-breakpoints").stopped, keymap_opts("DAP: current stopped breakpoint"))
 
--- DAP Integrations
-map("n", "<Leader>dgt", require("dap-go").debug_test, keymap_opts("DEBUG: GO test under cursor"))
-map("n", "<Leader>dpt", require("dap-python").test_method, keymap_opts("DEBUG: Python test under cursor"))
-map("n", "<Leader>dpc", require("dap-python").test_class, keymap_opts("DEBUG: Python class"))
+-- DAP Integrations - NeoTest
+map("n", "<Leader>tnd", function()
+    require("neotest").run.run({ suite = false, strategy = "dap" })
+end, keymap_opts("DEBUG: run nearest test with DAP integration"))
+
+map("n", "<Leader>tfd", function()
+    require("neotest").run.run({ vim.fn.expand("%"), suite = false, strategy = "dap" })
+end, keymap_opts("DEBUG: run current test file with DAP integration"))
+
+map("n", "<Leader>tn", function()
+    require("neotest").run.run({ suite = false })
+end, keymap_opts("TEST: run nearest test"))
+
+map("n", "<Leader>tf", function()
+    require("neotest").run.run({ vim.fn.expand("%"), suite = false })
+end, keymap_opts("TEST: run current test file"))
+
+map("n", "<leader>td", function()
+    require("neotest").run.run({ vim.fn.getcwd(), suite = false })
+end, keymap_opts("TEST: run current dir tests"))
+
+map("n", "<Leader>ts", function()
+    require("neotest").summary.toggle()
+end, keymap_opts("DEBUG: open summary"))
+
+map("n", "<Leader>tt", function()
+    require("neotest").run.stop()
+end, keymap_opts("TEST: stop test execution"))
+
+vim.keymap.set("n", "<Leader>to", function()
+    require("neotest").output.open({ enter = true, auto_close = true })
+end, { desc = "DEBUG: open test output" })
+
+vim.keymap.set("n", "<Leader>top", function()
+    require("neotest").output_panel.toggle()
+end, { desc = "DEBUG: open test output panel" })
+
+vim.keymap.set("n", "<Leader>tw", function()
+    require("neotest").watch.toggle(vim.fn.expand("%"))
+end, { desc = "TEST: run test on file changes" })
 
 -- Terminal
 map("n", "<Leader>;", command("ToggleTerm"), keymap_opts("Toggle terminal"))
@@ -254,7 +290,7 @@ map("t", "<Esc>", "<C-\\><C-n>", keymap_opts("Exit terminal mode"))
 map("n", "jq", command("JqxList"), keymap_opts("Jq/Yq quickfix"))
 map("n", "jqq", command("JqxQuery"), keymap_opts("Jq/Yq query"))
 map("n", "<Leader>h", command("CloakToggle"), keymap_opts("Toggle sensitive data"))
-map("n", "<Leader>tw", function()
+map("n", "<Leader>z", function()
     Snacks.toggle.dim():toggle()
 end, keymap_opts("Toggle focus mode"))
 map("n", "<C-a>", function()

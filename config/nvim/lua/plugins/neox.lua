@@ -2,7 +2,12 @@ require("neotest").setup({
     adapters = {
         require("neotest-golang")({
             runner = "gotestsum",
+            filter_dir_patterns = {
+                "**/vendor",
+                "**/e2e",
+            },
         }),
+        require("nvim-ginkgo"),
         require("neotest-python")({
             dap = { justMyCode = false },
         }),
