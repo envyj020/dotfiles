@@ -14,10 +14,6 @@
 	path = modules/catppuccin-btop-themes
 	url = https://github.com/catppuccin/btop.git
 	branch = main
-[submodule "modules/catppuccin-k9s-themes"]
-	path = modules/catppuccin-k9s-themes
-	url = https://github.com/catppuccin/k9s.git
-	branch = main
 [submodule "modules/catppuccin-eza-themes"]
 	path = modules/catppuccin-eza-themes
 	url = https://github.com/catppuccin/eza.git
